@@ -21,7 +21,8 @@ jobs:
       - name: Checkout repo
         uses: actions/checkout@v3
         with:
-          persist-credentials: true
+          ref: master
+          persist-credentials: false  # We'll handle token manually
 
       # 2️⃣ Set up Python
       - name: Set up Python
@@ -44,8 +45,12 @@ jobs:
         run: |
           git config user.name "github-actions[bot]"
           git config user.email "github-actions[bot]@users.noreply.github.com"
+          
           git add dhl_stadium.ics
           git commit -m "Update DHL Stadium ICS" || echo "No changes to commit"
-          git push
+          
+          # Use HTTPS with token to push
+          git remote set-url origin https://x-access-token:${GITHUB_TOKEN}@github.com/GiladAmar/GreenpointStandiumScraper.git
+          git push origin master
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
