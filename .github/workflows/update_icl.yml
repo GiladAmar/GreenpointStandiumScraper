@@ -15,7 +15,6 @@ on:
 jobs:
   build:
     runs-on: ubuntu-latest
-
     steps:
       - name: Checkout repo
         uses: actions/checkout@v3
@@ -25,14 +24,10 @@ jobs:
         with:
           python-version: 3.12
 
-      - name: Install uv
-        if: steps.cache-uv.outputs.cache-hit != 'true'
+      - name: Install dependencies
         run: |
-          curl -sSL https://uv.run/install.sh | bash
-
-      - name: Install dependencies via uv
-        run: |
-          uv install requests ics
+          python -m pip install --upgrade pip
+          pip install requests ics
 
       - name: Generate ICS
         run: python generate_dhl_ics.py
