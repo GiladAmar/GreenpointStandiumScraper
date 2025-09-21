@@ -8,7 +8,7 @@ on:
   # Run on push to main branch
   push:
     branches:
-      - main
+      - master
 
   workflow_dispatch: # manual trigger
 
@@ -23,16 +23,7 @@ jobs:
       - name: Set up Python
         uses: actions/setup-python@v4
         with:
-          python-version: "3.11"
-
-      - name: Cache uv packages
-        id: cache-uv
-        uses: actions/cache@v3
-        with:
-          path: ~/.uv
-          key: uv-packages-${{ runner.os }}-${{ hashFiles('**/generate_dhl_ics.py') }}
-          restore-keys: |
-            uv-packages-${{ runner.os }}-
+          python-version: 3.12
 
       - name: Install uv
         if: steps.cache-uv.outputs.cache-hit != 'true'
