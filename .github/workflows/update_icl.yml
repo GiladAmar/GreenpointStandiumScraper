@@ -5,7 +5,7 @@ on:
   schedule:
     - cron: '0 1 1 * *'
 
-  # Run on push to main branch
+  # Run on push to master branch
   push:
     branches:
       - master
@@ -13,27 +13,33 @@ on:
   workflow_dispatch: # manual trigger
 
 jobs:
-  build:
+  generate-ics:
     runs-on: ubuntu-latest
+
     steps:
+      # 1️⃣ Checkout repo and allow push with GITHUB_TOKEN
       - name: Checkout repo
         uses: actions/checkout@v3
         with:
-          persist-credentials: true  # ensures push uses GITHUB_TOKEN
+          persist-credentials: true
 
+      # 2️⃣ Set up Python
       - name: Set up Python
         uses: actions/setup-python@v4
         with:
           python-version: 3.12
 
+      # 3️⃣ Install dependencies
       - name: Install dependencies
         run: |
           python -m pip install --upgrade pip
           pip install requests ics
 
+      # 4️⃣ Generate the ICS file
       - name: Generate ICS
         run: python generate_dhl_ics.py
 
+      # 5️⃣ Commit and push ICS
       - name: Commit and push ICS
         run: |
           git config user.name "github-actions[bot]"
@@ -41,3 +47,5 @@ jobs:
           git add dhl_stadium.ics
           git commit -m "Update DHL Stadium ICS" || echo "No changes to commit"
           git push
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
