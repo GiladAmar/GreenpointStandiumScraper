@@ -2,122 +2,150 @@ BEGIN:VCALENDAR
 VERSION:2.0
 PRODID:ics.py - http://git.io/lLljaA
 BEGIN:VEVENT
+DESCRIPTION:This Summit unites school sport educators\, coaches\, and leaders for two days of learning and collaboration.
+DTEND:20251021T235959Z
+DTSTART:20251021T060000Z
+SUMMARY:Playbook Education School Sports Summit 
+UID:f31c5841-2b83-47e1-a7bd-ac9cd3858437@f31c.org
+END:VEVENT
+BEGIN:VEVENT
 DESCRIPTION:DHL Stormers takes on Leinster in their first home game of the 2025/6 Vodacom URC season. 
 DTEND:20250926T235959Z
 DTSTART:20250926T170000Z
 SUMMARY:DHL Stormers vs Leinster 
-UID:e64348e7-d99e-475f-9674-c3f7ee5c9dc2@e643.org
-END:VEVENT
-BEGIN:VEVENT
-DESCRIPTION:Join us for the season finale of the 2025 FIM World Supercross Championship on December 13.\n
-DTEND:20251213T235959Z
-DTSTART:20251213T080000Z
-SUMMARY:World Supercross Championship 
-UID:db1627e6-5ed1-4f30-a361-abca4a8f5f01@db16.org
-END:VEVENT
-BEGIN:VEVENT
-DESCRIPTION:HSBC SVNS returns to DHL Stadium for a weekend of world-class rugby\, live music\, food\, and unforgettable vibes.
-DTEND:20251207T235959Z
-DTSTART:20251207T080000Z
-SUMMARY:HSBC SVNS Cape Town
-UID:9c9651e2-2c7a-4716-9194-9bd7a1726a0b@9c96.org
-END:VEVENT
-BEGIN:VEVENT
-DESCRIPTION:DHL Stormers take on Glasgow Warriors.
-DTEND:20260425T235959Z
-DTSTART:20260425T114500Z
-SUMMARY:DHL Stormers vs Glasgow Warriors
-UID:17fc1e7d-1715-4dab-8f6d-fed03130de01@17fc.org
-END:VEVENT
-BEGIN:VEVENT
-DESCRIPTION:HSBC SVNS returns to DHL Stadium for a weekend of world-class rugby\, live music\, food\, and unforgettable vibes.
-DTEND:20251206T235959Z
-DTSTART:20251206T080000Z
-SUMMARY:HSBC SVNS Cape Town
-UID:132c2336-d01c-4e70-99bd-cb48afdffc9b@132c.org
-END:VEVENT
-BEGIN:VEVENT
-DESCRIPTION:DHL Stormers take on Connacht Rugby. 
-DTEND:20260418T235959Z
-DTSTART:20260418T114500Z
-SUMMARY:DHL Stormers vs Connacht
-UID:c22ee358-aa7e-495b-80f8-77998d939926@c22e.org
-END:VEVENT
-BEGIN:VEVENT
-DESCRIPTION:Sanlam Cape Town Marathon Expo & Registration\n
-DTEND:20251016T235959Z
-DTSTART:20251016T070000Z
-SUMMARY:Sanlam Cape Town Marathon Expo
-UID:71b6f304-55ab-4a6b-9a15-0fa63b160981@71b6.org
-END:VEVENT
-BEGIN:VEVENT
-DESCRIPTION:DHL Stormers take on Leicester Tigers.
-DTEND:20260117T235959Z
-DTSTART:20260117T151500Z
-SUMMARY:DHL Stormers vs Leicester Tigers 
-UID:4230bd86-e12a-4d24-aaa9-19a01f0ae956@4230.org
-END:VEVENT
-BEGIN:VEVENT
-DESCRIPTION:DHL Stormers take on Edinburgh Rugby. 
-DTEND:20260328T235959Z
-DTSTART:20260328T170000Z
-SUMMARY:DHL Stormers vs Edinburgh
-UID:5825b19d-e43d-4238-91c0-795ce2896ee5@5825.org
-END:VEVENT
-BEGIN:VEVENT
-DESCRIPTION:DHL Stormers takes on Emirates Lions on 20 December 2025. 
-DTEND:20251220T235959Z
-DTSTART:20251220T133000Z
-SUMMARY:DHL Stormers vs Emirates Lions 
-UID:ee52ce63-6368-4dfb-877f-67542e4e4b5c@ee52.org
-END:VEVENT
-BEGIN:VEVENT
-DESCRIPTION:DHL Stormers take on Ospreys.
-DTEND:20251003T235959Z
-DTSTART:20251003T170000Z
-SUMMARY:DHL Stormers vs Ospreys 
-UID:6cf996bd-6180-4b6e-b428-a59dcce7587c@6cf9.org
-END:VEVENT
-BEGIN:VEVENT
-DESCRIPTION:DHL Stormers takes on Vodacom Bulls.
-DTEND:20260103T235959Z
-DTSTART:20260103T160000Z
-SUMMARY:DHL Stormers vs Vodacom Bulls 
-UID:51733924-3bf1-42c2-b180-b91bc8f226de@5173.org
+UID:b28f10fb-3590-4c4c-b8cf-dcaa9270f2da@b28f.org
 END:VEVENT
 BEGIN:VEVENT
 DESCRIPTION:DHL Stormers take on Hollywoodbets Sharks.
 DTEND:20260124T235959Z
 DTSTART:20260124T173000Z
 SUMMARY:DHL Stormers vs Hollywoodbets Sharks 
-UID:3e4624a3-696b-4f8d-99ff-873f4c833c3a@3e46.org
+UID:f8e34918-3e64-4e6a-a797-0f11279e5797@f8e3.org
+END:VEVENT
+BEGIN:VEVENT
+DESCRIPTION:DHL Stormers takes on Emirates Lions on 20 December 2025. 
+DTEND:20251220T235959Z
+DTSTART:20251220T133000Z
+SUMMARY:DHL Stormers vs Emirates Lions 
+UID:d8cf8504-626c-4cbb-b6ee-d21f1b3bd4a8@d8cf.org
+END:VEVENT
+BEGIN:VEVENT
+DESCRIPTION:This Summit unites school sport educators\, coaches\, and leaders for two days of learning and collaboration.
+DTEND:20251022T235959Z
+DTSTART:20251022T061500Z
+SUMMARY:Playbook Education School Sports Summit 
+UID:b45548b8-22c3-465f-8cf1-7881e14f8e94@b455.org
+END:VEVENT
+BEGIN:VEVENT
+DESCRIPTION:SACO 2025 International Conference | 4–5 November at DHL Stadium
+DTEND:20251105T153000Z
+DTSTART:20251105T050000Z
+SUMMARY:Creative & Sports Economy Futures 2025
+UID:bf82fe0f-296f-47a1-ac8a-e16a81975293@bf82.org
+END:VEVENT
+BEGIN:VEVENT
+DESCRIPTION:Join us for the season finale of the 2025 FIM World Supercross Championship on December 13.\n
+DTEND:20251213T235959Z
+DTSTART:20251213T080000Z
+SUMMARY:World Supercross Championship 
+UID:f3ccce4f-6853-40bd-b05d-cadf45dcda81@f3cc.org
+END:VEVENT
+BEGIN:VEVENT
+DESCRIPTION:DHL Stormers take on Edinburgh Rugby. 
+DTEND:20260328T235959Z
+DTSTART:20260328T170000Z
+SUMMARY:DHL Stormers vs Edinburgh
+UID:631ec680-70dd-4a5a-9fc1-9b60996d6614@631e.org
+END:VEVENT
+BEGIN:VEVENT
+DESCRIPTION:DHL Stormers take on Ospreys.
+DTEND:20251003T235959Z
+DTSTART:20251003T170000Z
+SUMMARY:DHL Stormers vs Ospreys 
+UID:2fbe5d24-d18e-4294-ad9b-66c22bf1ed7f@2fbe.org
+END:VEVENT
+BEGIN:VEVENT
+DESCRIPTION:HSBC SVNS returns to DHL Stadium for a weekend of world-class rugby\, live music\, food\, and unforgettable vibes.
+DTEND:20251206T235959Z
+DTSTART:20251206T080000Z
+SUMMARY:HSBC SVNS Cape Town
+UID:4f8ecc1b-f8db-4e89-b718-0aedd8b81d8c@4f8e.org
+END:VEVENT
+BEGIN:VEVENT
+DESCRIPTION:SACO 2025 International Conference | 4–5 November at DHL Stadium
+DTEND:20251104T200000Z
+DTSTART:20251104T050000Z
+SUMMARY:Creative & Sports Economy Futures 2025
+UID:ab0b6de2-3e9d-447e-96a7-c638e51139df@ab0b.org
 END:VEVENT
 BEGIN:VEVENT
 DESCRIPTION:Sanlam Cape Town Marathon Expo & Registration\n
 DTEND:20251017T235959Z
 DTSTART:20251017T070000Z
 SUMMARY:Sanlam Cape Town Marathon Expo
-UID:df35e4a9-0e88-4faa-83e4-2e0a949a7d7a@df35.org
+UID:60f684a5-9de2-4db5-9b77-6ea4b1a7226d@60f6.org
 END:VEVENT
 BEGIN:VEVENT
-DESCRIPTION:Stellenbosch FC takes on Kaizer Chiefs in the Carling Knockout Round of 16 match. 
-DTEND:20251005T235959Z
-DTSTART:20251005T130000Z
-SUMMARY:Stellenbosch FC vs Kaizer Chiefs 
-UID:7e03b7e4-a1cd-47b5-98b8-9eede5ce78c1@7e03.org
+DESCRIPTION:DHL Stormers take on Connacht Rugby. 
+DTEND:20260418T235959Z
+DTSTART:20260418T114500Z
+SUMMARY:DHL Stormers vs Connacht
+UID:ad1520bf-a32c-4b6f-835f-b5f8f9ee4208@ad15.org
+END:VEVENT
+BEGIN:VEVENT
+DESCRIPTION:DHL Stormers takes on Vodacom Bulls.
+DTEND:20260103T235959Z
+DTSTART:20260103T160000Z
+SUMMARY:DHL Stormers vs Vodacom Bulls 
+UID:6a492758-527f-4bdd-b443-4877c38d3e7a@6a49.org
+END:VEVENT
+BEGIN:VEVENT
+DESCRIPTION:Sanlam Cape Town Marathon Expo & Registration\n
+DTEND:20251016T235959Z
+DTSTART:20251016T070000Z
+SUMMARY:Sanlam Cape Town Marathon Expo
+UID:c03394a7-c22e-48ba-93d9-8d7ce29ee824@c033.org
+END:VEVENT
+BEGIN:VEVENT
+DESCRIPTION:DHL Stormers take on Glasgow Warriors.
+DTEND:20260425T235959Z
+DTSTART:20260425T114500Z
+SUMMARY:DHL Stormers vs Glasgow Warriors
+UID:3cda8b37-a698-4386-9583-a4162c1918ba@3cda.org
+END:VEVENT
+BEGIN:VEVENT
+DESCRIPTION:DHL Stormers take on Leicester Tigers.
+DTEND:20260117T235959Z
+DTSTART:20260117T151500Z
+SUMMARY:DHL Stormers vs Leicester Tigers 
+UID:737308b9-e9dc-42b8-8a6c-07a07332e5b4@7373.org
 END:VEVENT
 BEGIN:VEVENT
 DESCRIPTION:Join us for one of the most coveted tasting events on the South African wine calendar.
 DTEND:20251106T235959Z
 DTSTART:20251106T150000Z
 SUMMARY:Caroline's White Wine Review 
-UID:34965b57-53b9-4848-9c85-3d6ec44db309@3496.org
+UID:424a8f76-9412-4fcb-8956-f3d4d942a612@424a.org
+END:VEVENT
+BEGIN:VEVENT
+DESCRIPTION:Stellenbosch FC takes on Kaizer Chiefs in the Carling Knockout Round of 16 match. 
+DTEND:20251005T235959Z
+DTSTART:20251005T130000Z
+SUMMARY:Stellenbosch FC vs Kaizer Chiefs 
+UID:70644fbb-6e2b-4937-94ce-816630c043ef@7064.org
+END:VEVENT
+BEGIN:VEVENT
+DESCRIPTION:HSBC SVNS returns to DHL Stadium for a weekend of world-class rugby\, live music\, food\, and unforgettable vibes.
+DTEND:20251207T235959Z
+DTSTART:20251207T080000Z
+SUMMARY:HSBC SVNS Cape Town
+UID:dca2aac7-6574-46da-ac68-d670aa7e9bd2@dca2.org
 END:VEVENT
 BEGIN:VEVENT
 DESCRIPTION:Sanlam Cape Town Marathon Expo & Registration\n
 DTEND:20251018T235959Z
 DTSTART:20251018T070000Z
 SUMMARY:Sanlam Cape Town Marathon Expo
-UID:b47f11ee-75d7-4675-b9ac-8af16a02904d@b47f.org
+UID:e4fdf3e6-4468-42cc-b298-762777486090@e4fd.org
 END:VEVENT
 END:VCALENDAR
