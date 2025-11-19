@@ -205,7 +205,7 @@ def fetch_gun_run() -> Optional[Dict[str, str]]:
 
 def fetch_cape_town_carnival() -> Optional[Dict[str, str]]:
     patterns = [
-        re.compile(rf"(?P<d1>\d{{1,2}})(?:st|nd|rd|th)?\s*(?:of\s+)?(?P<mon>Mar(?:ch)?)\s*,?\s*(?P<year>20\d{{2}})", re.IGNORECASE),
+        re.compile(r"(?P<d1>\d{1,2})(?:st|nd|rd|th)?\s*(?:of\s+)?(?P<mon>Mar(?:ch)?)\s*,?\s*(?P<year>20\d{2})", re.IGNORECASE),
     ]
     return fetch_site("Cape Town Carnival", "https://capetowncarnival.com/2025-carnival/", patterns) #TODO fix this hardcoded year
 
