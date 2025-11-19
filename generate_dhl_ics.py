@@ -88,4 +88,4 @@ for event in all_events:
     cal.events.add(event)
 
 with open("dhl_stadium.ics", "w") as f:
-    f.write(str(cal))
+    f.write(cal.serialize())
