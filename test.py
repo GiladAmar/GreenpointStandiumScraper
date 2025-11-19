@@ -127,7 +127,7 @@ def generic_date_hunt(text: str) -> Optional[Dict[str, str]]:
         # Single-month range: '18 - 19 October 2025'
         re.compile(
             rf"(?P<d1>\d{{1,2}})(?:st|nd|rd|th)?\s*{SEP_REGEX}\s*(?P<d2>\d{{1,2}})(?:st|nd|rd|th)?\s*(?:of\s+)?(?P<mon>{MONTHS_REGEX})"
-            rf"\s*,?\s*(?P<year>20\d{{2}})",
+            r"\s*,?\s*(?P<year>20\d{2})",
             re.IGNORECASE,
         ),
         # Month-first range: 'October 18–19, 2025'
