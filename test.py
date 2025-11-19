@@ -175,7 +175,7 @@ def fetch_site(name: str, url: str, site_patterns: Optional[List[Pattern]] = Non
 def fetch_cycle_tour() -> Optional[Dict[str, str]]:
     patterns = [
         re.compile(rf"(?P<d1>\d{{1,2}})(?:st|nd|rd|th)?\s*{SEP_REGEX}\s*(?P<d2>\d{{1,2}})(?:st|nd|rd|th)?\s*(?:of\s+)?(?P<mon>Mar(?:ch)?)\s*,?\s*(?P<year>20\d{{2}})", re.IGNORECASE),
-        re.compile(rf"(?P<d1>\d{{1,2}})(?:st|nd|rd|th)?\s*(?:of\s+)?(?P<mon>Mar(?:ch)?)\s*,?\s*(?P<year>20\d{{2}})", re.IGNORECASE),
+        re.compile(r"(?P<d1>\d{1,2})(?:st|nd|rd|th)?\s*(?:of\s+)?(?P<mon>Mar(?:ch)?)\s*,?\s*(?P<year>20\d{2})", re.IGNORECASE),
     ]
     return fetch_site("Cape Town Cycle Tour", "https://www.capetowncycletour.com/", patterns)
 
