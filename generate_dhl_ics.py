@@ -7,6 +7,24 @@ from dateutil import parser as date_parser
 url = "https://content-dhlstadium.azurewebsites.net/api/events?filters[event][daterange][start][$gte]=2025-09-21T14:39:46.411Z&populate[0]=event.image&populate[1]=event.daterange&populate[2]=thumbnail"
 resp = requests.get(url).json()
 
+def add_minstrel_parade(years: List[int]) -> List[Event]:
+    """
+    Generate 'Minstrel Parade (Kaapse Klopse)' full-day event for January 2 in the given years.
+    Args:
+        years (List[int]): List of years to generate events for.
+    Returns:
+        List[Event]: List of Event objects for Minstrel Parade.
+    """
+    events: List[Event] = []
+    for year in years:
+        event = Event()
+        event.name = "Minstrel Parade (Kaapse Klopse)"
+        event.begin = datetime(year, 1, 2, 0, 0, 0)
+        event.end = datetime(year, 1, 2, 23, 59, 59)
+        event.description = "The Cape Town Minstrel Carnival, also known as Kaapse Klopse, is a large minstrel festival held annually on January 2 in Cape Town, South Africa."
+        events.append(event)
+    return events
+
 def add_first_thursdays(years: List[int]) -> List[Event]:
     """
     Generate 'First Thursdays' events for each month in the given years.
@@ -81,7 +99,7 @@ def get_event_start_dt(event: Event) -> datetime:
 cal: Calendar = Calendar()
 
 now: int = datetime.now().year
-all_events: List[Event] = get_api_events(resp) + add_first_thursdays([now, now+1])
+all_events: List[Event] = get_api_events(resp) + add_first_thursdays([now, now+1]) + add_minstrel_parade([now, now+1])
 # Sort events by start datetime robustly
 all_events.sort(key=get_event_start_dt)
 for event in all_events:
