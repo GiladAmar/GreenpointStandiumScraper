@@ -25,6 +25,10 @@ You can add this .ics link to your preferred calendar app:
   
   [Subscribe on iPhone/iPad](https://support.apple.com/en-za/guide/iphone/iph3d1110d4/ios)
 
-✅ The calendar auto-updates monthly — no manual refresh needed.
+## 📆 Events included
 
-💡 Perfect for staying on top of concerts, matches, and other events at the DHL Stadium.
+- **DHL Stadium events** — concerts, matches, and other events scraped from the official DHL Stadium API
+- **First Thursdays** — the monthly Cape Town art and culture event (4pm–11pm, first Thursday of every month)
+- **Minstrel Parade (Kaapse Klopse)** — the annual Cape Town Minstrel Carnival on January 2
+
+✅ The calendar auto-updates monthly — no manual refresh needed.
