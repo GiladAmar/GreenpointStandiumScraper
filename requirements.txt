@@ -1,5 +1,5 @@
 requests==2.32.5
 ics==0.7.2
 tatsu<5.7
-beautifulsoup4
-python-dateutil
+beautifulsoup4==4.14.2
+python-dateutil==2.9.0.post0

@@ -1,0 +1,197 @@
+{
+  "updated": "2026-03-01T20:25:52.710776+00:00",
+  "events": [
+    {
+      "name": "Cape Town Cycle Tour",
+      "url": "https://www.capetowncycletour.com/",
+      "start_date": "2026-03-08",
+      "end_date": "2026-03-08"
+    },
+    {
+      "name": "Two Oceans Marathon",
+      "url": "https://www.twooceansmarathon.org.za/",
+      "start_date": "2026-04-04",
+      "end_date": "2026-04-05"
+    },
+    {
+      "name": "Sanlam Cape Town Marathon",
+      "url": "https://www.capetownmarathon.com/",
+      "start_date": "2026-05-23",
+      "end_date": "2026-05-24"
+    },
+    {
+      "name": "Absa Cape Epic",
+      "url": "https://www.cape-epic.com/",
+      "start_date": "2026-03-15",
+      "end_date": "2026-03-22"
+    },
+    {
+      "name": "The Gun Run",
+      "url": "https://thegunrun.co.za/",
+      "start_date": "2026-09-13",
+      "end_date": "2026-09-13"
+    },
+    {
+      "name": "Cape Town Carnival",
+      "url": "https://capetowncarnival.com/",
+      "start_date": "2026-03-14",
+      "end_date": "2026-03-14"
+    },
+    {
+      "name": "Cape Town Pride Parade",
+      "url": "https://cptpride.org/",
+      "start_date": "2027-02-27",
+      "end_date": "2027-02-27"
+    },
+    {
+      "name": "Knysna Cycle Tour",
+      "url": "https://knysnacycle.co.za/",
+      "start_date": "2026-07-12",
+      "end_date": "2026-07-12"
+    },
+    {
+      "name": "First Thursdays",
+      "start_date": "2026-01-01T16:00:00",
+      "end_date": "2026-01-01T23:00:00",
+      "url": "https://first-thursdays.co.za/"
+    },
+    {
+      "name": "First Thursdays",
+      "start_date": "2026-02-05T16:00:00",
+      "end_date": "2026-02-05T23:00:00",
+      "url": "https://first-thursdays.co.za/"
+    },
+    {
+      "name": "First Thursdays",
+      "start_date": "2026-03-05T16:00:00",
+      "end_date": "2026-03-05T23:00:00",
+      "url": "https://first-thursdays.co.za/"
+    },
+    {
+      "name": "First Thursdays",
+      "start_date": "2026-04-02T16:00:00",
+      "end_date": "2026-04-02T23:00:00",
+      "url": "https://first-thursdays.co.za/"
+    },
+    {
+      "name": "First Thursdays",
+      "start_date": "2026-05-07T16:00:00",
+      "end_date": "2026-05-07T23:00:00",
+      "url": "https://first-thursdays.co.za/"
+    },
+    {
+      "name": "First Thursdays",
+      "start_date": "2026-06-04T16:00:00",
+      "end_date": "2026-06-04T23:00:00",
+      "url": "https://first-thursdays.co.za/"
+    },
+    {
+      "name": "First Thursdays",
+      "start_date": "2026-07-02T16:00:00",
+      "end_date": "2026-07-02T23:00:00",
+      "url": "https://first-thursdays.co.za/"
+    },
+    {
+      "name": "First Thursdays",
+      "start_date": "2026-08-06T16:00:00",
+      "end_date": "2026-08-06T23:00:00",
+      "url": "https://first-thursdays.co.za/"
+    },
+    {
+      "name": "First Thursdays",
+      "start_date": "2026-09-03T16:00:00",
+      "end_date": "2026-09-03T23:00:00",
+      "url": "https://first-thursdays.co.za/"
+    },
+    {
+      "name": "First Thursdays",
+      "start_date": "2026-10-01T16:00:00",
+      "end_date": "2026-10-01T23:00:00",
+      "url": "https://first-thursdays.co.za/"
+    },
+    {
+      "name": "First Thursdays",
+      "start_date": "2026-11-05T16:00:00",
+      "end_date": "2026-11-05T23:00:00",
+      "url": "https://first-thursdays.co.za/"
+    },
+    {
+      "name": "First Thursdays",
+      "start_date": "2026-12-03T16:00:00",
+      "end_date": "2026-12-03T23:00:00",
+      "url": "https://first-thursdays.co.za/"
+    },
+    {
+      "name": "First Thursdays",
+      "start_date": "2027-01-07T16:00:00",
+      "end_date": "2027-01-07T23:00:00",
+      "url": "https://first-thursdays.co.za/"
+    },
+    {
+      "name": "First Thursdays",
+      "start_date": "2027-02-04T16:00:00",
+      "end_date": "2027-02-04T23:00:00",
+      "url": "https://first-thursdays.co.za/"
+    },
+    {
+      "name": "First Thursdays",
+      "start_date": "2027-03-04T16:00:00",
+      "end_date": "2027-03-04T23:00:00",
+      "url": "https://first-thursdays.co.za/"
+    },
+    {
+      "name": "First Thursdays",
+      "start_date": "2027-04-01T16:00:00",
+      "end_date": "2027-04-01T23:00:00",
+      "url": "https://first-thursdays.co.za/"
+    },
+    {
+      "name": "First Thursdays",
+      "start_date": "2027-05-06T16:00:00",
+      "end_date": "2027-05-06T23:00:00",
+      "url": "https://first-thursdays.co.za/"
+    },
+    {
+      "name": "First Thursdays",
+      "start_date": "2027-06-03T16:00:00",
+      "end_date": "2027-06-03T23:00:00",
+      "url": "https://first-thursdays.co.za/"
+    },
+    {
+      "name": "First Thursdays",
+      "start_date": "2027-07-01T16:00:00",
+      "end_date": "2027-07-01T23:00:00",
+      "url": "https://first-thursdays.co.za/"
+    },
+    {
+      "name": "First Thursdays",
+      "start_date": "2027-08-05T16:00:00",
+      "end_date": "2027-08-05T23:00:00",
+      "url": "https://first-thursdays.co.za/"
+    },
+    {
+      "name": "First Thursdays",
+      "start_date": "2027-09-02T16:00:00",
+      "end_date": "2027-09-02T23:00:00",
+      "url": "https://first-thursdays.co.za/"
+    },
+    {
+      "name": "First Thursdays",
+      "start_date": "2027-10-07T16:00:00",
+      "end_date": "2027-10-07T23:00:00",
+      "url": "https://first-thursdays.co.za/"
+    },
+    {
+      "name": "First Thursdays",
+      "start_date": "2027-11-04T16:00:00",
+      "end_date": "2027-11-04T23:00:00",
+      "url": "https://first-thursdays.co.za/"
+    },
+    {
+      "name": "First Thursdays",
+      "start_date": "2027-12-02T16:00:00",
+      "end_date": "2027-12-02T23:00:00",
+      "url": "https://first-thursdays.co.za/"
+    }
+  ]
+}

@@ -13,12 +13,13 @@ Includes:
 - Absa Cape Epic
 - The Gun Run
 - Cape Town Carnival
+- Cape Town Pride Parade
 - Knysna Cycle Tour
 
 Features:
 - Handles '18 - 19 October 2025', '15th of March 2025', 'March 15th, 2025', etc.
 - Ignores events from previous years (only keeps this year or next).
-- Falls back gracefully to generic patterns.
+- Falls back gracefully to hardcoded dates when scraping fails.
 - Outputs events.json with ISO dates.
 """
 
@@ -27,12 +28,13 @@ from __future__ import annotations
 import json
 import logging
 import re
-from datetime import datetime
+from datetime import date, datetime, timedelta, time, timezone
 from typing import Dict, List, Optional, Pattern
 
 import requests
 from bs4 import BeautifulSoup
 from dateutil import parser as date_parser
+from dateutil.easter import easter as _easter_sunday
 
 # ------------------------------------------------------------
 # Config
@@ -47,6 +49,51 @@ MONTHS_REGEX = (
     r"Aug(?:ust)?|Sep(?:t(?:ember)?)?|Oct(?:ober)?|Nov(?:ember)?|Dec(?:ember)?)"
 )
 SEP_REGEX = r"(?:-|–|—|to|until|through|thru)"  # dash or textual range markers
+
+# ------------------------------------------------------------
+# Calendar calculation helpers
+# ------------------------------------------------------------
+
+def nth_weekday_of_month(year: int, month: int, n: int, weekday: int) -> date:
+    """Return the nth occurrence (1-based) of weekday (Mon=0 … Sun=6) in year/month."""
+    first = date(year, month, 1)
+    days_ahead = weekday - first.weekday()
+    if days_ahead < 0:
+        days_ahead += 7
+    return first + timedelta(days=days_ahead) + timedelta(weeks=n - 1)
+
+def last_weekday_of_month(year: int, month: int, weekday: int) -> date:
+    """Return the last occurrence of weekday (Mon=0 … Sun=6) in year/month."""
+    if month == 12:
+        last = date(year + 1, 1, 1) - timedelta(days=1)
+    else:
+        last = date(year, month + 1, 1) - timedelta(days=1)
+    days_back = (last.weekday() - weekday) % 7
+    return last - timedelta(days=days_back)
+
+def cycle_tour_date(year: int) -> date:
+    """Cape Town Cycle Tour: 2nd Sunday of March."""
+    return nth_weekday_of_month(year, 3, 2, 6)
+
+def gun_run_date(year: int) -> date:
+    """The Gun Run: 2nd Sunday of September."""
+    return nth_weekday_of_month(year, 9, 2, 6)
+
+def carnival_date(year: int) -> date:
+    """Cape Town Carnival: Saturday after the Cycle Tour (Cycle Tour Sunday + 6 days)."""
+    return cycle_tour_date(year) + timedelta(days=6)
+
+def pride_date(year: int) -> date:
+    """Cape Town Pride Parade: last Saturday of February."""
+    return last_weekday_of_month(year, 2, 5)
+
+def two_oceans_start_date(year: int) -> date:
+    """Two Oceans Ultra: Easter Saturday."""
+    return _easter_sunday(year) - timedelta(days=1)
+
+def two_oceans_end_date(year: int) -> date:
+    """Two Oceans Half: Easter Sunday."""
+    return _easter_sunday(year)
 
 # ------------------------------------------------------------
 # Utilities
@@ -70,8 +117,8 @@ def safe_get(url: str) -> Optional[str]:
 def html_to_text(html: str) -> str:
     """Convert HTML to visible text and normalize whitespace."""
     soup = BeautifulSoup(html, "html.parser")
-    text = soup.get_text(" ", strip=True)
-    text = re.sub(r"\s+", " ", text)
+    text = soup.get_text()
+    text = re.sub(r"\s+", " ", text).strip()
     return text
 
 def parse_iso_date(day: str, month: str, year: str) -> str:
@@ -155,7 +202,7 @@ def fetch_site(name: str, url: str, site_patterns: Optional[List[Pattern]] = Non
     """Fetch a site, extract visible text, and find the event date."""
     html = safe_get(url)
     if not html:
-        return None
+        return {"name": name, "url": url}
     text = html_to_text(html)
 
     # Try site-specific patterns first
@@ -173,17 +220,37 @@ def fetch_site(name: str, url: str, site_patterns: Optional[List[Pattern]] = Non
     return {"name": name, "url": url}
 
 def fetch_cycle_tour() -> Optional[Dict[str, str]]:
+    name = "Cape Town Cycle Tour"
+    url = "https://www.capetowncycletour.com/"
     patterns = [
         re.compile(rf"(?P<d1>\d{{1,2}})(?:st|nd|rd|th)?\s*{SEP_REGEX}\s*(?P<d2>\d{{1,2}})(?:st|nd|rd|th)?\s*(?:of\s+)?(?P<mon>Mar(?:ch)?)\s*,?\s*(?P<year>20\d{{2}})", re.IGNORECASE),
         re.compile(r"(?P<d1>\d{1,2})(?:st|nd|rd|th)?\s*(?:of\s+)?(?P<mon>Mar(?:ch)?)\s*,?\s*(?P<year>20\d{2})", re.IGNORECASE),
     ]
-    return fetch_site("Cape Town Cycle Tour", "https://www.capetowncycletour.com/", patterns)
+    result = fetch_site(name, url, patterns)
+    if result and result.get("start_date"):
+        return result
+    # Fallback: 2nd Sunday of March
+    today = date.today()
+    for year in range(today.year, today.year + 2):
+        d = cycle_tour_date(year)
+        if d >= today:
+            return {"name": name, "url": url, "start_date": str(d), "end_date": str(d)}
+    return {"name": name, "url": url}
 
 def fetch_two_oceans() -> Optional[Dict[str, str]]:
-    patterns = [
-        re.compile(rf"(?P<d1>\d{{1,2}})(?:st|nd|rd|th)?\s*{SEP_REGEX}\s*(?P<d2>\d{{1,2}})(?:st|nd|rd|th)?\s*(?:of\s+)?(?P<mon>Apr(?:il)?)\s*,?\s*(?P<year>20\d{{2}})", re.IGNORECASE),
-    ]
-    return fetch_site("Two Oceans Marathon", "https://www.twooceansmarathon.org.za/", patterns)
+    """
+    Two Oceans Marathon: Easter Saturday (Ultra) → Easter Sunday (Half).
+    The website is not reliably scrapable, so we calculate from Easter.
+    """
+    name = "Two Oceans Marathon"
+    url = "https://www.twooceansmarathon.org.za/"
+    today = date.today()
+    for year in range(today.year, today.year + 2):
+        start = two_oceans_start_date(year)
+        end = two_oceans_end_date(year)
+        if start >= today:
+            return {"name": name, "url": url, "start_date": str(start), "end_date": str(end)}
+    return {"name": name, "url": url}
 
 def fetch_ct_marathon() -> Optional[Dict[str, str]]:
     patterns = [
@@ -198,24 +265,65 @@ def fetch_cape_epic() -> Optional[Dict[str, str]]:
     return fetch_site("Absa Cape Epic", "https://www.cape-epic.com/", patterns)
 
 def fetch_gun_run() -> Optional[Dict[str, str]]:
-    patterns = [
-        re.compile(rf"(?P<d1>\d{{1,2}})(?:st|nd|rd|th)?\s*{SEP_REGEX}\s*(?P<d2>\d{{1,2}})(?:st|nd|rd|th)?\s*(?:of\s+)?(?P<mon>Sep(?:t(?:ember)?)?)\s*,?\s*(?P<year>20\d{{2}})", re.IGNORECASE),
-    ]
-    return fetch_site("The Gun Run", "https://thegunrun.co.za/", patterns) #TODO there are several of these in the year
+    # 2nd Sunday of September
+    # Source: https://thegunrun.co.za/
+    name = "The Gun Run"
+    url = "https://thegunrun.co.za/"
+    today = date.today()
+    for year in range(today.year, today.year + 2):
+        d = gun_run_date(year)
+        if d >= today:
+            return {"name": name, "url": url, "start_date": str(d), "end_date": str(d)}
+    return {"name": name, "url": url}
 
 def fetch_cape_town_carnival() -> Optional[Dict[str, str]]:
-    patterns = [
-        re.compile(r"(?P<d1>\d{1,2})(?:st|nd|rd|th)?\s*(?:of\s+)?(?P<mon>Mar(?:ch)?)\s*,?\s*(?P<year>20\d{2})", re.IGNORECASE),
-    ]
-    year = datetime.now().year
-    url = f"https://capetowncarnival.com/{year}-carnival/"
-    return fetch_site("Cape Town Carnival", url, patterns)
+    # Saturday after the Cycle Tour (Cycle Tour Sunday + 6 days)
+    # Source: https://capetowncarnival.com/
+    name = "Cape Town Carnival"
+    url = "https://capetowncarnival.com/"
+    today = date.today()
+    for year in range(today.year, today.year + 2):
+        d = carnival_date(year)
+        if d >= today:
+            return {"name": name, "url": url, "start_date": str(d), "end_date": str(d)}
+    return {"name": name, "url": url}
+
+def fetch_cape_town_pride() -> Optional[Dict[str, str]]:
+    # Last Saturday of February each year
+    # Source: https://cptpride.org/
+    name = "Cape Town Pride Parade"
+    url = "https://cptpride.org/"
+    today = date.today()
+    for year in range(today.year, today.year + 2):
+        d = pride_date(year)
+        if d >= today:
+            return {"name": name, "url": url, "start_date": str(d), "end_date": str(d)}
+    return {"name": name, "url": url}
 
 def fetch_knysna_cycle_tour() -> Optional[Dict[str, str]]:
     patterns = [
-        re.compile(rf"(?P<d1>\d{{1,2}})(?:st|nd|rd|th)?\s*(?P<mon1>Jun(?:e)?)\s*{SEP_REGEX}\s*(?P<d2>\d{{1,2}})(?:st|nd|rd|th)?\s*(?P<mon2>Jul(?:y)?)\s*,?\s*(?P<year>20\d{{2}})", re.IGNORECASE),
+        re.compile(rf"(?P<d1>\d{{1,2}})(?:st|nd|rd|th)?\s*(?P<mon1>June?)\s*{SEP_REGEX}\s*(?P<d2>\d{{1,2}})(?:st|nd|rd|th)?\s*(?P<mon2>July?)\s*,?\s*(?P<year>20\d{{2}})", re.IGNORECASE),
     ]
     return fetch_site("Knysna Cycle Tour", "https://knysnacycle.co.za/", patterns)
+
+def get_first_thursdays(year: int) -> List[Dict[str, str]]:
+    """Return a list of 'First Thursdays' events for each month in the given year."""
+    events = []
+    for month in range(1, 13):
+        # Find the first day of the month
+        dt = datetime(year, month, 1)
+        # Find the first Thursday (weekday 3)
+        while dt.weekday() != 3:
+            dt += timedelta(days=1)
+        start_dt = datetime.combine(dt.date(), time(16, 0))
+        end_dt = datetime.combine(dt.date(), time(23, 0))
+        events.append({
+            "name": "First Thursdays",
+            "start_date": start_dt.isoformat(),
+            "end_date": end_dt.isoformat(),
+            "url": "https://first-thursdays.co.za/"
+        })
+    return events
 
 # ------------------------------------------------------------
 # Runner
@@ -229,6 +337,7 @@ def fetch_all_events() -> List[Dict[str, str]]:
         fetch_cape_epic,
         fetch_gun_run,
         fetch_cape_town_carnival,
+        fetch_cape_town_pride,
         fetch_knysna_cycle_tour,
     ]
     results: List[Dict[str, str]] = []
@@ -240,11 +349,15 @@ def fetch_all_events() -> List[Dict[str, str]]:
                 results.append(data)
         except Exception as e:
             logging.error(f"Extractor error in {fn.__name__}: {e}")
+    # Add First Thursdays events for this year and next year
+    now = datetime.now().year
+    results.extend(get_first_thursdays(now))
+    results.extend(get_first_thursdays(now + 1))
     return results
 
 def main() -> None:
     events = fetch_all_events()
-    out = {"updated": datetime.utcnow().isoformat(), "events": events}
+    out = {"updated": datetime.now(timezone.utc).isoformat(), "events": events}
     with open("events.json", "w", encoding="utf-8") as f:
         json.dump(out, f, indent=2, ensure_ascii=False)
     logging.info(f"Saved {len(events)} events to events.json")

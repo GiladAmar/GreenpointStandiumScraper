@@ -1,12 +1,14 @@
 from datetime import datetime, timedelta
-from ics import Calendar, Event
-import requests
-from typing import List, Any
-from dateutil import parser as date_parser
 from test import fetch_all_events
+from typing import Any, List
+
+import requests
+from dateutil import parser as date_parser
+from ics import Calendar, Event
 
 url = "https://content-dhlstadium.azurewebsites.net/api/events?filters[event][daterange][start][$gte]=2025-09-21T14:39:46.411Z&populate[0]=event.image&populate[1]=event.daterange&populate[2]=thumbnail"
 resp = requests.get(url).json()
+
 
 def add_minstrel_parade(years: List[int]) -> List[Event]:
     """
@@ -25,6 +27,7 @@ def add_minstrel_parade(years: List[int]) -> List[Event]:
         event.description = "The Cape Town Minstrel Carnival, also known as Kaapse Klopse, is a large minstrel festival held annually on January 2 in Cape Town, South Africa."
         events.append(event)
     return events
+
 
 def add_first_thursdays(years: List[int]) -> List[Event]:
     """
@@ -49,6 +52,7 @@ def add_first_thursdays(years: List[int]) -> List[Event]:
             event.description = "Monthly art and culture event in Cape Town."
             events.append(event)
     return events
+
 
 def get_api_events(resp: Any) -> List[Event]:
     """
@@ -82,6 +86,7 @@ def get_api_events(resp: Any) -> List[Event]:
                 events.append(event)
     return events
 
+
 def add_cape_town_events() -> List[Event]:
     """
     Fetch Cape Town major events via test.py scrapers and return as Event objects.
@@ -98,21 +103,30 @@ def add_cape_town_events() -> List[Event]:
         for item in data:
             if not item.get("start_date"):
                 continue
-            event = Event()
-            event.name = item["name"]
-            start = datetime.strptime(item["start_date"], "%Y-%m-%d")
-            end = datetime.strptime(item.get("end_date", item["start_date"]), "%Y-%m-%d")
-            event.begin = start.replace(hour=0, minute=0, second=0)
-            event.end = end.replace(hour=23, minute=59, second=59)
-            events.append(event)
+            # Skip events with datetime strings (e.g. First Thursdays — added separately)
+            if "T" in item["start_date"]:
+                continue
+            try:
+                event = Event()
+                event.name = item["name"]
+                start = datetime.strptime(item["start_date"], "%Y-%m-%d")
+                end = datetime.strptime(
+                    item.get("end_date", item["start_date"]), "%Y-%m-%d"
+                )
+                event.begin = start.replace(hour=0, minute=0, second=0)
+                event.end = end.replace(hour=23, minute=59, second=59)
+                events.append(event)
+            except Exception as e:
+                print(f"Warning: Skipping event '{item.get('name')}': {e}")
     except Exception as e:
         print(f"Warning: Failed to fetch Cape Town events: {e}")
     return events
 
+
 def get_event_start_dt(event: Event) -> datetime:
     """Return the event's start datetime as a datetime object."""
     begin = event.begin
-    if hasattr(begin, 'datetime'):
+    if hasattr(begin, "datetime"):
         return begin.datetime
     if isinstance(begin, datetime):
         return begin
@@ -124,10 +138,16 @@ def get_event_start_dt(event: Event) -> datetime:
             return datetime.max
     return datetime.max
 
+
 cal: Calendar = Calendar()
 
 now: int = datetime.now().year
-all_events: List[Event] = get_api_events(resp) + add_first_thursdays([now, now+1]) + add_minstrel_parade([now, now+1]) + add_cape_town_events()
+all_events: List[Event] = (
+    get_api_events(resp)
+    + add_first_thursdays([now, now + 1])
+    + add_minstrel_parade([now, now + 1])
+    + add_cape_town_events()
+)
 # Sort events by start datetime robustly
 all_events.sort(key=get_event_start_dt)
 for event in all_events:
