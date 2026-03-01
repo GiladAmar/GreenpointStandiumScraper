@@ -3,6 +3,7 @@ from ics import Calendar, Event
 import requests
 from typing import List, Any
 from dateutil import parser as date_parser
+from test import fetch_all_events
 
 url = "https://content-dhlstadium.azurewebsites.net/api/events?filters[event][daterange][start][$gte]=2025-09-21T14:39:46.411Z&populate[0]=event.image&populate[1]=event.daterange&populate[2]=thumbnail"
 resp = requests.get(url).json()
@@ -81,6 +82,33 @@ def get_api_events(resp: Any) -> List[Event]:
                 events.append(event)
     return events
 
+def add_cape_town_events() -> List[Event]:
+    """
+    Fetch Cape Town major events via test.py scrapers and return as Event objects.
+
+    Events include: Cape Town Cycle Tour, Two Oceans Marathon, Sanlam Cape Town
+    Marathon, Absa Cape Epic, The Gun Run, Cape Town Carnival, Knysna Cycle Tour.
+
+    Returns:
+        List[Event]: List of Event objects for Cape Town major events.
+    """
+    events: List[Event] = []
+    try:
+        data = fetch_all_events()
+        for item in data:
+            if not item.get("start_date"):
+                continue
+            event = Event()
+            event.name = item["name"]
+            start = datetime.strptime(item["start_date"], "%Y-%m-%d")
+            end = datetime.strptime(item.get("end_date", item["start_date"]), "%Y-%m-%d")
+            event.begin = start.replace(hour=0, minute=0, second=0)
+            event.end = end.replace(hour=23, minute=59, second=59)
+            events.append(event)
+    except Exception as e:
+        print(f"Warning: Failed to fetch Cape Town events: {e}")
+    return events
+
 def get_event_start_dt(event: Event) -> datetime:
     """Return the event's start datetime as a datetime object."""
     begin = event.begin
@@ -99,7 +127,7 @@ def get_event_start_dt(event: Event) -> datetime:
 cal: Calendar = Calendar()
 
 now: int = datetime.now().year
-all_events: List[Event] = get_api_events(resp) + add_first_thursdays([now, now+1]) + add_minstrel_parade([now, now+1])
+all_events: List[Event] = get_api_events(resp) + add_first_thursdays([now, now+1]) + add_minstrel_parade([now, now+1]) + add_cape_town_events()
 # Sort events by start datetime robustly
 all_events.sort(key=get_event_start_dt)
 for event in all_events:
