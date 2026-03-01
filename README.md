@@ -28,3 +28,23 @@ You can add this .ics link to your preferred calendar app:
 ✅ The calendar auto-updates monthly — no manual refresh needed.
 
 💡 Perfect for staying on top of concerts, matches, and other events at the DHL Stadium.
+
+## 📋 Events included
+
+The calendar aggregates events from multiple sources:
+
+### DHL Stadium (via official API)
+Live events pulled from the DHL Stadium API, including concerts, rugby matches, and other stadium events.
+
+### Recurring Cape Town events (scraped from official websites)
+| Event | Typical timing |
+|---|---|
+| Cape Town Cycle Tour | March |
+| Absa Cape Epic | March |
+| Cape Town Carnival | March |
+| Two Oceans Marathon | April |
+| Knysna Cycle Tour | June–July |
+| The Gun Run | September |
+| Sanlam Cape Town Marathon | October |
+| Minstrel Parade (Kaapse Klopse) | 2 January |
+| First Thursdays | First Thursday of every month, 16:00–23:00 |
