@@ -1,9 +1,9 @@
 name: Generate DHL Stadium ICS
 
 on:
-  # Schedule: 01:00 UTC on the 1st of every month
+  # Schedule: 01:00 UTC every 2 weeks (1st and 15th of every month)
   schedule:
-    - cron: '0 1 1 * *'
+    - cron: '0 1 1,15 * *'
 
   # Run on push to master branch
   push:
