@@ -1,10 +1,13 @@
 from datetime import datetime, timedelta
+from zoneinfo import ZoneInfo
 from test import fetch_all_events
 from typing import Any, List
 
 import requests
 from dateutil import parser as date_parser
 from ics import Calendar, Event
+
+SAST = ZoneInfo("Africa/Johannesburg")
 
 url = "https://content-dhlstadium.azurewebsites.net/api/events?filters[event][daterange][start][$gte]=2025-09-21T14:39:46.411Z&populate[0]=event.image&populate[1]=event.daterange&populate[2]=thumbnail"
 resp = requests.get(url).json()
@@ -22,8 +25,8 @@ def add_minstrel_parade(years: List[int]) -> List[Event]:
     for year in years:
         event = Event()
         event.name = "Minstrel Parade (Kaapse Klopse)"
-        event.begin = datetime(year, 1, 2, 0, 0, 0)
-        event.end = datetime(year, 1, 2, 23, 59, 59)
+        event.begin = datetime(year, 1, 2, 0, 0, 0, tzinfo=SAST)
+        event.end = datetime(year, 1, 2, 23, 59, 59, tzinfo=SAST)
         event.description = "The Cape Town Minstrel Carnival, also known as Kaapse Klopse, is a large minstrel festival held annually on January 2 in Cape Town, South Africa."
         events.append(event)
     return events
@@ -43,8 +46,8 @@ def add_first_thursdays(years: List[int]) -> List[Event]:
             dt = datetime(year, month, 1)
             while dt.weekday() != 3:
                 dt += timedelta(days=1)
-            start_dt = dt.replace(hour=16, minute=0, second=0)
-            end_dt = dt.replace(hour=23, minute=0, second=0)
+            start_dt = dt.replace(hour=16, minute=0, second=0, tzinfo=SAST)
+            end_dt = dt.replace(hour=23, minute=0, second=0, tzinfo=SAST)
             event = Event()
             event.name = "First Thursdays"
             event.begin = start_dt
@@ -78,7 +81,8 @@ def get_api_events(resp: Any) -> List[Event]:
                     event.begin = start
                 if not end or end <= start:
                     start_dt = datetime.fromisoformat(start.replace("Z", "+00:00"))
-                    event.end = start_dt.replace(hour=23, minute=59, second=59)
+                    start_sast = start_dt.astimezone(SAST)
+                    event.end = start_sast.replace(hour=23, minute=59, second=59)
                 else:
                     event.end = end
                 event.name = ev.get("title", "No title")
@@ -113,8 +117,8 @@ def add_cape_town_events() -> List[Event]:
                 end = datetime.strptime(
                     item.get("end_date", item["start_date"]), "%Y-%m-%d"
                 )
-                event.begin = start.replace(hour=0, minute=0, second=0)
-                event.end = end.replace(hour=23, minute=59, second=59)
+                event.begin = start.replace(hour=0, minute=0, second=0, tzinfo=SAST)
+                event.end = end.replace(hour=23, minute=59, second=59, tzinfo=SAST)
                 events.append(event)
             except Exception as e:
                 print(f"Warning: Skipping event '{item.get('name')}': {e}")
