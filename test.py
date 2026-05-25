@@ -30,6 +30,7 @@ import logging
 import re
 from datetime import date, datetime, timedelta, time, timezone
 from typing import Dict, List, Optional, Pattern
+from zoneinfo import ZoneInfo
 
 import requests
 from bs4 import BeautifulSoup
@@ -44,9 +45,11 @@ logging.basicConfig(level=logging.INFO, format="%(levelname)s: %(message)s")
 session = requests.Session()
 session.headers.update({"User-Agent": "CapeTownTrafficEventsBot/1.5"})
 
+SAST = ZoneInfo("Africa/Johannesburg")
+
 MONTHS_REGEX = (
-    r"(Jan(?:uary)?|Feb(?:ruary)?|Mar(?:ch)?|Apr(?:il)?|May|Jun(?:e)?|Jul(?:y)?|"
-    r"Aug(?:ust)?|Sep(?:t(?:ember)?)?|Oct(?:ober)?|Nov(?:ember)?|Dec(?:ember)?)"
+    r"(Jan(?:uary)?|Feb(?:ruary)?|Mar(?:ch)?|Apr(?:il)?|May|Jun(?:e)?|Jul(?:y)?"
+    r"|Aug(?:ust)?|Sep(?:t(?:ember)?)?|Oct(?:ober)?|Nov(?:ember)?|Dec(?:ember)?)"
 )
 SEP_REGEX = r"(?:-|–|—|to|until|through|thru)"  # dash or textual range markers
 
@@ -156,7 +159,7 @@ def try_patterns(text: str, patterns: List[Pattern]) -> Optional[Dict[str, str]]
             end = parse_iso_date(gd["d2"], gd["mon"], year)
             return {"start_date": start, "end_date": end}
 
-        # Single date e.g. '15th of March 2025'
+        # Single date e.g. '15th of March 2025' or 'March 15th, 2025'
         if gd.get("d1") and gd.get("mon"):
             day = parse_iso_date(gd["d1"], gd["mon"], year)
             return {"start_date": day, "end_date": day}
@@ -315,8 +318,8 @@ def get_first_thursdays(year: int) -> List[Dict[str, str]]:
         # Find the first Thursday (weekday 3)
         while dt.weekday() != 3:
             dt += timedelta(days=1)
-        start_dt = datetime.combine(dt.date(), time(16, 0))
-        end_dt = datetime.combine(dt.date(), time(23, 0))
+        start_dt = datetime.combine(dt.date(), time(16, 0), tzinfo=SAST)
+        end_dt = datetime.combine(dt.date(), time(23, 0), tzinfo=SAST)
         events.append({
             "name": "First Thursdays",
             "start_date": start_dt.isoformat(),

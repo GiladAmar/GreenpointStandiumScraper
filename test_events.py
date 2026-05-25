@@ -5,13 +5,13 @@ Run with:  pytest test_events.py -v
 """
 
 import pytest
-from datetime import date, timedelta
+from datetime import date, datetime, timedelta, timezone
 from unittest.mock import patch
 
 import test as events
 
 
-# ── nth_weekday_of_month ──────────────────────────────────────────────────────
+# ── nth_weekday_of_month ────────────────────────────────────────────────────────────────────────────────
 
 class TestNthWeekdayOfMonth:
     def test_second_sunday_march_2025(self):
@@ -42,7 +42,7 @@ class TestNthWeekdayOfMonth:
             assert 8 <= d.day <= 14, f"{year}: {d} is outside 2nd-week range"
 
 
-# ── last_weekday_of_month ─────────────────────────────────────────────────────
+# ── last_weekday_of_month ──────────────────────────────────────────────────────────────────────────────────
 
 class TestLastWeekdayOfMonth:
     def test_last_saturday_february_2025(self):
@@ -71,7 +71,7 @@ class TestLastWeekdayOfMonth:
         assert d.weekday() == 4
 
 
-# ── Event date calculation functions ─────────────────────────────────────────
+# ── Event date calculation functions ──────────────────────────────────────────────────────────────────
 
 class TestCycleTourDate:
     def test_2025(self):
@@ -183,7 +183,7 @@ class TestTwoOceansDates:
             assert events.two_oceans_end_date(year) == events.two_oceans_start_date(year) + timedelta(days=1)
 
 
-# ── Fetch function structure (network mocked out) ─────────────────────────────
+# ── Fetch function structure (network mocked out) ────────────────────────────────────────────────────
 
 CALCULATED_FETCHERS = [
     ("fetch_cycle_tour",       "Cape Town Cycle Tour"),
@@ -241,3 +241,49 @@ def test_end_date_not_before_start_date(fn_name, _):
     start = date.fromisoformat(result["start_date"])
     end   = date.fromisoformat(result["end_date"])
     assert end >= start
+
+
+# ── get_first_thursdays timezone ───────────────────────────────────────────────────────────────────────────
+
+class TestGetFirstThursdays:
+    def test_returns_twelve_events(self):
+        result = events.get_first_thursdays(2026)
+        assert len(result) == 12
+
+    def test_all_events_are_thursdays(self):
+        for ev in events.get_first_thursdays(2026):
+            start = datetime.fromisoformat(ev["start_date"])
+            assert start.weekday() == 3, f"{ev['start_date']} is not a Thursday"
+
+    def test_start_times_are_timezone_aware_sast(self):
+        from datetime import timedelta
+        for ev in events.get_first_thursdays(2026):
+            start = datetime.fromisoformat(ev["start_date"])
+            assert start.tzinfo is not None, "start_date must be timezone-aware"
+            assert start.utcoffset() == timedelta(hours=2), "start_date must be SAST (UTC+2)"
+
+    def test_end_times_are_timezone_aware_sast(self):
+        from datetime import timedelta
+        for ev in events.get_first_thursdays(2026):
+            end = datetime.fromisoformat(ev["end_date"])
+            assert end.tzinfo is not None, "end_date must be timezone-aware"
+            assert end.utcoffset() == timedelta(hours=2), "end_date must be SAST (UTC+2)"
+
+    def test_start_hour_is_1600_sast(self):
+        for ev in events.get_first_thursdays(2026):
+            start = datetime.fromisoformat(ev["start_date"])
+            assert start.hour == 16 and start.minute == 0
+
+    def test_end_hour_is_2300_sast(self):
+        for ev in events.get_first_thursdays(2026):
+            end = datetime.fromisoformat(ev["end_date"])
+            assert end.hour == 23 and end.minute == 0
+
+    def test_end_does_not_cross_midnight_sast(self):
+        """Events must not spill into the next day in SAST."""
+        for ev in events.get_first_thursdays(2026):
+            start = datetime.fromisoformat(ev["start_date"])
+            end = datetime.fromisoformat(ev["end_date"])
+            assert end.date() == start.date(), (
+                f"Event on {start.date()} ends on {end.date()} (crosses midnight in SAST)"
+            )
