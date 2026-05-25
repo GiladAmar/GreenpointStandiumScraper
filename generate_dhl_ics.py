@@ -25,8 +25,9 @@ def add_minstrel_parade(years: List[int]) -> List[Event]:
     for year in years:
         event = Event()
         event.name = "Minstrel Parade (Kaapse Klopse)"
-        event.begin = datetime(year, 1, 2, 0, 0, 0, tzinfo=SAST)
-        event.end = datetime(year, 1, 2, 23, 59, 59, tzinfo=SAST)
+        event.begin = datetime(year, 1, 2)
+        event.end = datetime(year, 1, 3)  # exclusive end per iCal VALUE=DATE convention
+        event.make_all_day()
         event.description = "The Cape Town Minstrel Carnival, also known as Kaapse Klopse, is a large minstrel festival held annually on January 2 in Cape Town, South Africa."
         events.append(event)
     return events
@@ -117,8 +118,9 @@ def add_cape_town_events() -> List[Event]:
                 end = datetime.strptime(
                     item.get("end_date", item["start_date"]), "%Y-%m-%d"
                 )
-                event.begin = start.replace(hour=0, minute=0, second=0, tzinfo=SAST)
-                event.end = end.replace(hour=23, minute=59, second=59, tzinfo=SAST)
+                event.begin = start
+                event.end = end + timedelta(days=1)  # exclusive end per iCal VALUE=DATE convention
+                event.make_all_day()
                 events.append(event)
             except Exception as e:
                 print(f"Warning: Skipping event '{item.get('name')}': {e}")
