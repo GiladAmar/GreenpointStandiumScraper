@@ -2,471 +2,471 @@ BEGIN:VCALENDAR
 VERSION:2.0
 PRODID:ics.py - http://git.io/lLljaA
 BEGIN:VEVENT
-DESCRIPTION:SACO 2025 International Conference | 4–5 November at DHL Stadium
-DTEND:20251104T200000Z
-DTSTART:20251104T050000Z
-SUMMARY:Creative & Sports Economy Futures 2025
-UID:92a4a55e-d64e-4123-97b0-5c2f05912db2@92a4.org
-END:VEVENT
-BEGIN:VEVENT
-DESCRIPTION:HSBC SVNS returns to DHL Stadium for a weekend of world-class rugby\, live music\, food\, and unforgettable vibes.
-DTEND:20251206T215959Z
-DTSTART:20251206T080000Z
-SUMMARY:HSBC SVNS Cape Town
-UID:c6496ad5-2545-470b-a5a8-55f1e8837173@c649.org
-END:VEVENT
-BEGIN:VEVENT
-DESCRIPTION:Monthly art and culture event in Cape Town.
-DTEND:20260806T210000Z
-DTSTART:20260806T140000Z
-SUMMARY:First Thursdays
-UID:4f50dcf7-dbf8-4bbd-b542-d51077f0e506@4f50.org
-END:VEVENT
-BEGIN:VEVENT
-DTSTART;VALUE=DATE:20270227
-DTEND;VALUE=DATE:20270301
-SUMMARY:Cape Town Pride Parade
-UID:e53049c2-78f3-4fd5-b27d-dc8d5814fbe3@e530.org
-END:VEVENT
-BEGIN:VEVENT
-DESCRIPTION:DHL Stormers takes on Vodacom Bulls.
-DTEND:20260103T215959Z
-DTSTART:20260103T160000Z
-SUMMARY:DHL Stormers vs Vodacom Bulls 
-UID:773da208-b831-4bd6-9424-1a7ac13cf9f7@773d.org
-END:VEVENT
-BEGIN:VEVENT
-DESCRIPTION:DHL Stormers take on Leicester Tigers.
-DTEND:20260117T215959Z
-DTSTART:20260117T151500Z
-SUMMARY:DHL Stormers vs Leicester Tigers 
-UID:5c7c9b5f-b2ea-49d3-9543-27d0debe1444@5c7c.org
-END:VEVENT
-BEGIN:VEVENT
-DESCRIPTION:Monthly art and culture event in Cape Town.
-DTEND:20270204T210000Z
-DTSTART:20270204T140000Z
-SUMMARY:First Thursdays
-UID:5cd07587-9efa-47a2-958d-e6423a3b044f@5cd0.org
-END:VEVENT
-BEGIN:VEVENT
-DESCRIPTION:Experience three days of world-class artistry as the South African International Tattoo Convention takes place from 13–15 March 2026.
-DTEND:20260315T215959Z
-DTSTART:20260315T080000Z
-SUMMARY:SA International Tattoo Convention
-UID:3cfcbe56-98e4-4596-850d-eb3642360c8e@3cfc.org
-END:VEVENT
-BEGIN:VEVENT
-DESCRIPTION:Monthly art and culture event in Cape Town.
-DTEND:20270107T210000Z
-DTSTART:20270107T140000Z
-SUMMARY:First Thursdays
-UID:7d010071-dffb-438b-a207-fcc8301dd7c6@7d01.org
-END:VEVENT
-BEGIN:VEVENT
-DESCRIPTION:Monthly art and culture event in Cape Town.
-DTEND:20270506T210000Z
-DTSTART:20270506T140000Z
-SUMMARY:First Thursdays
-UID:b7a62b3f-c3d8-4f8d-ac1d-dc090f843a42@b7a6.org
-END:VEVENT
-BEGIN:VEVENT
-DESCRIPTION:DHL Stormers take on Hollywoodbets Sharks.
-DTEND:20260124T215959Z
-DTSTART:20260124T173000Z
-SUMMARY:DHL Stormers vs Hollywoodbets Sharks 
-UID:34304158-44a4-413f-89bf-7111d4dfbd38@3430.org
-END:VEVENT
-BEGIN:VEVENT
-DESCRIPTION:Monthly art and culture event in Cape Town.
-DTEND:20270902T210000Z
-DTSTART:20270902T140000Z
-SUMMARY:First Thursdays
-UID:259928d5-1be1-44ce-905b-6b6db07728dc@2599.org
-END:VEVENT
-BEGIN:VEVENT
-DESCRIPTION:Monthly art and culture event in Cape Town.
-DTEND:20260507T210000Z
-DTSTART:20260507T140000Z
-SUMMARY:First Thursdays
-UID:ac1456bb-8b0b-490a-a9b3-826247427624@ac14.org
-END:VEVENT
-BEGIN:VEVENT
-DESCRIPTION:The DHL Stormers take on the legendary All Blacks on 7 August for the friendly match part of the Rugby's Greatest Rivalry Tour.
-DTEND:20260807T215959Z
-DTSTART:20260807T170000Z
-SUMMARY:DHL Stormers vs All Blacks 
-UID:67895ddf-0f4b-43f3-bcff-d0400c94bbf1@6789.org
-END:VEVENT
-BEGIN:VEVENT
 DESCRIPTION:Monthly art and culture event in Cape Town.
 DTEND:20260205T210000Z
 DTSTART:20260205T140000Z
 SUMMARY:First Thursdays
-UID:908af8a3-60ed-408e-a81d-7112fba0116e@908a.org
-END:VEVENT
-BEGIN:VEVENT
-DESCRIPTION:Stellenbosch FC takes on CR Belouizdad in the second round of the CAF Confederation Cup.
-DTEND:20260201T215959Z
-DTSTART:20260201T130000Z
-SUMMARY:Stellenbosch FC vs CR Belouizdad
-UID:3ed0eefb-4662-4107-b8fd-90d914d43583@3ed0.org
-END:VEVENT
-BEGIN:VEVENT
-DESCRIPTION:DHL Stormers take on Connacht Rugby. DHL Stormers XXIII will also take Vodacom Bulls U23 in a friendly match.\n
-DTEND:20260418T215959Z
-DTSTART:20260418T114500Z
-SUMMARY:DHL Stormers vs Connacht Rugby
-UID:8076d452-e8f4-46e5-8c6a-1c45a65c282e@8076.org
-END:VEVENT
-BEGIN:VEVENT
-DESCRIPTION:DHL Stormers take on  Dragons RFC. 
-DTEND:20260322T215959Z
-DTSTART:20260322T130000Z
-SUMMARY:DHL Stormers vs Dragons
-UID:2a8ea673-0226-443e-b01d-6744f2a47675@2a8e.org
-END:VEVENT
-BEGIN:VEVENT
-DESCRIPTION:DHL Stormers take on Edinburgh Rugby. 
-DTEND:20260328T215959Z
-DTSTART:20260328T170000Z
-SUMMARY:DHL Stormers vs Edinburgh
-UID:a52e1043-4c66-4181-8139-2fa46cf0b0c1@a52e.org
-END:VEVENT
-BEGIN:VEVENT
-DESCRIPTION:Monthly art and culture event in Cape Town.
-DTEND:20270401T210000Z
-DTSTART:20270401T140000Z
-SUMMARY:First Thursdays
-UID:89745d46-faf2-401a-82dc-dc315f4e86a1@8974.org
-END:VEVENT
-BEGIN:VEVENT
-DESCRIPTION:Join us for the season finale of the 2025 FIM World Supercross Championship on December 13.\n
-DTEND:20251213T215959Z
-DTSTART:20251213T171000Z
-SUMMARY:World Supercross Championship 
-UID:d82f4f36-70dd-4b25-8396-b9ce8394ebb4@d82f.org
-END:VEVENT
-BEGIN:VEVENT
-DESCRIPTION:South Africa will face Panama in a FIFA International Friendly match.
-DTEND:20260331T215959Z
-DTSTART:20260331T173000Z
-SUMMARY:South Africa vs Panama
-UID:54a5e354-b758-446d-b614-1e6082b61f7c@54a5.org
-END:VEVENT
-BEGIN:VEVENT
-DESCRIPTION:Monthly art and culture event in Cape Town.
-DTEND:20270304T210000Z
-DTSTART:20270304T140000Z
-SUMMARY:First Thursdays
-UID:7252715e-ff00-4d6e-ac8a-3d59a2952723@7252.org
-END:VEVENT
-BEGIN:VEVENT
-DESCRIPTION:Monthly art and culture event in Cape Town.
-DTEND:20260101T210000Z
-DTSTART:20260101T140000Z
-SUMMARY:First Thursdays
-UID:0c79a175-634a-4da8-b617-478030af3a9a@0c79.org
-END:VEVENT
-BEGIN:VEVENT
-DESCRIPTION:Monthly art and culture event in Cape Town.
-DTEND:20271104T210000Z
-DTSTART:20271104T140000Z
-SUMMARY:First Thursdays
-UID:5bf9fae5-62e2-4afa-819b-4f5505f60306@5bf9.org
-END:VEVENT
-BEGIN:VEVENT
-DESCRIPTION:SACO 2025 International Conference | 4–5 November at DHL Stadium
-DTEND:20251105T153000Z
-DTSTART:20251105T050000Z
-SUMMARY:Creative & Sports Economy Futures 2025
-UID:cf4003f2-3bec-4a06-8fb7-ab3b3834ccd3@cf40.org
-END:VEVENT
-BEGIN:VEVENT
-DESCRIPTION:Experience three days of world-class artistry as the South African International Tattoo Convention takes place from 13–15 March 2026.
-DTEND:20260314T215959Z
-DTSTART:20260314T080000Z
-SUMMARY:SA International Tattoo Convention
-UID:4730a190-b224-47b2-9a88-2839a8bc31ce@4730.org
-END:VEVENT
-BEGIN:VEVENT
-DTSTART;VALUE=DATE:20270102
-DTEND;VALUE=DATE:20270104
-DESCRIPTION:The Cape Town Minstrel Carnival\, also known as Kaapse Klopse\, is a large minstrel festival held annually on January 2 in Cape Town\, South Africa.
-SUMMARY:Minstrel Parade (Kaapse Klopse)
-UID:f23adb1b-da5b-4987-9453-035c92791868@f23a.org
-END:VEVENT
-BEGIN:VEVENT
-DESCRIPTION:DHL Stormers takes on Emirates Lions on 20 December 2025. 
-DTEND:20251220T215959Z
-DTSTART:20251220T133000Z
-SUMMARY:DHL Stormers vs Emirates Lions 
-UID:b2b08140-11a1-493b-8d0a-d301abae19c3@b2b0.org
-END:VEVENT
-BEGIN:VEVENT
-DTSTART;VALUE=DATE:20270327
-DTEND;VALUE=DATE:20270330
-SUMMARY:Two Oceans Marathon
-UID:26a0c8ba-9f8f-488b-9f94-46a3c17c58ac@26a0.org
-END:VEVENT
-BEGIN:VEVENT
-DESCRIPTION:DHL Stormers take on Glasgow Warriors. DHL Stormers XXIII will also take on the Sharks in a friendly match.
-DTEND:20260425T215959Z
-DTSTART:20260425T114500Z
-SUMMARY:DHL Stormers vs Glasgow Warriors
-UID:21411361-edfc-43dc-bf1a-dd70ad747b5b@2141.org
-END:VEVENT
-BEGIN:VEVENT
-DESCRIPTION:Get ready for three days of cycling excitement as the Cape Town Cycle Tour Expo returns from 5–7 March 2026.
-DTEND:20260307T215959Z
-DTSTART:20260307T070000Z
-SUMMARY:Cape Town Cycle Tour Expo
-UID:3ab8f6d5-b801-4c2d-a8f3-ca25a30bc09d@3ab8.org
-END:VEVENT
-BEGIN:VEVENT
-DTSTART;VALUE=DATE:20260414
-DTEND;VALUE=DATE:20260420
-SUMMARY:Absa Cape Epic
-UID:bbe33630-3c23-4957-9a30-f4d002bc22b4@bbe3.org
-END:VEVENT
-BEGIN:VEVENT
-DESCRIPTION:Monthly art and culture event in Cape Town.
-DTEND:20270701T210000Z
-DTSTART:20270701T140000Z
-SUMMARY:First Thursdays
-UID:98199b66-7a72-4eb8-acec-27017ef6f71d@9819.org
-END:VEVENT
-BEGIN:VEVENT
-DESCRIPTION:Monthly art and culture event in Cape Town.
-DTEND:20260402T210000Z
-DTSTART:20260402T140000Z
-SUMMARY:First Thursdays
-UID:48484d4a-7a97-436d-b253-d9bab42cefe0@4848.org
-END:VEVENT
-BEGIN:VEVENT
-DESCRIPTION:Join us for one of the most coveted tasting events on the South African wine calendar.
-DTEND:20251106T215959Z
-DTSTART:20251106T150000Z
-SUMMARY:Caroline's White Wine Review 
-UID:81bd475e-4e8f-4786-bbdd-feb9e910f82a@81bd.org
-END:VEVENT
-BEGIN:VEVENT
-DESCRIPTION:HSBC SVNS returns to DHL Stadium for a weekend of world-class rugby\, live music\, food\, and unforgettable vibes.
-DTEND:20251207T215959Z
-DTSTART:20251207T080000Z
-SUMMARY:HSBC SVNS Cape Town
-UID:08a53c68-67b8-4f8c-8ba7-2262b4e32dab@08a5.org
-END:VEVENT
-BEGIN:VEVENT
-DESCRIPTION:Experience three days of world-class artistry as the South African International Tattoo Convention takes place from 13–15 March 2026.
-DTEND:20260313T215959Z
-DTSTART:20260313T150000Z
-SUMMARY:SA International Tattoo Convention
-UID:2b71382d-ac9e-4d67-975f-468da9f62388@2b71.org
-END:VEVENT
-BEGIN:VEVENT
-DESCRIPTION:Monthly art and culture event in Cape Town.
-DTEND:20261001T210000Z
-DTSTART:20261001T140000Z
-SUMMARY:First Thursdays
-UID:df0b3e25-b1cd-45ea-b472-94c597b832a3@df0b.org
-END:VEVENT
-BEGIN:VEVENT
-DTSTART;VALUE=DATE:20260102
-DTEND;VALUE=DATE:20260104
-DESCRIPTION:The Cape Town Minstrel Carnival\, also known as Kaapse Klopse\, is a large minstrel festival held annually on January 2 in Cape Town\, South Africa.
-SUMMARY:Minstrel Parade (Kaapse Klopse)
-UID:79e867e8-93c0-42f7-a45c-66d0a0ff4240@79e8.org
-END:VEVENT
-BEGIN:VEVENT
-DESCRIPTION:Sanlam Cape Town Marathon Expo & Registration\n
-DTEND:20260521T215959Z
-DTSTART:20260521T070000Z
-SUMMARY:Sanlam Cape Town Marathon Expo
-UID:28e1ee8c-84a6-411c-8674-550f85be13e9@28e1.org
-END:VEVENT
-BEGIN:VEVENT
-DESCRIPTION:Monthly art and culture event in Cape Town.
-DTEND:20270603T210000Z
-DTSTART:20270603T140000Z
-SUMMARY:First Thursdays
-UID:902c5c7b-b6e9-43f2-9bb9-a964e24960fe@902c.org
-END:VEVENT
-BEGIN:VEVENT
-DESCRIPTION:This Summit unites school sport educators\, coaches\, and leaders for two days of learning and collaboration.
-DTEND:20251021T215959Z
-DTSTART:20251021T060000Z
-SUMMARY:Playbook Education School Sports Summit 
-UID:da839906-6022-4e5b-8a2e-cbbfa2dad38c@da83.org
-END:VEVENT
-BEGIN:VEVENT
-DESCRIPTION:Monthly art and culture event in Cape Town.
-DTEND:20271202T210000Z
-DTSTART:20271202T140000Z
-SUMMARY:First Thursdays
-UID:c472926d-cc96-4e3f-8e59-c19cfb1a00aa@c472.org
-END:VEVENT
-BEGIN:VEVENT
-DESCRIPTION:Stellenbosch FC takes on Singida Black Stars in the CAF Confederation Cup.
-DTEND:20260215T215959Z
-DTSTART:20260215T160000Z
-SUMMARY:Stellenbosch FC vs Singida Black Stars 
-UID:d2d5ce01-df3d-4c31-a638-d3983dd957a8@d2d5.org
-END:VEVENT
-BEGIN:VEVENT
-DTSTART;VALUE=DATE:20270314
-DTEND;VALUE=DATE:20270316
-SUMMARY:Cape Town Cycle Tour
-UID:02882f36-2b93-4307-9e9b-20016f00315a@0288.org
-END:VEVENT
-BEGIN:VEVENT
-DTSTART;VALUE=DATE:20270320
-DTEND;VALUE=DATE:20270322
-SUMMARY:Cape Town Carnival
-UID:73ab8e05-742f-4319-9460-b6aec67a8f16@73ab.org
-END:VEVENT
-BEGIN:VEVENT
-DESCRIPTION:Monthly art and culture event in Cape Town.
-DTEND:20271007T210000Z
-DTSTART:20271007T140000Z
-SUMMARY:First Thursdays
-UID:8ee2cc28-66c6-449f-ac25-2154512b4b44@8ee2.org
-END:VEVENT
-BEGIN:VEVENT
-DESCRIPTION:Sanlam Cape Town Marathon Expo & Registration\n
-DTEND:20260523T215959Z
-DTSTART:20260523T080000Z
-SUMMARY:Sanlam Cape Town Marathon Expo
-UID:e43235f4-2472-4175-b3e4-d69fa4121eba@e432.org
-END:VEVENT
-BEGIN:VEVENT
-DESCRIPTION:Monthly art and culture event in Cape Town.
-DTEND:20260903T210000Z
-DTSTART:20260903T140000Z
-SUMMARY:First Thursdays
-UID:82287070-8c4b-43b6-b970-0114278ec559@8228.org
-END:VEVENT
-BEGIN:VEVENT
-DESCRIPTION:Monthly art and culture event in Cape Town.
-DTEND:20260305T210000Z
-DTSTART:20260305T140000Z
-SUMMARY:First Thursdays
-UID:4b5447eb-f51f-4d2e-9b07-b47286f9b76b@4b54.org
-END:VEVENT
-BEGIN:VEVENT
-DESCRIPTION:We're hosting one of the Western Cape’s largest inter-school athletics events\,  for a day of elite competition and school spirit.
-DTEND:20260207T215959Z
-DTSTART:20260207T040000Z
-SUMMARY:DTBS Flashes 
-UID:a16e0aa7-b995-487f-ae9a-cd02bfc44c83@a16e.org
-END:VEVENT
-BEGIN:VEVENT
-DESCRIPTION:Get ready for three days of cycling excitement as the Cape Town Cycle Tour Expo returns from 5–7 March 2026.
-DTEND:20260306T215959Z
-DTSTART:20260306T070000Z
-SUMMARY:Cape Town Cycle Tour Expo
-UID:c15f6450-09f2-4d63-a285-0c90aeb8b898@c15f.org
-END:VEVENT
-BEGIN:VEVENT
-DTSTART;VALUE=DATE:20260712
-DTEND;VALUE=DATE:20260714
-SUMMARY:Knysna Cycle Tour
-UID:7e2a5343-6e81-46a4-b88d-84c33ef79248@7e2a.org
-END:VEVENT
-BEGIN:VEVENT
-DESCRIPTION:DHL Stormers take on Ospreys.
-DTEND:20251003T215959Z
-DTSTART:20251003T170000Z
-SUMMARY:DHL Stormers vs Ospreys 
-UID:291302b5-b59b-40dc-91a7-579cfbf759ff@2913.org
-END:VEVENT
-BEGIN:VEVENT
-DESCRIPTION:Monthly art and culture event in Cape Town.
-DTEND:20260702T210000Z
-DTSTART:20260702T140000Z
-SUMMARY:First Thursdays
-UID:e41b33f8-8025-429a-8b23-f76bc6c080e7@e41b.org
-END:VEVENT
-BEGIN:VEVENT
-DTSTART;VALUE=DATE:20260913
-DTEND;VALUE=DATE:20260915
-SUMMARY:The Gun Run
-UID:cfe69634-69a7-40c1-be31-46e2c71ed97a@cfe6.org
-END:VEVENT
-BEGIN:VEVENT
-DESCRIPTION:Stellenbosch FC takes on Kaizer Chiefs in the  Nedbank Cup Round of 32.
-DTEND:20260204T215959Z
-DTSTART:20260204T170000Z
-SUMMARY:Stellenbosch FC vs Kaizer Chiefs 
-UID:6274a9f2-629f-42a5-a645-140b9d35fc06@6274.org
+UID:ee7e6b54-3ac7-4083-bb62-7ed9d1f7d832@ee7e.org
 END:VEVENT
 BEGIN:VEVENT
 DESCRIPTION:Monthly art and culture event in Cape Town.
 DTEND:20260604T210000Z
 DTSTART:20260604T140000Z
 SUMMARY:First Thursdays
-UID:1f488abb-4567-4b18-b814-6d2b49b69128@1f48.org
+UID:b56cd0f7-8de0-4797-bf24-54958cf8316e@b56c.org
 END:VEVENT
 BEGIN:VEVENT
 DESCRIPTION:Monthly art and culture event in Cape Town.
-DTEND:20261203T210000Z
-DTSTART:20261203T140000Z
+DTEND:20270304T210000Z
+DTSTART:20270304T140000Z
 SUMMARY:First Thursdays
-UID:a79b8af2-b022-4eb2-88bf-38c80a474ddc@a79b.org
+UID:cfa7b583-0049-4289-939c-918a3186825e@cfa7.org
 END:VEVENT
 BEGIN:VEVENT
 DESCRIPTION:Monthly art and culture event in Cape Town.
-DTEND:20270805T210000Z
-DTSTART:20270805T140000Z
+DTEND:20270204T210000Z
+DTSTART:20270204T140000Z
 SUMMARY:First Thursdays
-UID:38f24de9-2996-41a1-8875-88321d517cc2@38f2.org
+UID:e093cfb8-87a7-40e9-883a-dd8a851d1b0d@e093.org
 END:VEVENT
 BEGIN:VEVENT
-DESCRIPTION:Witness the Springboks take on the All Blacks in the Rugby's Greatest Rivalry Tour.
-DTEND:20260829T215959Z
-DTSTART:20260829T150000Z
-SUMMARY:Springboks vs All Blacks 
-UID:04a935ba-26e9-4609-a91f-de38481cad6f@04a9.org
+DESCRIPTION:DHL Stormers take on Hollywoodbets Sharks.
+DTEND:20260124T215959Z
+DTSTART:20260124T173000Z
+SUMMARY:DHL Stormers vs Hollywoodbets Sharks 
+UID:4cfca4e7-4418-44ae-8f65-aacacd068e26@4cfc.org
 END:VEVENT
 BEGIN:VEVENT
-DESCRIPTION:Sanlam Cape Town Marathon Expo & Registration\n
-DTEND:20260522T215959Z
-DTSTART:20260522T070000Z
-SUMMARY:Sanlam Cape Town Marathon Expo
-UID:420d7502-b964-44c3-9aa2-c4bdd12d7d0b@420d.org
-END:VEVENT
-BEGIN:VEVENT
-DESCRIPTION:DHL Stormers takes on Leinster in their first home game of the 2025/6 Vodacom URC season. 
-DTEND:20250926T215959Z
-DTSTART:20250926T170000Z
-SUMMARY:DHL Stormers vs Leinster 
-UID:4e5b2444-b9c8-42ce-bb0f-6e0bd5a3b845@4e5b.org
-END:VEVENT
-BEGIN:VEVENT
-DESCRIPTION:Get ready for three days of cycling excitement as the Cape Town Cycle Tour Expo returns from 5–7 March 2026.
-DTEND:20260305T215959Z
-DTSTART:20260305T073000Z
-SUMMARY:Cape Town Cycle Tour Expo
-UID:05f1d423-2e05-4ac2-a6a7-9030c8c9d649@05f1.org
-END:VEVENT
-BEGIN:VEVENT
-DTSTART;VALUE=DATE:20260523
-DTEND;VALUE=DATE:20260526
-SUMMARY:Sanlam Cape Town Marathon
-UID:4c2a2a82-00c6-4f5a-be52-6f78cde3b585@4c2a.org
+DTSTART;VALUE=DATE:20270320
+DTEND;VALUE=DATE:20270322
+SUMMARY:Cape Town Carnival
+UID:938842e9-1b17-4324-8e5d-af7ad3fd54e6@9388.org
 END:VEVENT
 BEGIN:VEVENT
 DESCRIPTION:Monthly art and culture event in Cape Town.
 DTEND:20261105T210000Z
 DTSTART:20261105T140000Z
 SUMMARY:First Thursdays
-UID:5f15bb3e-c271-400b-b88e-7cd08f1a1a5a@5f15.org
+UID:d3e78fc9-ad59-4b00-baca-27a5ad652024@d3e7.org
+END:VEVENT
+BEGIN:VEVENT
+DESCRIPTION:Get ready for three days of cycling excitement as the Cape Town Cycle Tour Expo returns from 5–7 March 2026.
+DTEND:20260307T215959Z
+DTSTART:20260307T070000Z
+SUMMARY:Cape Town Cycle Tour Expo
+UID:e1efe182-2da6-43ee-bbe6-52af72113da8@e1ef.org
+END:VEVENT
+BEGIN:VEVENT
+DESCRIPTION:Monthly art and culture event in Cape Town.
+DTEND:20270902T210000Z
+DTSTART:20270902T140000Z
+SUMMARY:First Thursdays
+UID:80bcccc6-e13a-496b-83f3-585da5e49da8@80bc.org
+END:VEVENT
+BEGIN:VEVENT
+DESCRIPTION:DHL Stormers takes on Leinster in their first home game of the 2025/6 Vodacom URC season. 
+DTEND:20250926T215959Z
+DTSTART:20250926T170000Z
+SUMMARY:DHL Stormers vs Leinster 
+UID:f81bdc36-57f3-45b8-be34-c224f577f66e@f81b.org
+END:VEVENT
+BEGIN:VEVENT
+DTSTART;VALUE=DATE:20260414
+DTEND;VALUE=DATE:20260420
+SUMMARY:Absa Cape Epic
+UID:12c7aa60-ec49-40de-befb-b4e9c6c0acef@12c7.org
 END:VEVENT
 BEGIN:VEVENT
 DESCRIPTION:This Summit unites school sport educators\, coaches\, and leaders for two days of learning and collaboration.
 DTEND:20251022T215959Z
 DTSTART:20251022T061500Z
 SUMMARY:Playbook Education School Sports Summit 
-UID:a1f26468-476a-4216-9a2d-cef0b4b8f681@a1f2.org
+UID:e3e2a629-b606-479c-a48c-da567a70b558@e3e2.org
+END:VEVENT
+BEGIN:VEVENT
+DESCRIPTION:Experience three days of world-class artistry as the South African International Tattoo Convention takes place from 13–15 March 2026.
+DTEND:20260313T215959Z
+DTSTART:20260313T150000Z
+SUMMARY:SA International Tattoo Convention
+UID:d5f74230-391a-4a4c-a3d0-00e9fe7145f7@d5f7.org
+END:VEVENT
+BEGIN:VEVENT
+DESCRIPTION:Monthly art and culture event in Cape Town.
+DTEND:20260903T210000Z
+DTSTART:20260903T140000Z
+SUMMARY:First Thursdays
+UID:b8b13887-aa24-4a5b-ad10-a7815867955b@b8b1.org
+END:VEVENT
+BEGIN:VEVENT
+DESCRIPTION:Stellenbosch FC takes on CR Belouizdad in the second round of the CAF Confederation Cup.
+DTEND:20260201T215959Z
+DTSTART:20260201T130000Z
+SUMMARY:Stellenbosch FC vs CR Belouizdad
+UID:35346cef-c0ef-4f54-81b5-1d0f3eb6ad4b@3534.org
+END:VEVENT
+BEGIN:VEVENT
+DESCRIPTION:Monthly art and culture event in Cape Town.
+DTEND:20260806T210000Z
+DTSTART:20260806T140000Z
+SUMMARY:First Thursdays
+UID:008c5e79-c095-4899-9aab-b9ec127a331c@008c.org
+END:VEVENT
+BEGIN:VEVENT
+DESCRIPTION:SACO 2025 International Conference | 4–5 November at DHL Stadium
+DTEND:20251104T200000Z
+DTSTART:20251104T050000Z
+SUMMARY:Creative & Sports Economy Futures 2025
+UID:df0be601-3daf-477a-8025-0a728ac6d84a@df0b.org
+END:VEVENT
+BEGIN:VEVENT
+DESCRIPTION:Monthly art and culture event in Cape Town.
+DTEND:20261203T210000Z
+DTSTART:20261203T140000Z
+SUMMARY:First Thursdays
+UID:9c1e5198-4e00-4325-bb8b-49603322ef47@9c1e.org
+END:VEVENT
+BEGIN:VEVENT
+DESCRIPTION:Monthly art and culture event in Cape Town.
+DTEND:20260305T210000Z
+DTSTART:20260305T140000Z
+SUMMARY:First Thursdays
+UID:17edf9d2-ab0f-47df-826f-8c8f54a96ec4@17ed.org
+END:VEVENT
+BEGIN:VEVENT
+DESCRIPTION:Monthly art and culture event in Cape Town.
+DTEND:20261001T210000Z
+DTSTART:20261001T140000Z
+SUMMARY:First Thursdays
+UID:12c84486-23c9-4ed3-bbcf-4cb6d012535a@12c8.org
+END:VEVENT
+BEGIN:VEVENT
+DESCRIPTION:Monthly art and culture event in Cape Town.
+DTEND:20270506T210000Z
+DTSTART:20270506T140000Z
+SUMMARY:First Thursdays
+UID:5ecf5998-2a1c-4ccd-b2cc-f7194e353c91@5ecf.org
+END:VEVENT
+BEGIN:VEVENT
+DESCRIPTION:DHL Stormers take on Edinburgh Rugby. 
+DTEND:20260328T215959Z
+DTSTART:20260328T170000Z
+SUMMARY:DHL Stormers vs Edinburgh
+UID:14dc0fcc-d073-4a10-af3c-529b7b26d722@14dc.org
+END:VEVENT
+BEGIN:VEVENT
+DESCRIPTION:DHL Stormers take on Leicester Tigers.
+DTEND:20260117T215959Z
+DTSTART:20260117T151500Z
+SUMMARY:DHL Stormers vs Leicester Tigers 
+UID:c36a27cf-5a2b-4b65-94a1-6de47fa7d5ce@c36a.org
+END:VEVENT
+BEGIN:VEVENT
+DESCRIPTION:DHL Stormers take on Ospreys.
+DTEND:20251003T215959Z
+DTSTART:20251003T170000Z
+SUMMARY:DHL Stormers vs Ospreys 
+UID:7638a99d-0cbb-44e5-bf6c-46703df55cb9@7638.org
+END:VEVENT
+BEGIN:VEVENT
+DESCRIPTION:DHL Stormers takes on Vodacom Bulls.
+DTEND:20260103T215959Z
+DTSTART:20260103T160000Z
+SUMMARY:DHL Stormers vs Vodacom Bulls 
+UID:5ee5cf27-c04c-4d23-b26e-865cdf39927a@5ee5.org
+END:VEVENT
+BEGIN:VEVENT
+DESCRIPTION:Get ready for three days of cycling excitement as the Cape Town Cycle Tour Expo returns from 5–7 March 2026.
+DTEND:20260305T215959Z
+DTSTART:20260305T073000Z
+SUMMARY:Cape Town Cycle Tour Expo
+UID:beb7dfe6-ff27-434c-ad5e-2a87feadfe57@beb7.org
+END:VEVENT
+BEGIN:VEVENT
+DTSTART;VALUE=DATE:20260712
+DTEND;VALUE=DATE:20260714
+SUMMARY:Knysna Cycle Tour
+UID:4a9bb257-0bfc-41fd-899c-6e08b01c9ae6@4a9b.org
+END:VEVENT
+BEGIN:VEVENT
+DTSTART;VALUE=DATE:20270327
+DTEND;VALUE=DATE:20270330
+SUMMARY:Two Oceans Marathon
+UID:089fb977-4b0a-4b14-abf6-b6d67b510965@089f.org
+END:VEVENT
+BEGIN:VEVENT
+DESCRIPTION:Experience three days of world-class artistry as the South African International Tattoo Convention takes place from 13–15 March 2026.
+DTEND:20260315T215959Z
+DTSTART:20260315T080000Z
+SUMMARY:SA International Tattoo Convention
+UID:e469ba24-f8cd-438a-8721-84e2eefdb965@e469.org
+END:VEVENT
+BEGIN:VEVENT
+DESCRIPTION:Monthly art and culture event in Cape Town.
+DTEND:20270107T210000Z
+DTSTART:20270107T140000Z
+SUMMARY:First Thursdays
+UID:2cef0675-820d-4aa7-b128-f8d1fcef738a@2cef.org
+END:VEVENT
+BEGIN:VEVENT
+DTSTART;VALUE=DATE:20270227
+DTEND;VALUE=DATE:20270301
+SUMMARY:Cape Town Pride Parade
+UID:4a746404-8f80-437e-9bce-11a68a9695dd@4a74.org
+END:VEVENT
+BEGIN:VEVENT
+DESCRIPTION:Stellenbosch FC takes on Singida Black Stars in the CAF Confederation Cup.
+DTEND:20260215T215959Z
+DTSTART:20260215T160000Z
+SUMMARY:Stellenbosch FC vs Singida Black Stars 
+UID:4a5af400-6f8a-448d-9d6a-3e6c0b56dca7@4a5a.org
+END:VEVENT
+BEGIN:VEVENT
+DESCRIPTION:Sanlam Cape Town Marathon Expo & Registration\n
+DTEND:20260523T215959Z
+DTSTART:20260523T080000Z
+SUMMARY:Sanlam Cape Town Marathon Expo
+UID:96813550-fdb1-457e-8632-d46710acdca2@9681.org
+END:VEVENT
+BEGIN:VEVENT
+DESCRIPTION:We're hosting one of the Western Cape’s largest inter-school athletics events\,  for a day of elite competition and school spirit.
+DTEND:20260207T215959Z
+DTSTART:20260207T040000Z
+SUMMARY:DTBS Flashes 
+UID:feaffac4-67f1-47aa-9cd0-ffbad7053cd8@feaf.org
+END:VEVENT
+BEGIN:VEVENT
+DESCRIPTION:Experience three days of world-class artistry as the South African International Tattoo Convention takes place from 13–15 March 2026.
+DTEND:20260314T215959Z
+DTSTART:20260314T080000Z
+SUMMARY:SA International Tattoo Convention
+UID:59ddd89a-19fe-47e6-8d12-ecae3fbc3a8f@59dd.org
+END:VEVENT
+BEGIN:VEVENT
+DESCRIPTION:Join us for one of the most coveted tasting events on the South African wine calendar.
+DTEND:20251106T215959Z
+DTSTART:20251106T150000Z
+SUMMARY:Caroline's White Wine Review 
+UID:3ceaaa2c-a3d7-4b8a-86c3-125c9e10fdad@3cea.org
+END:VEVENT
+BEGIN:VEVENT
+DESCRIPTION:Monthly art and culture event in Cape Town.
+DTEND:20260507T210000Z
+DTSTART:20260507T140000Z
+SUMMARY:First Thursdays
+UID:fed6e3da-d5ea-49bc-be5f-e472decfed8a@fed6.org
+END:VEVENT
+BEGIN:VEVENT
+DESCRIPTION:HSBC SVNS returns to DHL Stadium for a weekend of world-class rugby\, live music\, food\, and unforgettable vibes.
+DTEND:20251207T215959Z
+DTSTART:20251207T080000Z
+SUMMARY:HSBC SVNS Cape Town
+UID:e8186359-cbef-470d-b69c-8155a465c32a@e818.org
+END:VEVENT
+BEGIN:VEVENT
+DTSTART;VALUE=DATE:20260102
+DTEND;VALUE=DATE:20260104
+DESCRIPTION:The Cape Town Minstrel Carnival\, also known as Kaapse Klopse\, is a large minstrel festival held annually on January 2 in Cape Town\, South Africa.
+SUMMARY:Minstrel Parade (Kaapse Klopse)
+UID:fc7ae436-ee50-42ca-9181-a1d21563763a@fc7a.org
+END:VEVENT
+BEGIN:VEVENT
+DTSTART;VALUE=DATE:20260913
+DTEND;VALUE=DATE:20260915
+SUMMARY:The Gun Run
+UID:47c52dad-c871-4e26-960b-009745eec9e1@47c5.org
+END:VEVENT
+BEGIN:VEVENT
+DESCRIPTION:Monthly art and culture event in Cape Town.
+DTEND:20260702T210000Z
+DTSTART:20260702T140000Z
+SUMMARY:First Thursdays
+UID:fbd97d23-db63-4748-854f-a73e58fa61a9@fbd9.org
+END:VEVENT
+BEGIN:VEVENT
+DESCRIPTION:Witness the Springboks take on the All Blacks in the Rugby's Greatest Rivalry Tour.
+DTEND:20260829T215959Z
+DTSTART:20260829T150000Z
+SUMMARY:Springboks vs All Blacks 
+UID:938d4133-a05a-4bc1-ae57-8adf40d15ad2@938d.org
+END:VEVENT
+BEGIN:VEVENT
+DESCRIPTION:HSBC SVNS returns to DHL Stadium for a weekend of world-class rugby\, live music\, food\, and unforgettable vibes.
+DTEND:20251206T215959Z
+DTSTART:20251206T080000Z
+SUMMARY:HSBC SVNS Cape Town
+UID:f8101575-411c-4335-ac73-e6de022c347b@f810.org
+END:VEVENT
+BEGIN:VEVENT
+DESCRIPTION:Monthly art and culture event in Cape Town.
+DTEND:20271104T210000Z
+DTSTART:20271104T140000Z
+SUMMARY:First Thursdays
+UID:60516ce1-cc79-476d-9426-be0340b30f40@6051.org
+END:VEVENT
+BEGIN:VEVENT
+DESCRIPTION:This Summit unites school sport educators\, coaches\, and leaders for two days of learning and collaboration.
+DTEND:20251021T215959Z
+DTSTART:20251021T060000Z
+SUMMARY:Playbook Education School Sports Summit 
+UID:ff60ef99-c57c-4de8-a8eb-1ffdb84a867d@ff60.org
+END:VEVENT
+BEGIN:VEVENT
+DESCRIPTION:DHL Stormers takes on Emirates Lions on 20 December 2025. 
+DTEND:20251220T215959Z
+DTSTART:20251220T133000Z
+SUMMARY:DHL Stormers vs Emirates Lions 
+UID:5850a9d5-64a5-495e-8f93-65b3c4b6e376@5850.org
+END:VEVENT
+BEGIN:VEVENT
+DESCRIPTION:Get ready for three days of cycling excitement as the Cape Town Cycle Tour Expo returns from 5–7 March 2026.
+DTEND:20260306T215959Z
+DTSTART:20260306T070000Z
+SUMMARY:Cape Town Cycle Tour Expo
+UID:8eb8ff97-6ff6-49e8-9528-4e99026fc1b2@8eb8.org
+END:VEVENT
+BEGIN:VEVENT
+DESCRIPTION:DHL Stormers take on Connacht Rugby. DHL Stormers XXIII will also take Vodacom Bulls U23 in a friendly match.\n
+DTEND:20260418T215959Z
+DTSTART:20260418T114500Z
+SUMMARY:DHL Stormers vs Connacht Rugby
+UID:3cb82994-b78a-4683-b26b-8c7a6925bb0b@3cb8.org
+END:VEVENT
+BEGIN:VEVENT
+DESCRIPTION:Monthly art and culture event in Cape Town.
+DTEND:20260101T210000Z
+DTSTART:20260101T140000Z
+SUMMARY:First Thursdays
+UID:7e0cc5f5-4d88-44fe-9bf2-ee723846c0cb@7e0c.org
+END:VEVENT
+BEGIN:VEVENT
+DESCRIPTION:Sanlam Cape Town Marathon Expo & Registration\n
+DTEND:20260522T215959Z
+DTSTART:20260522T070000Z
+SUMMARY:Sanlam Cape Town Marathon Expo
+UID:f8e57443-8c1b-4399-94c7-6004ff6f549a@f8e5.org
+END:VEVENT
+BEGIN:VEVENT
+DESCRIPTION:Monthly art and culture event in Cape Town.
+DTEND:20270701T210000Z
+DTSTART:20270701T140000Z
+SUMMARY:First Thursdays
+UID:4c37d3c9-fa9f-4a20-88e8-364393b1067a@4c37.org
+END:VEVENT
+BEGIN:VEVENT
+DESCRIPTION:SACO 2025 International Conference | 4–5 November at DHL Stadium
+DTEND:20251105T153000Z
+DTSTART:20251105T050000Z
+SUMMARY:Creative & Sports Economy Futures 2025
+UID:f3f05701-7fa7-4482-9d5e-8f701dc1086f@f3f0.org
+END:VEVENT
+BEGIN:VEVENT
+DESCRIPTION:The DHL Stormers take on the legendary All Blacks on 7 August for the friendly match part of the Rugby's Greatest Rivalry Tour.
+DTEND:20260807T215959Z
+DTSTART:20260807T170000Z
+SUMMARY:DHL Stormers vs All Blacks 
+UID:c03b1e4a-76a7-48ff-978f-dcb04e507d76@c03b.org
+END:VEVENT
+BEGIN:VEVENT
+DESCRIPTION:Monthly art and culture event in Cape Town.
+DTEND:20270401T210000Z
+DTSTART:20270401T140000Z
+SUMMARY:First Thursdays
+UID:97c165b3-56d2-44c1-8ba2-cab81e5de9da@97c1.org
+END:VEVENT
+BEGIN:VEVENT
+DESCRIPTION:Stellenbosch FC takes on Kaizer Chiefs in the  Nedbank Cup Round of 32.
+DTEND:20260204T215959Z
+DTSTART:20260204T170000Z
+SUMMARY:Stellenbosch FC vs Kaizer Chiefs 
+UID:b70f0dd8-5e8d-4441-ab7e-9509eb02da53@b70f.org
+END:VEVENT
+BEGIN:VEVENT
+DESCRIPTION:Monthly art and culture event in Cape Town.
+DTEND:20270805T210000Z
+DTSTART:20270805T140000Z
+SUMMARY:First Thursdays
+UID:cc3b047a-5ab9-4157-967c-3b6c86922884@cc3b.org
+END:VEVENT
+BEGIN:VEVENT
+DESCRIPTION:DHL Stormers take on  Dragons RFC. 
+DTEND:20260322T215959Z
+DTSTART:20260322T130000Z
+SUMMARY:DHL Stormers vs Dragons
+UID:ac478dcf-1634-4e92-8382-931e146871a1@ac47.org
+END:VEVENT
+BEGIN:VEVENT
+DESCRIPTION:Monthly art and culture event in Cape Town.
+DTEND:20270603T210000Z
+DTSTART:20270603T140000Z
+SUMMARY:First Thursdays
+UID:e68d70f9-89af-4a8b-bc59-f9214212825b@e68d.org
+END:VEVENT
+BEGIN:VEVENT
+DESCRIPTION:Sanlam Cape Town Marathon Expo & Registration\n
+DTEND:20260521T215959Z
+DTSTART:20260521T070000Z
+SUMMARY:Sanlam Cape Town Marathon Expo
+UID:b5808759-8c1b-4bcf-8264-249a81cb33cf@b580.org
+END:VEVENT
+BEGIN:VEVENT
+DTSTART;VALUE=DATE:20260523
+DTEND;VALUE=DATE:20260526
+SUMMARY:Sanlam Cape Town Marathon
+UID:b3372532-af86-4b5a-ade4-32472522c417@b337.org
+END:VEVENT
+BEGIN:VEVENT
+DESCRIPTION:South Africa will face Panama in a FIFA International Friendly match.
+DTEND:20260331T215959Z
+DTSTART:20260331T173000Z
+SUMMARY:South Africa vs Panama
+UID:aa9e9594-9eda-46aa-ba77-2f8644fc05b7@aa9e.org
+END:VEVENT
+BEGIN:VEVENT
+DTSTART;VALUE=DATE:20270102
+DTEND;VALUE=DATE:20270104
+DESCRIPTION:The Cape Town Minstrel Carnival\, also known as Kaapse Klopse\, is a large minstrel festival held annually on January 2 in Cape Town\, South Africa.
+SUMMARY:Minstrel Parade (Kaapse Klopse)
+UID:5d395881-aeb7-4849-bae3-241e69269f95@5d39.org
+END:VEVENT
+BEGIN:VEVENT
+DESCRIPTION:DHL Stormers take on Glasgow Warriors. DHL Stormers XXIII will also take on the Sharks in a friendly match.
+DTEND:20260425T215959Z
+DTSTART:20260425T114500Z
+SUMMARY:DHL Stormers vs Glasgow Warriors
+UID:3a7ec9fd-bbaf-4b90-be60-5e4959276a84@3a7e.org
+END:VEVENT
+BEGIN:VEVENT
+DTSTART;VALUE=DATE:20270314
+DTEND;VALUE=DATE:20270316
+SUMMARY:Cape Town Cycle Tour
+UID:d9e5444c-56ee-4128-a274-ad8423211f1e@d9e5.org
+END:VEVENT
+BEGIN:VEVENT
+DESCRIPTION:Monthly art and culture event in Cape Town.
+DTEND:20271007T210000Z
+DTSTART:20271007T140000Z
+SUMMARY:First Thursdays
+UID:d2f510a4-c709-4cb3-93fe-ec227cb6c534@d2f5.org
+END:VEVENT
+BEGIN:VEVENT
+DESCRIPTION:Join us for the season finale of the 2025 FIM World Supercross Championship on December 13.\n
+DTEND:20251213T215959Z
+DTSTART:20251213T171000Z
+SUMMARY:World Supercross Championship 
+UID:ce938735-43d9-46bf-95a7-b81eda2ae403@ce93.org
+END:VEVENT
+BEGIN:VEVENT
+DESCRIPTION:Monthly art and culture event in Cape Town.
+DTEND:20271202T210000Z
+DTSTART:20271202T140000Z
+SUMMARY:First Thursdays
+UID:bcd2f80e-e0e5-40f0-a780-c9ccb1302e0e@bcd2.org
+END:VEVENT
+BEGIN:VEVENT
+DESCRIPTION:Monthly art and culture event in Cape Town.
+DTEND:20260402T210000Z
+DTSTART:20260402T140000Z
+SUMMARY:First Thursdays
+UID:d5887915-bb43-4a4c-a3da-d57bafd6932e@d588.org
 END:VEVENT
 END:VCALENDAR
