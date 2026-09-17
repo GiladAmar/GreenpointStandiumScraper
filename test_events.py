@@ -4,10 +4,13 @@ Tests for Cape Town event date calculations and fetch functions.
 Run with:  pytest test_events.py -v
 """
 
-import pytest
-from datetime import date, timedelta
+import json
 from contextlib import contextmanager
+from dataclasses import replace
+from datetime import date, datetime, timedelta
 from unittest.mock import Mock, patch
+
+import pytest
 
 import city_events as events
 
@@ -624,8 +627,347 @@ def test_stadium_api_follows_all_pages():
     assert any("pagination[page]=2" in u for u in seen)        # page 2 was requested
 
 
-def test_stadium_api_returns_partial_on_error():
-    """A network/API failure must not crash the build — return what we have."""
+def test_stadium_api_raises_on_error():
+    """A network/API failure must stop the build, not quietly return nothing.
+
+    Returning an empty result here is what let a single failed request publish a
+    calendar with every upcoming fixture deleted.
+    """
     with patch("generate_dhl_ics.requests.get", side_effect=RuntimeError("network down")):
-        resp = gen.fetch_stadium_api("2025-01-01T00:00:00.000Z")
-    assert resp == {"data": []}
+        with pytest.raises(gen.StadiumApiError):
+            gen.fetch_stadium_api("2025-01-01T00:00:00.000Z")
+
+
+# ── Event model ───────────────────────────────────────────────────────────────
+
+SAST = gen.SAST
+
+
+def all_day(name, start, days=1, **kw):
+    return gen.CalEvent(name, start, start + timedelta(days=days), **kw)
+
+
+def timed(name, start, hours=2, **kw):
+    return gen.CalEvent(name, start, start + timedelta(hours=hours), **kw)
+
+
+def test_uid_scheme_matches_the_already_published_calendar():
+    """UIDs must not change: a new UID is a duplicate in every subscriber's client.
+
+    The expected value is taken from the published dhl_stadium.ics.
+    """
+    first_thursday = datetime(2027, 3, 4, 16, 0, tzinfo=SAST)
+    assert gen.make_uid("First Thursdays", first_thursday) == (
+        "67e7f6493c10737b@greenpoint-stadium-scraper"
+    )
+    assert gen.make_uid("Africa Energy Indaba", date(2027, 3, 2)) == (
+        "7a92f8c43ce9ae63@greenpoint-stadium-scraper"
+    )
+
+
+def test_all_day_event_is_past_the_day_after_it_ends():
+    """An all-day event's exclusive end is midnight, so date maths is off by a day.
+
+    If is_past() says "not yet past" on the day after the event, the merge step
+    will neither preserve it as history nor re-fetch it, and it is lost.
+    """
+    event = all_day("Race", date(2026, 10, 18))  # runs on the 18th, DTEND the 19th
+    during = datetime(2026, 10, 18, 12, 0, tzinfo=SAST)
+    after = datetime(2026, 10, 19, 0, 1, tzinfo=SAST)
+    assert not gen.is_past(event, during)
+    assert gen.is_past(event, after)
+
+
+def test_description_link_round_trips_without_doubling():
+    event = all_day("X", date(2027, 1, 1), description="Blurb.", url="https://e.test/x")
+    rendered = gen.render_description(event)
+    assert rendered.endswith("More info: https://e.test/x")
+    blurb, label = gen.split_description(rendered, event.url)
+    assert (blurb, label) == ("Blurb.", "More info")
+
+
+def test_description_with_only_a_link_round_trips_to_an_empty_blurb():
+    event = all_day("X", date(2027, 1, 1), url="https://e.test/x", link_label="Tickets")
+    blurb, label = gen.split_description(gen.render_description(event), event.url)
+    assert (blurb, label) == ("", "Tickets")
+
+
+def test_a_label_without_a_link_is_discarded():
+    """Otherwise it survives in memory but not through the file, and every rebuild
+    would see the event as 'changed' and bump its SEQUENCE."""
+    event = all_day("X", date(2027, 1, 1), link_label="Tickets")
+    assert event.link_label == gen.DEFAULT_LINK_LABEL
+
+
+# ── Calendar round-trip ───────────────────────────────────────────────────────
+
+SAMPLE_EVENTS = [
+    all_day("All day", date(2027, 3, 14), description="d", url="https://a.test/",
+            location="CBD", category=gen.CATEGORY_CITY),
+    timed("Timed", datetime(2027, 3, 14, 16, 0, tzinfo=SAST), description="d",
+          url="https://b.test/", link_label="Tickets", category=gen.CATEGORY_STADIUM),
+    all_day("No link", date(2027, 4, 1), category=gen.CATEGORY_CITY),
+    timed("No description", datetime(2027, 4, 2, 9, 0, tzinfo=SAST),
+          category=gen.CATEGORY_STADIUM),
+]
+
+
+def test_calendar_round_trip_preserves_every_field():
+    stamped = gen.stamp_events(SAMPLE_EVENTS, [])
+    parsed = gen.parse_calendar(gen.build_calendar(stamped).to_ical())
+    assert len(parsed) == len(stamped)
+    by_uid = {event.uid: event for event in parsed}
+    for original in stamped:
+        assert gen.fingerprint(by_uid[original.uid]) == gen.fingerprint(original)
+
+
+def test_calendar_carries_the_metadata_clients_display():
+    raw = gen.build_calendar(gen.stamp_events(SAMPLE_EVENTS, [])).to_ical().decode()
+    for prop in ("X-WR-CALNAME", "X-WR-CALDESC", "X-WR-TIMEZONE", "METHOD:PUBLISH",
+                 "REFRESH-INTERVAL;VALUE=DURATION:PT12H", "X-PUBLISHED-TTL:PT12H",
+                 "BEGIN:VTIMEZONE", "TZID:Africa/Johannesburg"):
+        assert prop in raw, f"missing {prop}"
+    assert raw.count("DTSTAMP:") == len(SAMPLE_EVENTS)  # required by RFC 5545
+
+
+def test_timed_events_are_published_in_sast_not_utc():
+    raw = gen.build_calendar(gen.stamp_events(SAMPLE_EVENTS, [])).to_ical().decode()
+    assert "DTSTART;TZID=Africa/Johannesburg:20270314T160000" in raw
+    assert "DTSTART;VALUE=DATE:20270314" in raw
+
+
+def test_rebuilding_unchanged_events_leaves_the_file_identical():
+    """A no-op rebuild must not churn DTSTAMP/SEQUENCE, or CI commits noise and
+    clients re-notify about events that have not moved."""
+    first = gen.stamp_events(SAMPLE_EVENTS, [])
+    raw = gen.build_calendar(first).to_ical()
+    second = gen.stamp_events(gen.parse_calendar(raw), gen.parse_calendar(raw))
+    assert gen.build_calendar(second).to_ical() == raw
+
+
+def test_a_changed_event_gets_a_new_dtstamp_and_a_bumped_sequence():
+    published = gen.stamp_events([SAMPLE_EVENTS[0]], [])
+    moved = replace(published[0], location="Sea Point", dtstamp=None, sequence=0)
+    restamped = gen.stamp_events([moved], published)
+    assert restamped[0].sequence == published[0].sequence + 1
+    assert restamped[0].dtstamp != published[0].dtstamp
+
+
+# ── Merge (history preservation) ──────────────────────────────────────────────
+
+def test_merge_keeps_past_events_and_takes_the_future_from_the_fresh_fetch():
+    yesterday = date.today() - timedelta(days=2)
+    tomorrow = date.today() + timedelta(days=2)
+    history = gen.stamp_events([all_day("Gone by now", yesterday)], [])
+    stale_future = gen.stamp_events([all_day("Cancelled", tomorrow)], [])
+    fresh = [all_day("Still on", tomorrow)]
+
+    merged = gen.merge_events(fresh, history + stale_future)
+    names = {event.name for event in merged}
+    assert "Gone by now" in names     # history survives
+    assert "Still on" in names        # fresh future published
+    assert "Cancelled" not in names   # a withdrawn future event disappears
+
+
+# ── Deduplication ─────────────────────────────────────────────────────────────
+
+def test_the_same_race_from_two_sources_becomes_one_event():
+    """The stadium lists the Gun Run expo under its sponsor name two days before
+    the city scraper's race date; subscribers should see one entry, not two."""
+    stadium = timed("OUTsurance Gun Run", datetime(2027, 9, 10, 8, 0, tzinfo=SAST),
+                    url="https://tickets.test/gr", link_label="Tickets",
+                    description="Sponsor copy", category=gen.CATEGORY_STADIUM)
+    city = all_day("The Gun Run", date(2027, 9, 12), url="https://gunrun.test/",
+                   description="Road closures on the Atlantic seaboard.",
+                   category=gen.CATEGORY_CITY)
+
+    merged = gen.dedupe_events([stadium, city])
+    assert len(merged) == 1
+    event = merged[0]
+    assert event.name == "The Gun Run"                       # canonical name
+    assert event.start == date(2027, 9, 10)                  # spans both
+    assert event.end == date(2027, 9, 13)
+    assert event.description == "Road closures on the Atlantic seaboard."
+    assert event.url == "https://gunrun.test/"               # curated link wins
+
+
+def test_consecutive_days_of_one_tournament_collapse_into_one_entry():
+    days = [timed("HSBC SVNS Cape Town", datetime(2026, 12, day, 7, 0, tzinfo=SAST))
+            for day in (5, 6)]
+    merged = gen.dedupe_events(days)
+    assert len(merged) == 1
+    assert merged[0].start == days[0].start
+    assert merged[0].end == days[1].end
+
+
+def test_separate_editions_of_the_same_event_are_not_merged():
+    """Two First Thursdays a month apart are different events, not duplicates."""
+    months = [timed("First Thursdays", datetime(2027, month, 4, 16, 0, tzinfo=SAST))
+              for month in (3, 4)]
+    assert len(gen.dedupe_events(months)) == 2
+
+
+def test_different_fixtures_are_left_alone():
+    fixtures = [
+        timed("DHL Stormers vs Sharks", datetime(2026, 10, 10, 19, 0, tzinfo=SAST)),
+        timed("DHL Stormers vs Bristol Bears", datetime(2026, 10, 17, 19, 0, tzinfo=SAST)),
+    ]
+    assert len(gen.dedupe_events(fixtures)) == 2
+
+
+# ── Fail-closed guards ────────────────────────────────────────────────────────
+
+def _published(count, category=gen.CATEGORY_STADIUM):
+    base = date.today() + timedelta(days=30)
+    return [all_day(f"Event {i}", base + timedelta(days=i), category=category)
+            for i in range(count)]
+
+
+def test_guard_blocks_a_build_with_no_stadium_events():
+    city = _published(3, gen.CATEGORY_CITY)
+    with pytest.raises(gen.CalendarBuildError, match="stadium fetch produced no events"):
+        gen.check_regression([], city, city, [])
+
+
+def test_guard_blocks_a_build_with_no_city_events():
+    stadium = _published(3)
+    with pytest.raises(gen.CalendarBuildError, match="city scrapers produced no dated"):
+        gen.check_regression(stadium, [], stadium, [])
+
+
+def test_guard_blocks_a_collapse_in_upcoming_events():
+    """The exact failure this exists for: the API blips and half the calendar goes."""
+    existing = _published(20)
+    stadium, city = _published(2), _published(2, gen.CATEGORY_CITY)
+    with pytest.raises(gen.CalendarBuildError, match="upcoming events fell from 20 to 4"):
+        gen.check_regression(stadium, city, stadium + city, existing)
+
+
+def test_guard_allows_a_normal_build():
+    existing = _published(20)
+    stadium, city = _published(15), _published(6, gen.CATEGORY_CITY)
+    gen.check_regression(stadium, city, stadium + city, existing)  # must not raise
+
+
+def test_guard_can_be_overridden_deliberately():
+    existing = _published(20)
+    stadium, city = _published(1), _published(1, gen.CATEGORY_CITY)
+    gen.check_regression(stadium, city, stadium + city, existing, allow_shrink=True)
+
+
+def test_guard_ignores_past_events_when_comparing():
+    """A calendar that is mostly history must not look like a collapse."""
+    history = [all_day("Old", date.today() - timedelta(days=d)) for d in range(30, 60)]
+    stadium, city = _published(3), _published(3, gen.CATEGORY_CITY)
+    gen.check_regression(stadium, city, stadium + city, history)
+
+
+# ── Staleness detection ───────────────────────────────────────────────────────
+
+def test_stadium_horizon_warns_when_the_feed_stops_reaching_forward():
+    """A frozen endpoint still answers; what gives it away is a shrinking horizon."""
+    now = datetime(2026, 9, 17, 12, 0, tzinfo=SAST)
+    near = [all_day("Last one", date(2026, 9, 25), category=gen.CATEGORY_STADIUM)]
+    assert gen.check_stadium_horizon(near, now)
+
+
+def test_stadium_horizon_is_quiet_for_a_healthy_feed():
+    now = datetime(2026, 9, 17, 12, 0, tzinfo=SAST)
+    far = [all_day("Next season", date(2027, 4, 1), category=gen.CATEGORY_STADIUM)]
+    assert gen.check_stadium_horizon(far, now) is None
+
+
+# ── Health report ─────────────────────────────────────────────────────────────
+
+def test_health_flags_a_scraper_that_fell_back_to_its_calendar_rule():
+    previous = {"sources": {"fetch_jazz_festival": {"source": "text", "start_date": "2027-03-26"}}}
+    current = {"sources": {"fetch_jazz_festival": {"source": "computed", "start_date": "2027-03-26"}}}
+    assert gen.compare_health(previous, current) == [
+        "fetch_jazz_festival: no longer reads its live date (text -> computed)"
+    ]
+
+
+def test_health_flags_a_scraper_that_lost_its_date_entirely():
+    previous = {"sources": {"fetch_big_walk": {"source": "text", "start_date": "2027-03-15"}}}
+    current = {"sources": {"fetch_big_walk": {"source": "none", "start_date": None}}}
+    degradations = gen.compare_health(previous, current)
+    assert len(degradations) == 1 and "fetch_big_walk" in degradations[0]
+
+
+def test_health_is_quiet_when_a_scraper_stays_healthy():
+    previous = {"sources": {"fetch_jazz_festival": {"source": "text", "start_date": "2027-03-26"}}}
+    current = {"sources": {"fetch_jazz_festival": {"source": "jsonld", "start_date": "2027-03-27"}}}
+    assert gen.compare_health(previous, current) == []
+
+
+def test_health_ignores_a_source_that_was_already_computed():
+    """Only a *regression* is news; an event with no scrapable date never had one."""
+    previous = {"sources": {"fetch_gun_run": {"source": "computed", "start_date": "2027-09-12"}}}
+    current = {"sources": {"fetch_gun_run": {"source": "computed", "start_date": "2027-09-12"}}}
+    assert gen.compare_health(previous, current) == []
+
+
+def test_health_check_exit_status(tmp_path):
+    clean = tmp_path / "clean.json"
+    clean.write_text(json.dumps({"degradations": []}))
+    assert gen.check_health_file(str(clean)) == 0
+
+    dirty = tmp_path / "dirty.json"
+    dirty.write_text(json.dumps({"degradations": ["fetch_x: broke"]}))
+    assert gen.check_health_file(str(dirty)) == 1
+
+
+# ── End-to-end build ──────────────────────────────────────────────────────────
+
+def _api_payload(entries):
+    return {"data": [{"attributes": {"event": [entry]}} for entry in entries]}
+
+
+STADIUM_PAYLOAD = _api_payload([
+    {"title": "DHL Stormers vs Sharks ", "description": "Match day.",
+     "externallink": "https://tickets.test/1", "externallinktext": "Tickets",
+     "daterange": [{"start": "2027-10-10T17:00:00.000Z", "end": "2027-10-10T19:00:00.000Z"}]},
+    {"title": "Stadium Concert", "description": "", "externallink": "",
+     "daterange": [{"start": "2027-11-20T18:00:00.000Z", "end": None}]},
+])
+
+
+def _build(tmp_path, payload=STADIUM_PAYLOAD, **kwargs):
+    ics = tmp_path / "out.ics"
+    health = tmp_path / "health.json"
+    with patch.object(gen, "fetch_stadium_api", return_value=payload),          patch("city_events.safe_get", return_value=None):
+        report = gen.generate(str(ics), str(health), **kwargs)
+    return ics, health, report
+
+
+def test_end_to_end_build_writes_a_calendar_and_a_health_report(tmp_path):
+    ics, health, report = _build(tmp_path)
+    raw = ics.read_bytes()
+    events = gen.parse_calendar(raw)
+    assert len(events) == report["calendar"]["total"]
+    assert any(event.category == gen.CATEGORY_STADIUM for event in events)
+    assert any(event.category == gen.CATEGORY_CITY for event in events)
+    assert json.loads(health.read_text())["sources"]["fetch_cycle_tour"]["source"] == "computed"
+
+
+def test_end_to_end_build_is_idempotent(tmp_path):
+    ics, _, _ = _build(tmp_path)
+    first = ics.read_bytes()
+    _build(tmp_path)
+    assert ics.read_bytes() == first
+
+
+def test_a_failed_stadium_fetch_leaves_the_published_file_untouched(tmp_path):
+    ics, health, _ = _build(tmp_path)
+    before = ics.read_bytes()
+    with patch.object(gen, "fetch_stadium_api", return_value={"data": []}), \
+         patch("city_events.safe_get", return_value=None):
+        with pytest.raises(gen.CalendarBuildError):
+            gen.generate(str(ics), str(health))
+    assert ics.read_bytes() == before
+
+
+def test_main_reports_a_failed_build_with_a_non_zero_exit_code(tmp_path, monkeypatch):
+    monkeypatch.chdir(tmp_path)
+    with patch.object(gen, "fetch_stadium_api", side_effect=gen.StadiumApiError("down")):
+        assert gen.main([]) == 1
