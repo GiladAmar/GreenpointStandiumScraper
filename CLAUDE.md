@@ -47,6 +47,15 @@ CBD / Green Point / Atlantic-seaboard traffic and publishes them as `dhl_stadium
    both a clickable `URL` and an inline link. When merging/regenerating, carry these fields
    over rather than dropping them.
 
+4. **Each development session, reconcile the stadium events against the live site.**
+   Compare what the stadium source produces against <https://www.dhlstadium.co.za/events>
+   (the site is a JS SPA, so read events from its API, `api.dhlstadium.co.za/api/events`,
+   with `populate[…]=event.daterange` etc., not the raw HTML). If a fixture on the site is
+   missing or wrong in the calendar, fix the scraper. The endpoint has silently moved and
+   frozen before (`content-dhlstadium.azurewebsites.net` stalled at Aug 2026), so also
+   sanity-check that the API's newest event isn't suspiciously close to "today" — a sign it
+   has gone stale and the site has moved to a new host again.
+
 ## Gotchas
 - Scrapers guard with `is_recent_date()` (this year or next) **and** a future-date check, so
   a stale prior edition isn't picked up.
