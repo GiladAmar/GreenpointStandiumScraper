@@ -6,7 +6,8 @@ Run with:  pytest test_events.py -v
 
 import pytest
 from datetime import date, timedelta
-from unittest.mock import patch
+from contextlib import contextmanager
+from unittest.mock import Mock, patch
 
 import city_events as events
 
@@ -372,12 +373,17 @@ def test_calculated_fetchers_return_valid_iso_dates(fn_name, _):
 
 
 @pytest.mark.parametrize("fn_name,_", CALCULATED_FETCHERS)
-def test_calculated_fetchers_return_future_dates(fn_name, _):
-    """The next upcoming occurrence should be in the future."""
+def test_calculated_fetchers_return_unfinished_editions(fn_name, _):
+    """The occurrence returned must not already be over.
+
+    The assertion is on the *end* date, not the start: an event that is currently
+    running has to stay on the calendar (the merge step only preserves events that
+    have finished, so rolling over early would delete it mid-event).
+    """
     with patch("city_events.safe_get", return_value=None):
         result = getattr(events, fn_name)()
-    start = date.fromisoformat(result["start_date"])
-    assert start >= date.today(), f"{fn_name} returned past date {start}"
+    end = date.fromisoformat(result["end_date"])
+    assert end >= date.today(), f"{fn_name} returned a finished edition ending {end}"
 
 
 @pytest.mark.parametrize("fn_name,_", CALCULATED_FETCHERS)
@@ -464,6 +470,123 @@ def test_scrape_only_ignores_stale_date_and_stays_off_calendar():
     with patch("city_events.safe_get", return_value="<p>Archive: 5 January 2000</p>"):
         result = events.fetch_africa_oil_week()
     assert "start_date" not in result
+
+
+# ── Provenance / health reporting ─────────────────────────────────────────────
+# Every record says where its date came from, so a scraper that has quietly
+# stopped working (and is coasting on its computed fallback) is detectable.
+
+@pytest.mark.parametrize("fn_name,_", CALCULATED_FETCHERS)
+def test_calculated_fetchers_report_computed_offline(fn_name, _):
+    with patch("city_events.safe_get", return_value=None):
+        result = getattr(events, fn_name)()
+    assert result["source"] == events.SOURCE_COMPUTED
+
+
+@pytest.mark.parametrize("fn_name,_", SCRAPE_ONLY_FETCHERS)
+def test_scrape_only_fetchers_report_none_offline(fn_name, _):
+    with patch("city_events.safe_get", return_value=None):
+        result = getattr(events, fn_name)()
+    assert result["source"] == events.SOURCE_NONE
+
+
+@pytest.mark.parametrize("fn_name,html,exp_start,exp_end", SCRAPE_SAMPLES)
+def test_scraped_dates_report_a_scraped_source(fn_name, html, exp_start, exp_end):
+    with patch("city_events.safe_get", return_value=html):
+        result = getattr(events, fn_name)()
+    assert result["source"] in events.SCRAPED_SOURCES
+
+
+def test_jsonld_hit_is_labelled_jsonld():
+    html = (
+        f'<script type="application/ld+json">'
+        f'{{"@type":"Event","startDate":"{NEXT_YEAR}-09-15","endDate":"{NEXT_YEAR}-09-18"}}'
+        f'</script>'
+    )
+    with patch("city_events.safe_get", return_value=html):
+        assert events.fetch_africa_oil_week()["source"] == events.SOURCE_JSONLD
+
+
+def test_mining_indaba_title_fallback_is_labelled_title():
+    """No JSON-LD, but the <title> carries the range — recorded as a title scrape."""
+    html = f"<html><title>Mining Indaba | 8-11 February {NEXT_YEAR}</title><body></body></html>"
+    with patch("city_events.safe_get", return_value=html):
+        result = events.fetch_mining_indaba()
+    assert result["source"] == events.SOURCE_TITLE
+    assert result["start_date"] == f"{NEXT_YEAR}-02-08"
+
+
+def test_crashing_extractor_is_reported_not_dropped():
+    """A fetcher that raises still produces a record, so health sees the failure."""
+    boom = Mock(side_effect=RuntimeError("boom"))
+    boom.__name__ = "fetch_cycle_tour"
+    with patch.object(events, "EXTRACTORS", [boom]):
+        results = events.fetch_all_events()
+    crashed = [r for r in results if r["fetcher"] == "fetch_cycle_tour"]
+    assert len(crashed) == 1
+    assert crashed[0]["source"] == events.SOURCE_NONE
+    assert "start_date" not in crashed[0]
+
+
+def test_every_record_carries_a_source_and_fetcher():
+    with patch("city_events.safe_get", return_value=None):
+        results = events.fetch_all_events()
+    assert results
+    for record in results:
+        assert record.get("source"), record
+        assert record.get("fetcher"), record
+
+
+# ── Date-rule rollover ────────────────────────────────────────────────────────
+
+def test_next_computed_keeps_an_event_that_is_currently_running():
+    """A multi-day event must not roll over to next year while it is in progress."""
+    today = date.today()
+    rule = lambda year: (date(year, 1, 1), date(year, 12, 31))  # spans all of `year`
+    result = events.next_computed("Year Long", "https://example.com/", rule)
+    assert result["start_date"] == str(date(today.year, 1, 1))
+    assert result["source"] == events.SOURCE_COMPUTED
+
+
+def test_next_computed_rolls_over_once_the_event_is_over():
+    today = date.today()
+    yesterday = today - timedelta(days=1)
+    rule = lambda year: date(year, yesterday.month, yesterday.day)
+    result = events.next_computed("Single Day", "https://example.com/", rule)
+    assert date.fromisoformat(result["start_date"]) >= today
+
+
+def test_next_computed_returns_no_date_outside_its_horizon():
+    """No edition inside the horizon must not fabricate one."""
+    result = events.next_computed(
+        "Never", "https://example.com/", lambda year: date(year - 50, 1, 1)
+    )
+    assert "start_date" not in result
+    assert result["source"] == events.SOURCE_NONE
+
+
+@contextmanager
+def frozen_today(day):
+    """Pin city_events' notion of 'today', so rollover tests are deterministic."""
+    pinned = type("PinnedDate", (date,), {"today": classmethod(lambda cls: day)})
+    with patch.object(events, "date", pinned):
+        yield
+
+
+def test_fetch_site_rejects_an_edition_that_has_already_happened():
+    """A page still advertising this year's finished race must not be published.
+
+    is_recent_date() alone accepts the current year, so without the end-date guard
+    the Cycle Tour would publish a March date that has already passed instead of
+    falling back to next year's rule.
+    """
+    this_year = date.today().year  # keeps is_recent_date() happy whenever this runs
+    september = date(this_year, 9, 17)  # safely after the race
+    html = f"<p>Cycle Tour 8 March {this_year}</p>"
+    with frozen_today(september), patch("city_events.safe_get", return_value=html):
+        result = events.fetch_cycle_tour()
+    assert result["source"] == events.SOURCE_COMPUTED
+    assert date.fromisoformat(result["end_date"]) >= september
 
 
 # ── DHL Stadium API pagination (mock network) ─────────────────────────────────
