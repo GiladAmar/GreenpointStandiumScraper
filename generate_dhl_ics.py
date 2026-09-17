@@ -27,6 +27,24 @@ url = (
 resp = requests.get(url).json()
 
 
+def apply_link(event: Event, link: str, description: str = "", label: str = "More info") -> None:
+    """Attach a source link to an event two ways for maximum client support.
+
+    - Sets the iCal ``URL`` property, which calendar clients render as a
+      clickable link.
+    - Appends the same link to the description text, so clients that ignore
+      ``URL`` still show it inline.
+    """
+    description = (description or "").strip()
+    link = (link or "").strip()
+    if not link:
+        event.description = description
+        return
+    event.url = link
+    link_line = f"{label}: {link}"
+    event.description = f"{description}\n\n{link_line}".strip() if description else link_line
+
+
 def add_first_thursdays(years: List[int]) -> List[Event]:
     """
     Generate 'First Thursdays' events for each month in the given years.
@@ -47,10 +65,12 @@ def add_first_thursdays(years: List[int]) -> List[Event]:
             event.name = "First Thursdays"
             event.begin = start_dt
             event.end = end_dt
-            event.description = (
+            apply_link(
+                event,
+                "https://first-thursdays.co.za/",
                 "Monthly art-and-culture evening — CBD galleries and venues open "
                 "late (16:00–23:00), bringing foot traffic and parking pressure to "
-                "the city centre."
+                "the city centre.",
             )
             events.append(event)
     return events
@@ -85,7 +105,11 @@ def get_api_events(resp: Any) -> List[Event]:
                 else:
                     event.end = end
                 event.name = ev.get("title", "No title")
-                event.description = ev.get("description", "")
+                # Prefer the event's external link (usually ticket sales); label
+                # it with the site's own link text when supplied.
+                link = ev.get("externallink") or ""
+                label = (ev.get("externallinktext") or "Tickets").strip() or "Tickets"
+                apply_link(event, link, ev.get("description", ""), label)
                 events.append(event)
     return events
 
@@ -117,7 +141,7 @@ def add_cape_town_events() -> List[Event]:
             try:
                 event = Event()
                 event.name = item["name"]
-                event.description = item.get("description", "")
+                apply_link(event, item.get("url", ""), item.get("description", ""))
                 start = datetime.strptime(item["start_date"], "%Y-%m-%d")
                 end = datetime.strptime(
                     item.get("end_date", item["start_date"]), "%Y-%m-%d"
