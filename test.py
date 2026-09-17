@@ -96,6 +96,10 @@ EVENT_DESCRIPTIONS: Dict[str, str] = {
     "First Thursdays":
         "Monthly art-and-culture evening — CBD galleries and venues open late "
         "(16:00–23:00), bringing foot traffic and parking pressure to the city centre.",
+    "State of the Nation Address (SONA)":
+        "Evening joint sitting of Parliament at the Cape Town City Hall (Grand Parade). "
+        "Road closures and a security lockdown around the Darling/Plein/Roeland Street "
+        "precinct through the afternoon and evening.",
 }
 
 # ------------------------------------------------------------
@@ -173,6 +177,17 @@ def mining_indaba_dates(year: int) -> tuple[date, date]:
     if monday.day < 3:
         monday += timedelta(days=7)
     return monday, monday + timedelta(days=3)
+
+def sona_date(year: int) -> date:
+    """State of the Nation Address: best-guess = 2nd Thursday of February.
+
+    SONA is set by the Presidency and announced each year, but recent editions have
+    almost all fallen on the 2nd Thursday of February (2020-2026), the exception being
+    2025 (1st Thursday). Election years can add a mid-year post-election SONA. This rule
+    is only a placeholder shown in advance; fetch_sona() overrides it with the scraped
+    official date once Parliament/gov.za publishes it.
+    """
+    return nth_weekday_of_month(year, 2, 2, 3)  # 2nd (n=2) Thursday (weekday=3) of Feb
 
 # ------------------------------------------------------------
 # Utilities
@@ -459,6 +474,41 @@ def fetch_mining_indaba() -> Optional[Dict[str, str]]:
             return {"name": name, "url": url, "start_date": str(start), "end_date": str(end)}
     return {"name": name, "url": url}
 
+def fetch_sona() -> Optional[Dict[str, str]]:
+    """State of the Nation Address — evening joint sitting at Cape Town City Hall.
+
+    Central-CBD lockdown (Grand Parade / Parliament precinct). The date is announced
+    each year; scraped most- to least-reliable, then a computed 2nd-Thursday-of-Feb
+    fallback:
+      1. parliament.gov.za SONA landing page (stable URL, plain-text date).
+      2. gov.za/SONA{year} (predictable per-year URL, plain-text date).
+      3. Computed sona_date(year), only accepted when it is still in the future.
+    """
+    name = "State of the Nation Address (SONA)"
+    url = "https://www.parliament.gov.za/state-of-the-nation-address"
+    location = "Cape Town City Hall, Darling Street, Cape Town"
+    today = date.today()
+
+    # 1 & 2: scrape official pages; accept only a *future* date in a recent year.
+    candidates = [url] + [f"https://www.gov.za/SONA{y}" for y in (today.year, today.year + 1)]
+    for src in candidates:
+        html = safe_get(src)
+        if not html:
+            continue
+        hit = generic_date_hunt(html_to_text(html))
+        if hit and is_recent_date(int(hit["start_date"][:4])) \
+                and date.fromisoformat(hit["start_date"]) >= today:
+            return {"name": name, "url": url, "location": location,
+                    "start_date": hit["start_date"], "end_date": hit["start_date"]}
+
+    # 3: computed fallback — next upcoming 2nd Thursday of February.
+    for year in range(today.year, today.year + 2):
+        d = sona_date(year)
+        if d >= today:
+            return {"name": name, "url": url, "location": location,
+                    "start_date": str(d), "end_date": str(d)}
+    return {"name": name, "url": url, "location": location}
+
 def fetch_knysna_cycle_tour() -> Optional[Dict[str, str]]:
     patterns = [
         re.compile(rf"(?P<d1>\d{{1,2}})(?:st|nd|rd|th)?\s*(?P<mon1>June?)\s*{SEP_REGEX}\s*(?P<d2>\d{{1,2}})(?:st|nd|rd|th)?\s*(?P<mon2>July?)\s*,?\s*(?P<year>20\d{{2}})", re.IGNORECASE),
@@ -500,6 +550,7 @@ def fetch_all_events() -> List[Dict[str, str]]:
         fetch_minstrel_carnival,
         fetch_new_year_v_and_a,
         fetch_mining_indaba,
+        fetch_sona,
         fetch_knysna_cycle_tour,
     ]
     results: List[Dict[str, str]] = []

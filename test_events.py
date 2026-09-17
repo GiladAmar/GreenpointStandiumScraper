@@ -171,6 +171,26 @@ class TestMinstrelCarnivalDate:
             assert d.month == 1 and d.day == 2
 
 
+class TestSonaDate:
+    def test_2026(self):
+        assert events.sona_date(2026) == date(2026, 2, 12)   # matches actual SONA 2026
+
+    def test_2027(self):
+        assert events.sona_date(2027) == date(2027, 2, 11)   # 2nd Thursday of Feb 2027
+
+    def test_always_thursday(self):
+        for year in range(2025, 2032):
+            assert events.sona_date(year).weekday() == 3
+
+    def test_always_february(self):
+        for year in range(2025, 2032):
+            assert events.sona_date(year).month == 2
+
+    def test_always_second_week(self):
+        for year in range(2025, 2032):
+            assert 8 <= events.sona_date(year).day <= 14
+
+
 class TestNewYearVADate:
     def test_2026(self):
         assert events.new_year_v_and_a_date(2026) == date(2026, 12, 31)
@@ -219,6 +239,7 @@ CALCULATED_FETCHERS = [
     ("fetch_cape_town_pride",  "Cape Town Pride Parade"),
     ("fetch_minstrel_carnival","Minstrel Carnival (Kaapse Klopse)"),
     ("fetch_new_year_v_and_a", "V&A Waterfront New Year's Eve"),
+    ("fetch_sona",             "State of the Nation Address (SONA)"),
 ]
 
 ALL_FETCHERS = CALCULATED_FETCHERS + [

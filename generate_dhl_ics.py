@@ -149,6 +149,8 @@ def add_cape_town_events() -> List[Event]:
                 event.begin = start
                 event.end = end + timedelta(days=1)  # exclusive end per iCal VALUE=DATE convention
                 event.make_all_day()
+                if item.get("location"):
+                    event.location = item["location"]
                 events.append(event)
             except Exception as e:
                 print(f"Warning: Skipping event '{item.get('name')}': {e}")

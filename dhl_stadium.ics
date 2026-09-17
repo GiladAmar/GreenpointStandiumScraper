@@ -18,20 +18,6 @@ UID:d2372f93c76bc23c@greenpoint-stadium-scraper
 URL:https://first-thursdays.co.za/
 END:VEVENT
 BEGIN:VEVENT
-DESCRIPTION:Join us for the season finale of the 2025 FIM World Supercross Championship on December 13.\n
-DTEND:20251213T215959Z
-DTSTART:20251213T171000Z
-SUMMARY:World Supercross Championship 
-UID:9e3ddc4730e007eb@greenpoint-stadium-scraper
-END:VEVENT
-BEGIN:VEVENT
-DESCRIPTION:Stellenbosch FC takes on CR Belouizdad in the second round of the CAF Confederation Cup.
-DTEND:20260201T215959Z
-DTSTART:20260201T130000Z
-SUMMARY:Stellenbosch FC vs CR Belouizdad
-UID:a1d0620ac324412b@greenpoint-stadium-scraper
-END:VEVENT
-BEGIN:VEVENT
 DTSTART;VALUE=DATE:20270321
 DTEND;VALUE=DATE:20270330
 DESCRIPTION:Eight-day mountain-bike stage race across the Western Cape\; the start and finish stages disrupt local traffic.\n\nMore info: https://www.cape-epic.com/
@@ -48,32 +34,20 @@ UID:a30c186bf8a8844b@greenpoint-stadium-scraper
 URL:https://springboks.tmtickets.co.za/Events
 END:VEVENT
 BEGIN:VEVENT
-DESCRIPTION:We're hosting one of the Western Cape’s largest inter-school athletics events\,  for a day of elite competition and school spirit.
-DTEND:20260207T215959Z
-DTSTART:20260207T040000Z
-SUMMARY:DTBS Flashes 
-UID:c7906ff813a226a0@greenpoint-stadium-scraper
+DTSTART;VALUE=DATE:20270102
+DTEND;VALUE=DATE:20270104
+DESCRIPTION:The Cape Town Minstrel Carnival (Kaapse Klopse)\, a large minstrel festival held annually on 2 January. The parade moves through the CBD\, Bo-Kaap and Green Point\, closing Somerset Road and Green Point Main Road for the day.\n\nMore info: https://en.wikipedia.org/wiki/Kaapse_Klopse
+SUMMARY:Minstrel Carnival (Kaapse Klopse)
+UID:06989d96fc0d0200@greenpoint-stadium-scraper
+URL:https://en.wikipedia.org/wiki/Kaapse_Klopse
 END:VEVENT
 BEGIN:VEVENT
-DESCRIPTION:DHL Stormers take on Glasgow Warriors. DHL Stormers XXIII will also take on the Sharks in a friendly match.
-DTEND:20260425T215959Z
-DTSTART:20260425T114500Z
-SUMMARY:DHL Stormers vs Glasgow Warriors
-UID:fb8467c8a4c96636@greenpoint-stadium-scraper
-END:VEVENT
-BEGIN:VEVENT
-DESCRIPTION:Sanlam Cape Town Marathon Expo & Registration\n
-DTEND:20260523T215959Z
-DTSTART:20260523T080000Z
-SUMMARY:Sanlam Cape Town Marathon Expo
-UID:bdb45bdd4c0e2993@greenpoint-stadium-scraper
-END:VEVENT
-BEGIN:VEVENT
-DTSTART;VALUE=DATE:20260102
-DTEND;VALUE=DATE:20260104
-DESCRIPTION:The Cape Town Minstrel Carnival\, also known as Kaapse Klopse\, is a large minstrel festival held annually on January 2 in Cape Town\, South Africa.
-SUMMARY:Minstrel Parade (Kaapse Klopse)
-UID:1e0030ce4f282255@greenpoint-stadium-scraper
+DTSTART;VALUE=DATE:20270912
+DTEND;VALUE=DATE:20270914
+DESCRIPTION:Half marathon and 10 km along the Atlantic seaboard. Closures on Green Point\, Sea Point and Mouille Point roads.\n\nMore info: https://thegunrun.co.za/
+SUMMARY:The Gun Run
+UID:c0e59b6d76fdeee0@greenpoint-stadium-scraper
+URL:https://thegunrun.co.za/
 END:VEVENT
 BEGIN:VEVENT
 DESCRIPTION:Monthly art-and-culture evening — CBD galleries and venues open late (16:00–23:00)\, bringing foot traffic and parking pressure to the city centre.\n\nMore info: https://first-thursdays.co.za/
@@ -84,21 +58,6 @@ UID:d525f44b4faa1872@greenpoint-stadium-scraper
 URL:https://first-thursdays.co.za/
 END:VEVENT
 BEGIN:VEVENT
-DESCRIPTION:SACO 2025 International Conference | 4–5 November at DHL Stadium
-DTEND:20251104T200000Z
-DTSTART:20251104T050000Z
-SUMMARY:Creative & Sports Economy Futures 2025
-UID:b74bd72837d8af61@greenpoint-stadium-scraper
-END:VEVENT
-BEGIN:VEVENT
-DTSTART;VALUE=DATE:20270102
-DTEND;VALUE=DATE:20270104
-DESCRIPTION:The Cape Town Minstrel Carnival (Kaapse Klopse)\, a large minstrel festival held annually on 2 January. The parade moves through the CBD\, Bo-Kaap and Green Point\, closing Somerset Road and Green Point Main Road for the day.\n\nMore info: https://en.wikipedia.org/wiki/Kaapse_Klopse
-SUMMARY:Minstrel Carnival (Kaapse Klopse)
-UID:06989d96fc0d0200@greenpoint-stadium-scraper
-URL:https://en.wikipedia.org/wiki/Kaapse_Klopse
-END:VEVENT
-BEGIN:VEVENT
 DESCRIPTION:Monthly art-and-culture evening — CBD galleries and venues open late (16:00–23:00)\, bringing foot traffic and parking pressure to the city centre.\n\nMore info: https://first-thursdays.co.za/
 DTEND:20260507T210000Z
 DTSTART:20260507T140000Z
@@ -107,18 +66,12 @@ UID:7852f43c017a1570@greenpoint-stadium-scraper
 URL:https://first-thursdays.co.za/
 END:VEVENT
 BEGIN:VEVENT
-DESCRIPTION:DHL Stormers take on Edinburgh Rugby. 
-DTEND:20260328T215959Z
-DTSTART:20260328T170000Z
-SUMMARY:DHL Stormers vs Edinburgh
-UID:bcc99ead525b71ed@greenpoint-stadium-scraper
-END:VEVENT
-BEGIN:VEVENT
-DESCRIPTION:Sanlam Cape Town Marathon Expo & Registration\n
-DTEND:20260522T215959Z
-DTSTART:20260522T070000Z
-SUMMARY:Sanlam Cape Town Marathon Expo
-UID:ea832eaa0f4887f6@greenpoint-stadium-scraper
+DESCRIPTION:Monthly art-and-culture evening — CBD galleries and venues open late (16:00–23:00)\, bringing foot traffic and parking pressure to the city centre.\n\nMore info: https://first-thursdays.co.za/
+DTEND:20270902T210000Z
+DTSTART:20270902T140000Z
+SUMMARY:First Thursdays
+UID:170a43d6993ee0fa@greenpoint-stadium-scraper
+URL:https://first-thursdays.co.za/
 END:VEVENT
 BEGIN:VEVENT
 DESCRIPTION:Monthly art-and-culture evening — CBD galleries and venues open late (16:00–23:00)\, bringing foot traffic and parking pressure to the city centre.\n\nMore info: https://first-thursdays.co.za/
@@ -130,33 +83,10 @@ URL:https://first-thursdays.co.za/
 END:VEVENT
 BEGIN:VEVENT
 DESCRIPTION:Monthly art-and-culture evening — CBD galleries and venues open late (16:00–23:00)\, bringing foot traffic and parking pressure to the city centre.\n\nMore info: https://first-thursdays.co.za/
-DTEND:20260806T210000Z
-DTSTART:20260806T140000Z
-SUMMARY:First Thursdays
-UID:c9e279b3933f19ba@greenpoint-stadium-scraper
-URL:https://first-thursdays.co.za/
-END:VEVENT
-BEGIN:VEVENT
-DESCRIPTION:Monthly art-and-culture evening — CBD galleries and venues open late (16:00–23:00)\, bringing foot traffic and parking pressure to the city centre.\n\nMore info: https://first-thursdays.co.za/
 DTEND:20270204T210000Z
 DTSTART:20270204T140000Z
 SUMMARY:First Thursdays
 UID:0c8ca35aee5ff7ae@greenpoint-stadium-scraper
-URL:https://first-thursdays.co.za/
-END:VEVENT
-BEGIN:VEVENT
-DESCRIPTION:HSBC SVNS returns to DHL Stadium for a weekend of world-class rugby\, live music\, food\, and unforgettable vibes.
-DTEND:20251206T215959Z
-DTSTART:20251206T080000Z
-SUMMARY:HSBC SVNS Cape Town
-UID:f97c4fe79d6dd529@greenpoint-stadium-scraper
-END:VEVENT
-BEGIN:VEVENT
-DESCRIPTION:Monthly art-and-culture evening — CBD galleries and venues open late (16:00–23:00)\, bringing foot traffic and parking pressure to the city centre.\n\nMore info: https://first-thursdays.co.za/
-DTEND:20270902T210000Z
-DTSTART:20270902T140000Z
-SUMMARY:First Thursdays
-UID:170a43d6993ee0fa@greenpoint-stadium-scraper
 URL:https://first-thursdays.co.za/
 END:VEVENT
 BEGIN:VEVENT
@@ -168,20 +98,6 @@ UID:e96644db6dac49c0@greenpoint-stadium-scraper
 URL:https://www.capetownmarathon.com/
 END:VEVENT
 BEGIN:VEVENT
-DESCRIPTION:DHL Stormers take on Connacht Rugby. DHL Stormers XXIII will also take Vodacom Bulls U23 in a friendly match.\n
-DTEND:20260418T215959Z
-DTSTART:20260418T114500Z
-SUMMARY:DHL Stormers vs Connacht Rugby
-UID:779dca9bf873fe71@greenpoint-stadium-scraper
-END:VEVENT
-BEGIN:VEVENT
-DESCRIPTION:Join us for one of the most coveted tasting events on the South African wine calendar.
-DTEND:20251106T215959Z
-DTSTART:20251106T150000Z
-SUMMARY:Caroline's White Wine Review 
-UID:37fd7751cc0af691@greenpoint-stadium-scraper
-END:VEVENT
-BEGIN:VEVENT
 DESCRIPTION:Monthly art-and-culture evening — CBD galleries and venues open late (16:00–23:00)\, bringing foot traffic and parking pressure to the city centre.\n\nMore info: https://first-thursdays.co.za/
 DTEND:20260702T210000Z
 DTSTART:20260702T140000Z
@@ -190,11 +106,13 @@ UID:b7fd37516ad2b3e5@greenpoint-stadium-scraper
 URL:https://first-thursdays.co.za/
 END:VEVENT
 BEGIN:VEVENT
-DESCRIPTION:DHL Stormers take on  Dragons RFC. 
-DTEND:20260322T215959Z
-DTSTART:20260322T130000Z
-SUMMARY:DHL Stormers vs Dragons
-UID:2ec031ff34bf24e8@greenpoint-stadium-scraper
+DTSTART;VALUE=DATE:20270211
+DTEND;VALUE=DATE:20270213
+DESCRIPTION:Evening joint sitting of Parliament at the Cape Town City Hall (Grand Parade). Road closures and a security lockdown around the Darling/Plein/Roeland Street precinct through the afternoon and evening.\n\nMore info: https://www.parliament.gov.za/state-of-the-nation-address
+LOCATION:Cape Town City Hall\, Darling Street\, Cape Town
+SUMMARY:State of the Nation Address (SONA)
+UID:a44dd55a1f38ee31@greenpoint-stadium-scraper
+URL:https://www.parliament.gov.za/state-of-the-nation-address
 END:VEVENT
 BEGIN:VEVENT
 DTSTART;VALUE=DATE:20270711
@@ -213,33 +131,12 @@ UID:bdffe21a3bc5262e@greenpoint-stadium-scraper
 URL:https://first-thursdays.co.za/
 END:VEVENT
 BEGIN:VEVENT
-DESCRIPTION:Sanlam Cape Town Marathon Expo & Registration\n
-DTEND:20260521T215959Z
-DTSTART:20260521T070000Z
-SUMMARY:Sanlam Cape Town Marathon Expo
-UID:0b42631e3837fc41@greenpoint-stadium-scraper
-END:VEVENT
-BEGIN:VEVENT
-DESCRIPTION:Stellenbosch FC takes on Kaizer Chiefs in the  Nedbank Cup Round of 32.
-DTEND:20260204T215959Z
-DTSTART:20260204T170000Z
-SUMMARY:Stellenbosch FC vs Kaizer Chiefs 
-UID:a73f5da824063ac9@greenpoint-stadium-scraper
-END:VEVENT
-BEGIN:VEVENT
 DESCRIPTION:Monthly art-and-culture evening — CBD galleries and venues open late (16:00–23:00)\, bringing foot traffic and parking pressure to the city centre.\n\nMore info: https://first-thursdays.co.za/
 DTEND:20260305T210000Z
 DTSTART:20260305T140000Z
 SUMMARY:First Thursdays
 UID:d73857d38b872a67@greenpoint-stadium-scraper
 URL:https://first-thursdays.co.za/
-END:VEVENT
-BEGIN:VEVENT
-DESCRIPTION:HSBC SVNS returns to DHL Stadium for a weekend of world-class rugby\, live music\, food\, and unforgettable vibes.
-DTEND:20251207T215959Z
-DTSTART:20251207T080000Z
-SUMMARY:HSBC SVNS Cape Town
-UID:5d3306d505a1e905@greenpoint-stadium-scraper
 END:VEVENT
 BEGIN:VEVENT
 DESCRIPTION:Monthly art-and-culture evening — CBD galleries and venues open late (16:00–23:00)\, bringing foot traffic and parking pressure to the city centre.\n\nMore info: https://first-thursdays.co.za/
@@ -266,14 +163,6 @@ UID:ec8e91dcb49816a3@greenpoint-stadium-scraper
 URL:https://miningindaba.com/
 END:VEVENT
 BEGIN:VEVENT
-DTSTART;VALUE=DATE:20270912
-DTEND;VALUE=DATE:20270914
-DESCRIPTION:Half marathon and 10 km along the Atlantic seaboard. Closures on Green Point\, Sea Point and Mouille Point roads.\n\nMore info: https://thegunrun.co.za/
-SUMMARY:The Gun Run
-UID:c0e59b6d76fdeee0@greenpoint-stadium-scraper
-URL:https://thegunrun.co.za/
-END:VEVENT
-BEGIN:VEVENT
 DESCRIPTION:Monthly art-and-culture evening — CBD galleries and venues open late (16:00–23:00)\, bringing foot traffic and parking pressure to the city centre.\n\nMore info: https://first-thursdays.co.za/
 DTEND:20270107T210000Z
 DTSTART:20270107T140000Z
@@ -288,13 +177,6 @@ DTSTART:20260903T140000Z
 SUMMARY:First Thursdays
 UID:4b0d224d8b45ab26@greenpoint-stadium-scraper
 URL:https://first-thursdays.co.za/
-END:VEVENT
-BEGIN:VEVENT
-DESCRIPTION:Stellenbosch FC takes on Singida Black Stars in the CAF Confederation Cup.
-DTEND:20260215T215959Z
-DTSTART:20260215T160000Z
-SUMMARY:Stellenbosch FC vs Singida Black Stars 
-UID:f2b5571186d3bb45@greenpoint-stadium-scraper
 END:VEVENT
 BEGIN:VEVENT
 DESCRIPTION:Monthly art-and-culture evening — CBD galleries and venues open late (16:00–23:00)\, bringing foot traffic and parking pressure to the city centre.\n\nMore info: https://first-thursdays.co.za/
@@ -319,20 +201,6 @@ DTSTART:20271202T140000Z
 SUMMARY:First Thursdays
 UID:82bf3dfac4e8eb3c@greenpoint-stadium-scraper
 URL:https://first-thursdays.co.za/
-END:VEVENT
-BEGIN:VEVENT
-DESCRIPTION:Experience three days of world-class artistry as the South African International Tattoo Convention takes place from 13–15 March 2026.
-DTEND:20260313T215959Z
-DTSTART:20260313T150000Z
-SUMMARY:SA International Tattoo Convention
-UID:c128429d8d8672cd@greenpoint-stadium-scraper
-END:VEVENT
-BEGIN:VEVENT
-DESCRIPTION:DHL Stormers takes on Vodacom Bulls.
-DTEND:20260103T215959Z
-DTSTART:20260103T160000Z
-SUMMARY:DHL Stormers vs Vodacom Bulls 
-UID:f36b0794ca574c6f@greenpoint-stadium-scraper
 END:VEVENT
 BEGIN:VEVENT
 DESCRIPTION:Monthly art-and-culture evening — CBD galleries and venues open late (16:00–23:00)\, bringing foot traffic and parking pressure to the city centre.\n\nMore info: https://first-thursdays.co.za/
@@ -367,41 +235,6 @@ UID:58b654d14b45f9f9@greenpoint-stadium-scraper
 URL:https://capetowncarnival.com/
 END:VEVENT
 BEGIN:VEVENT
-DESCRIPTION:DHL Stormers take on Leicester Tigers.
-DTEND:20260117T215959Z
-DTSTART:20260117T151500Z
-SUMMARY:DHL Stormers vs Leicester Tigers 
-UID:9f7c41c7a408751c@greenpoint-stadium-scraper
-END:VEVENT
-BEGIN:VEVENT
-DESCRIPTION:Experience three days of world-class artistry as the South African International Tattoo Convention takes place from 13–15 March 2026.
-DTEND:20260315T215959Z
-DTSTART:20260315T080000Z
-SUMMARY:SA International Tattoo Convention
-UID:93bf78efdc3e9ea9@greenpoint-stadium-scraper
-END:VEVENT
-BEGIN:VEVENT
-DESCRIPTION:DHL Stormers takes on Leinster in their first home game of the 2025/6 Vodacom URC season. 
-DTEND:20250926T215959Z
-DTSTART:20250926T170000Z
-SUMMARY:DHL Stormers vs Leinster 
-UID:3f745e02194c6e7d@greenpoint-stadium-scraper
-END:VEVENT
-BEGIN:VEVENT
-DESCRIPTION:Get ready for three days of cycling excitement as the Cape Town Cycle Tour Expo returns from 5–7 March 2026.
-DTEND:20260305T215959Z
-DTSTART:20260305T073000Z
-SUMMARY:Cape Town Cycle Tour Expo
-UID:7f4ab8ac56df214c@greenpoint-stadium-scraper
-END:VEVENT
-BEGIN:VEVENT
-DESCRIPTION:Get ready for three days of cycling excitement as the Cape Town Cycle Tour Expo returns from 5–7 March 2026.
-DTEND:20260307T215959Z
-DTSTART:20260307T070000Z
-SUMMARY:Cape Town Cycle Tour Expo
-UID:c4161fd73ca9dce0@greenpoint-stadium-scraper
-END:VEVENT
-BEGIN:VEVENT
 DESCRIPTION:Monthly art-and-culture evening — CBD galleries and venues open late (16:00–23:00)\, bringing foot traffic and parking pressure to the city centre.\n\nMore info: https://first-thursdays.co.za/
 DTEND:20270401T210000Z
 DTSTART:20270401T140000Z
@@ -410,68 +243,12 @@ UID:6da66b9e400f2eac@greenpoint-stadium-scraper
 URL:https://first-thursdays.co.za/
 END:VEVENT
 BEGIN:VEVENT
-DESCRIPTION:DHL Stormers takes on Emirates Lions on 20 December 2025. 
-DTEND:20251220T215959Z
-DTSTART:20251220T133000Z
-SUMMARY:DHL Stormers vs Emirates Lions 
-UID:126262923726883c@greenpoint-stadium-scraper
-END:VEVENT
-BEGIN:VEVENT
-DESCRIPTION:Experience three days of world-class artistry as the South African International Tattoo Convention takes place from 13–15 March 2026.
-DTEND:20260314T215959Z
-DTSTART:20260314T080000Z
-SUMMARY:SA International Tattoo Convention
-UID:ac704c8357641033@greenpoint-stadium-scraper
-END:VEVENT
-BEGIN:VEVENT
 DESCRIPTION:Monthly art-and-culture evening — CBD galleries and venues open late (16:00–23:00)\, bringing foot traffic and parking pressure to the city centre.\n\nMore info: https://first-thursdays.co.za/
 DTEND:20270805T210000Z
 DTSTART:20270805T140000Z
 SUMMARY:First Thursdays
 UID:284ed2ba7c87b5c8@greenpoint-stadium-scraper
 URL:https://first-thursdays.co.za/
-END:VEVENT
-BEGIN:VEVENT
-DESCRIPTION:This Summit unites school sport educators\, coaches\, and leaders for two days of learning and collaboration.
-DTEND:20251021T215959Z
-DTSTART:20251021T060000Z
-SUMMARY:Playbook Education School Sports Summit 
-UID:42421972d8c60aa3@greenpoint-stadium-scraper
-END:VEVENT
-BEGIN:VEVENT
-DESCRIPTION:DHL Stormers take on Hollywoodbets Sharks.
-DTEND:20260124T215959Z
-DTSTART:20260124T173000Z
-SUMMARY:DHL Stormers vs Hollywoodbets Sharks 
-UID:84d2ce8e28d59b9b@greenpoint-stadium-scraper
-END:VEVENT
-BEGIN:VEVENT
-DESCRIPTION:This Summit unites school sport educators\, coaches\, and leaders for two days of learning and collaboration.
-DTEND:20251022T215959Z
-DTSTART:20251022T061500Z
-SUMMARY:Playbook Education School Sports Summit 
-UID:1a43ab549f0c9c97@greenpoint-stadium-scraper
-END:VEVENT
-BEGIN:VEVENT
-DESCRIPTION:SACO 2025 International Conference | 4–5 November at DHL Stadium
-DTEND:20251105T153000Z
-DTSTART:20251105T050000Z
-SUMMARY:Creative & Sports Economy Futures 2025
-UID:12ab81cdd2f181ba@greenpoint-stadium-scraper
-END:VEVENT
-BEGIN:VEVENT
-DESCRIPTION:DHL Stormers take on Ospreys.
-DTEND:20251003T215959Z
-DTSTART:20251003T170000Z
-SUMMARY:DHL Stormers vs Ospreys 
-UID:0fb72e3c093dfce8@greenpoint-stadium-scraper
-END:VEVENT
-BEGIN:VEVENT
-DESCRIPTION:Get ready for three days of cycling excitement as the Cape Town Cycle Tour Expo returns from 5–7 March 2026.
-DTEND:20260306T215959Z
-DTSTART:20260306T070000Z
-SUMMARY:Cape Town Cycle Tour Expo
-UID:dfc91acba60858b7@greenpoint-stadium-scraper
 END:VEVENT
 BEGIN:VEVENT
 DESCRIPTION:Witness the Springboks take on the All Blacks in the Rugby's Greatest Rivalry Tour.
@@ -521,10 +298,11 @@ UID:c9ffe84c12d39af0@greenpoint-stadium-scraper
 URL:https://first-thursdays.co.za/
 END:VEVENT
 BEGIN:VEVENT
-DESCRIPTION:South Africa will face Panama in a FIFA International Friendly match.
-DTEND:20260331T215959Z
-DTSTART:20260331T173000Z
-SUMMARY:South Africa vs Panama
-UID:c32ba518a5f00a67@greenpoint-stadium-scraper
+DESCRIPTION:Monthly art-and-culture evening — CBD galleries and venues open late (16:00–23:00)\, bringing foot traffic and parking pressure to the city centre.\n\nMore info: https://first-thursdays.co.za/
+DTEND:20260806T210000Z
+DTSTART:20260806T140000Z
+SUMMARY:First Thursdays
+UID:c9e279b3933f19ba@greenpoint-stadium-scraper
+URL:https://first-thursdays.co.za/
 END:VEVENT
 END:VCALENDAR

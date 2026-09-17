@@ -62,6 +62,7 @@ if the scrape fails.
 | Two Oceans Marathon | Easter Sat–Sun | Southern suburbs, peninsula |
 | Sanlam Cape Town Marathon | May | Green Point, Sea Point, CBD, suburbs |
 | Investing in African Mining Indaba | Early February (Mon–Thu) | Foreshore / CBD (CTICC) |
+| State of the Nation Address (SONA) | Evening, ~2nd Thursday of February | CBD (City Hall / Grand Parade / Parliament precinct) |
 | Knysna Cycle Tour | June–July | Knysna |
 
 ### 3. Calculated recurring events — fixed calendar rules
