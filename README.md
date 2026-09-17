@@ -64,7 +64,6 @@ if the scrape fails.
 | Investing in African Mining Indaba    | Early February (Mon–Thu) | Foreshore / CBD (CTICC) |
 | State of the Nation Address (SONA)    | Evening, ~2nd Thursday of February | CBD (City Hall / Grand Parade / Parliament precinct) |
 | Slave Route Challenge                 | ~3rd Sunday of October | CBD, District Six, Bo-Kaap, DHL Stadium |
-| International Friendship Run          | Cape Town Marathon weekend | Green Point, Mouille Point (seaboard) |
 | Cape Town Big Walk                    | Varies (recently March) | Green Point, Sea Point Promenade |
 | Cape Town International Jazz Festival | Last weekend of March | Foreshore / CBD (CTICC) |
 | Africa Oil Week                       | Sept–Oct | Foreshore / CBD (CTICC) |

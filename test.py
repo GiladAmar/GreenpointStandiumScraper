@@ -19,7 +19,6 @@ Includes:
 - Investing in African Mining Indaba (CTICC, early February)
 - State of the Nation Address (SONA)
 - Slave Route Challenge
-- International Friendship Run
 - Cape Town Big Walk
 - Cape Town International Jazz Festival (CTICC)
 - Africa Oil Week (CTICC)
@@ -105,10 +104,6 @@ EVENT_DESCRIPTIONS: Dict[str, str] = {
         "Darling Street and winding through District Six, the Company's Gardens, "
         "Bo-Kaap, the DHL Stadium and Fort Wynyard. CBD and Green Point road closures "
         "through the morning.",
-    "International Friendship Run":
-        "Curtain-raiser fun run of the Cape Town Marathon weekend, starting and "
-        "finishing at the DHL Stadium forecourt through Mouille Point and Green Point. "
-        "Short Atlantic-seaboard road closures.",
     "Cape Town Big Walk":
         "Mass-participation charity walk (5–10 km) starting in Green Point and "
         "following the Sea Point Promenade. Atlantic-seaboard road and parking "
@@ -648,21 +643,6 @@ def fetch_slave_route() -> Optional[Dict[str, str]]:
                     "start_date": str(d), "end_date": str(d)}
     return {"name": name, "url": url, "location": location}
 
-def fetch_friendship_run() -> Optional[Dict[str, str]]:
-    """International Friendship Run — curtain-raiser of the Cape Town Marathon weekend.
-
-    Shares the marathon weekend on the Atlantic seaboard; the date tracks the marathon
-    (which no longer has a fixed month), so this is scrape-only with no calendar-rule
-    fallback — it stays off the calendar until an official date can be read.
-    """
-    name = "International Friendship Run"
-    url = "https://www.capetownmarathon.com/"
-    location = "Green Point / Mouille Point (DHL Stadium forecourt)"
-    hit = scrape_event_date("https://www.capetownmarathon.com/friendship-run/", url)
-    if hit:
-        return {"name": name, "url": url, "location": location, **hit}
-    return {"name": name, "url": url, "location": location}
-
 def fetch_big_walk() -> Optional[Dict[str, str]]:
     """Cape Town Big Walk — mass charity walk along the Sea Point Promenade.
 
@@ -826,7 +806,6 @@ def fetch_all_events() -> List[Dict[str, str]]:
         fetch_mining_indaba,
         fetch_sona,
         fetch_slave_route,
-        fetch_friendship_run,
         fetch_big_walk,
         fetch_jazz_festival,
         fetch_africa_oil_week,

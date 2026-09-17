@@ -338,7 +338,6 @@ CALCULATED_FETCHERS = [
 SCRAPE_ONLY_FETCHERS = [
     ("fetch_ct_marathon",      "Sanlam Cape Town Marathon"),
     ("fetch_cape_epic",        "Absa Cape Epic"),
-    ("fetch_friendship_run",   "International Friendship Run"),
     ("fetch_big_walk",         "Cape Town Big Walk"),
     ("fetch_africa_oil_week",  "Africa Oil Week"),
     ("fetch_comic_con",        "Comic Con Cape Town"),
@@ -413,8 +412,6 @@ SCRAPE_SAMPLES = [
      f"<h1>March 21 - 28, {NEXT_YEAR}</h1>", f"{NEXT_YEAR}-03-21", f"{NEXT_YEAR}-03-28"),
     ("fetch_slave_route",
      f"<p>The race takes place on 18 October {NEXT_YEAR}.</p>", f"{NEXT_YEAR}-10-18", f"{NEXT_YEAR}-10-18"),
-    ("fetch_friendship_run",
-     f"<p>Join the fun on 22 May {NEXT_YEAR}!</p>", f"{NEXT_YEAR}-05-22", f"{NEXT_YEAR}-05-22"),
     ("fetch_big_walk",
      f"<p>Big Walk day: 15 March {NEXT_YEAR}</p>", f"{NEXT_YEAR}-03-15", f"{NEXT_YEAR}-03-15"),
     ("fetch_jazz_festival",

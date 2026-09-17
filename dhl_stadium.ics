@@ -256,15 +256,6 @@ UID:58b654d14b45f9f9@greenpoint-stadium-scraper
 URL:https://capetowncarnival.com/
 END:VEVENT
 BEGIN:VEVENT
-DTSTART;VALUE=DATE:20270522
-DTEND;VALUE=DATE:20270525
-DESCRIPTION:Curtain-raiser fun run of the Cape Town Marathon weekend\, starting and finishing at the DHL Stadium forecourt through Mouille Point and Green Point. Short Atlantic-seaboard road closures.\n\nMore info: https://www.capetownmarathon.com/
-LOCATION:Green Point / Mouille Point (DHL Stadium forecourt)
-SUMMARY:International Friendship Run
-UID:29cbf1bfa1ac8a8e@greenpoint-stadium-scraper
-URL:https://www.capetownmarathon.com/
-END:VEVENT
-BEGIN:VEVENT
 DESCRIPTION:Monthly art-and-culture evening — CBD galleries and venues open late (16:00–23:00)\, bringing foot traffic and parking pressure to the city centre.\n\nMore info: https://first-thursdays.co.za/
 DTEND:20270401T210000Z
 DTSTART:20270401T140000Z
