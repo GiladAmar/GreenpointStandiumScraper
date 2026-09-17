@@ -4,13 +4,13 @@ Guidance for working in this repo. It scrapes/computes Cape Town events that dis
 CBD / Green Point / Atlantic-seaboard traffic and publishes them as `dhl_stadium.ics`.
 
 ## Layout
-- `test.py` — despite the name, this is the **city-event scraper** (not tests). Each
+- `city_events.py` — the **city-event scraper**. Each
   `fetch_*` returns `{name, url, start_date, end_date, description?, location?}` and is
   registered in `fetch_all_events()`. Computed date rules live in the `*_date(s)` helpers;
   shared scraping in `scrape_event_date()`, `fetch_site()`, `generic_date_hunt()`,
   `jsonld_event_dates()`. Blurbs in `EVENT_DESCRIPTIONS`.
 - `generate_dhl_ics.py` — builds the ICS. Pulls the DHL Stadium API (`fetch_stadium_api`,
-  paginated), adds First Thursdays + `test.py` events, then `merge_events()` preserves past
+  paginated), adds `city_events.py` events, then `merge_events()` preserves past
   events from the existing file. Entry point is `main()` (guarded by `__main__`).
 - `test_events.py` — pytest suite. Run: `python3 -m pytest test_events.py -q`.
 - CI (`.github/workflows/update_icl.yml`) runs `generate_dhl_ics.py` on the 1st & 15th and

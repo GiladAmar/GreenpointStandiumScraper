@@ -2,7 +2,7 @@ import hashlib
 import os
 from datetime import date, datetime, timedelta, timezone
 from zoneinfo import ZoneInfo
-from test import fetch_all_events
+from city_events import fetch_all_events
 from typing import Any, List
 
 import requests
@@ -150,13 +150,13 @@ def get_api_events(resp: Any) -> List[Event]:
 
 def add_cape_town_events() -> List[Event]:
     """
-    Fetch Cape Town major events via test.py scrapers and return as Event objects.
+    Fetch Cape Town major events via city_events.py scrapers and return as Event objects.
 
     Events include the major Cape Town races, parades and CTICC conferences that
     drive road closures and congestion around Green Point, the Atlantic seaboard and
-    the CBD (see test.EVENT_DESCRIPTIONS for the full, current list).
+    the CBD (see city_events.EVENT_DESCRIPTIONS for the full, current list).
 
-    Each event carries a short context blurb (from test.EVENT_DESCRIPTIONS)
+    Each event carries a short context blurb (from city_events.EVENT_DESCRIPTIONS)
     describing what it is and how it affects Green Point / seaboard / CBD traffic.
 
     Returns:

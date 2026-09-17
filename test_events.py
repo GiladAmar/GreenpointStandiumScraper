@@ -8,7 +8,7 @@ import pytest
 from datetime import date, timedelta
 from unittest.mock import patch
 
-import test as events
+import city_events as events
 
 
 # ── nth_weekday_of_month ──────────────────────────────────────────────────────
@@ -348,7 +348,7 @@ ALL_FETCHERS = CALCULATED_FETCHERS + SCRAPE_ONLY_FETCHERS
 
 @pytest.mark.parametrize("fn_name,expected_name", ALL_FETCHERS)
 def test_fetch_returns_dict_with_correct_name(fn_name, expected_name):
-    with patch("test.safe_get", return_value=None):
+    with patch("city_events.safe_get", return_value=None):
         result = getattr(events, fn_name)()
     assert isinstance(result, dict)
     assert result["name"] == expected_name
@@ -357,7 +357,7 @@ def test_fetch_returns_dict_with_correct_name(fn_name, expected_name):
 @pytest.mark.parametrize("fn_name,_", CALCULATED_FETCHERS)
 def test_calculated_fetchers_always_return_dates(fn_name, _):
     """Events with calendar-rule fallbacks must return dates even with no network."""
-    with patch("test.safe_get", return_value=None):
+    with patch("city_events.safe_get", return_value=None):
         result = getattr(events, fn_name)()
     assert result.get("start_date"), f"{fn_name} returned no start_date"
     assert result.get("end_date"),   f"{fn_name} returned no end_date"
@@ -365,7 +365,7 @@ def test_calculated_fetchers_always_return_dates(fn_name, _):
 
 @pytest.mark.parametrize("fn_name,_", CALCULATED_FETCHERS)
 def test_calculated_fetchers_return_valid_iso_dates(fn_name, _):
-    with patch("test.safe_get", return_value=None):
+    with patch("city_events.safe_get", return_value=None):
         result = getattr(events, fn_name)()
     date.fromisoformat(result["start_date"])
     date.fromisoformat(result["end_date"])
@@ -374,7 +374,7 @@ def test_calculated_fetchers_return_valid_iso_dates(fn_name, _):
 @pytest.mark.parametrize("fn_name,_", CALCULATED_FETCHERS)
 def test_calculated_fetchers_return_future_dates(fn_name, _):
     """The next upcoming occurrence should be in the future."""
-    with patch("test.safe_get", return_value=None):
+    with patch("city_events.safe_get", return_value=None):
         result = getattr(events, fn_name)()
     start = date.fromisoformat(result["start_date"])
     assert start >= date.today(), f"{fn_name} returned past date {start}"
@@ -382,7 +382,7 @@ def test_calculated_fetchers_return_future_dates(fn_name, _):
 
 @pytest.mark.parametrize("fn_name,_", CALCULATED_FETCHERS)
 def test_end_date_not_before_start_date(fn_name, _):
-    with patch("test.safe_get", return_value=None):
+    with patch("city_events.safe_get", return_value=None):
         result = getattr(events, fn_name)()
     start = date.fromisoformat(result["start_date"])
     end   = date.fromisoformat(result["end_date"])
@@ -392,7 +392,7 @@ def test_end_date_not_before_start_date(fn_name, _):
 @pytest.mark.parametrize("fn_name,_", SCRAPE_ONLY_FETCHERS)
 def test_scrape_only_fetchers_have_no_offline_date(fn_name, _):
     """Scrape-only events must not invent a date when the network is unavailable."""
-    with patch("test.safe_get", return_value=None):
+    with patch("city_events.safe_get", return_value=None):
         result = getattr(events, fn_name)()
     assert "start_date" not in result, f"{fn_name} fabricated a date offline"
 
@@ -431,7 +431,7 @@ SCRAPE_SAMPLES = [
 
 @pytest.mark.parametrize("fn_name,html,exp_start,exp_end", SCRAPE_SAMPLES)
 def test_fetcher_scrapes_official_date(fn_name, html, exp_start, exp_end):
-    with patch("test.safe_get", return_value=html):
+    with patch("city_events.safe_get", return_value=html):
         result = getattr(events, fn_name)()
     assert result["start_date"] == exp_start
     assert result["end_date"] == exp_end
@@ -444,7 +444,7 @@ def test_scrape_prefers_jsonld_over_stray_text():
         f'{{"@type":"Event","startDate":"{NEXT_YEAR}-09-15","endDate":"{NEXT_YEAR}-09-18"}}'
         f'</script><p>Newsletter sent 1 January {NEXT_YEAR}</p>'
     )
-    with patch("test.safe_get", return_value=html):
+    with patch("city_events.safe_get", return_value=html):
         result = events.fetch_africa_oil_week()
     assert result["start_date"] == f"{NEXT_YEAR}-09-15"
     assert result["end_date"] == f"{NEXT_YEAR}-09-18"
@@ -452,7 +452,7 @@ def test_scrape_prefers_jsonld_over_stray_text():
 
 def test_scrape_ignores_stale_date_and_uses_calendar_fallback():
     """A past/stale date must be rejected; a calculated fetcher then uses its rule."""
-    with patch("test.safe_get", return_value="<p>Last held on 5 January 2000</p>"):
+    with patch("city_events.safe_get", return_value="<p>Last held on 5 January 2000</p>"):
         result = events.fetch_jazz_festival()
     start = date.fromisoformat(result["start_date"])
     assert start >= date.today()
@@ -461,7 +461,7 @@ def test_scrape_ignores_stale_date_and_uses_calendar_fallback():
 
 def test_scrape_only_ignores_stale_date_and_stays_off_calendar():
     """A scrape-only event with only a stale date returns name-only (no fabrication)."""
-    with patch("test.safe_get", return_value="<p>Archive: 5 January 2000</p>"):
+    with patch("city_events.safe_get", return_value="<p>Archive: 5 January 2000</p>"):
         result = events.fetch_africa_oil_week()
     assert "start_date" not in result
 
