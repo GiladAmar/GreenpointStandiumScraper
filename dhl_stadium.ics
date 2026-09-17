@@ -27,6 +27,20 @@ UID:d2372f93c76bc23c@greenpoint-stadium-scraper
 URL:https://first-thursdays.co.za/
 END:VEVENT
 BEGIN:VEVENT
+DESCRIPTION:DHL Stormers take on the Lions in the Vodacom United Rugby Championship Tournament.
+DTEND:20261219T215959Z
+DTSTART:20261219T130000Z
+SUMMARY:DHL Stormers vs Lions  
+UID:2f1adb10d00ef44b@greenpoint-stadium-scraper
+END:VEVENT
+BEGIN:VEVENT
+DESCRIPTION:DHL Stormers take on Cardiff Rugby in the Vodacom United Rugby Championship Tournament.
+DTEND:20270123T215959Z
+DTSTART:20270123T140000Z
+SUMMARY:DHL Stormers vs Cardiff Rugby 
+UID:6a0ff80b505999d6@greenpoint-stadium-scraper
+END:VEVENT
+BEGIN:VEVENT
 DTSTART;VALUE=DATE:20270321
 DTEND;VALUE=DATE:20270330
 DESCRIPTION:Eight-day mountain-bike stage race across the Western Cape\; the start and finish stages disrupt local traffic.\n\nMore info: https://www.epic-series.com/capeepic
@@ -76,12 +90,11 @@ UID:7852f43c017a1570@greenpoint-stadium-scraper
 URL:https://first-thursdays.co.za/
 END:VEVENT
 BEGIN:VEVENT
-DESCRIPTION:Monthly art-and-culture evening — CBD galleries and venues open late (16:00–23:00)\, bringing foot traffic and parking pressure to the city centre.\n\nMore info: https://first-thursdays.co.za/
-DTEND:20270902T210000Z
-DTSTART:20270902T140000Z
-SUMMARY:First Thursdays
-UID:170a43d6993ee0fa@greenpoint-stadium-scraper
-URL:https://first-thursdays.co.za/
+DESCRIPTION:HSBC SVNS returns to DHL Stadium for a weekend of world-class rugby\, live music\, food\, and unforgettable vibes.
+DTEND:20261206T215959Z
+DTSTART:20261206T080000Z
+SUMMARY:HSBC SVNS Cape Town
+UID:236dd484e9c4330a@greenpoint-stadium-scraper
 END:VEVENT
 BEGIN:VEVENT
 DESCRIPTION:Monthly art-and-culture evening — CBD galleries and venues open late (16:00–23:00)\, bringing foot traffic and parking pressure to the city centre.\n\nMore info: https://first-thursdays.co.za/
@@ -89,6 +102,14 @@ DTEND:20260604T210000Z
 DTSTART:20260604T140000Z
 SUMMARY:First Thursdays
 UID:3a4a38c165d8f559@greenpoint-stadium-scraper
+URL:https://first-thursdays.co.za/
+END:VEVENT
+BEGIN:VEVENT
+DESCRIPTION:Monthly art-and-culture evening — CBD galleries and venues open late (16:00–23:00)\, bringing foot traffic and parking pressure to the city centre.\n\nMore info: https://first-thursdays.co.za/
+DTEND:20270902T210000Z
+DTSTART:20270902T140000Z
+SUMMARY:First Thursdays
+UID:170a43d6993ee0fa@greenpoint-stadium-scraper
 URL:https://first-thursdays.co.za/
 END:VEVENT
 BEGIN:VEVENT
@@ -135,6 +156,13 @@ UID:a44dd55a1f38ee31@greenpoint-stadium-scraper
 URL:https://www.parliament.gov.za/state-of-the-nation-address
 END:VEVENT
 BEGIN:VEVENT
+DESCRIPTION:HSBC SVNS returns to DHL Stadium for a weekend of world-class rugby\, live music\, food\, and unforgettable vibes.
+DTEND:20261205T215959Z
+DTSTART:20261205T080000Z
+SUMMARY:HSBC SVNS Cape Town
+UID:22b3b3a68c4c17d2@greenpoint-stadium-scraper
+END:VEVENT
+BEGIN:VEVENT
 DESCRIPTION:Monthly art-and-culture evening — CBD galleries and venues open late (16:00–23:00)\, bringing foot traffic and parking pressure to the city centre.\n\nMore info: https://first-thursdays.co.za/
 DTEND:20271104T210000Z
 DTSTART:20271104T140000Z
@@ -160,12 +188,27 @@ UID:65223db0b6b76b86@greenpoint-stadium-scraper
 URL:https://wearevuka.com/energy/enlit-africa/
 END:VEVENT
 BEGIN:VEVENT
+DESCRIPTION:DHL Stormers take on the Vodacom Bulls in the Vodacom United Rugby Championship Tournament.
+DTEND:20270103T215959Z
+DTSTART:20270103T130000Z
+SUMMARY:DHL Stormers vs Vodacom Bulls 
+UID:26aac9eb53471f7c@greenpoint-stadium-scraper
+END:VEVENT
+BEGIN:VEVENT
 DESCRIPTION:Monthly art-and-culture evening — CBD galleries and venues open late (16:00–23:00)\, bringing foot traffic and parking pressure to the city centre.\n\nMore info: https://first-thursdays.co.za/
 DTEND:20270603T210000Z
 DTSTART:20270603T140000Z
 SUMMARY:First Thursdays
 UID:034e2855720ab6d9@greenpoint-stadium-scraper
 URL:https://first-thursdays.co.za/
+END:VEVENT
+BEGIN:VEVENT
+DESCRIPTION:The Outsurance Gun Run will be held on the Forecourt on September 12-13.\n\nMore information: https://www.outsurance.co.za/gunrun/event-information/
+DTEND:20260912T215959Z
+DTSTART:20260911T220000Z
+SUMMARY:OUTsurance Gun Run 
+UID:a38a25e4381d1feb@greenpoint-stadium-scraper
+URL:https://www.outsurance.co.za/gunrun/event-information/
 END:VEVENT
 BEGIN:VEVENT
 DESCRIPTION:Monthly art-and-culture evening — CBD galleries and venues open late (16:00–23:00)\, bringing foot traffic and parking pressure to the city centre.\n\nMore info: https://first-thursdays.co.za/
@@ -182,6 +225,13 @@ DESCRIPTION:Africa's largest mining investment conference at the CTICC (7 000+ d
 SUMMARY:Investing in African Mining Indaba
 UID:ec8e91dcb49816a3@greenpoint-stadium-scraper
 URL:https://miningindaba.com/
+END:VEVENT
+BEGIN:VEVENT
+DESCRIPTION:DHL Stormers take on the French team Racing 92 in the Investec Champions Cup.
+DTEND:20270116T215959Z
+DTSTART:20270116T151500Z
+SUMMARY:DHL Stormers vs Racing 92 
+UID:fc89dcc59f7dad4f@greenpoint-stadium-scraper
 END:VEVENT
 BEGIN:VEVENT
 DESCRIPTION:Monthly art-and-culture evening — CBD galleries and venues open late (16:00–23:00)\, bringing foot traffic and parking pressure to the city centre.\n\nMore info: https://first-thursdays.co.za/
@@ -208,12 +258,34 @@ UID:4ac1fc5aa335e5f8@greenpoint-stadium-scraper
 URL:https://first-thursdays.co.za/
 END:VEVENT
 BEGIN:VEVENT
+DESCRIPTION:DHL Stormers XXIII takes on Hollywoodbets Sharks in the Carling Currie Cup Tournament.\n\nTicket sales: https://stormers.tmtickets.co.za/EDP/Event/Index/63
+DTEND:20260801T215959Z
+DTSTART:20260801T130000Z
+SUMMARY:DHL Stormers XXIII vs Sharks
+UID:0ffc8c11ed64ee50@greenpoint-stadium-scraper
+URL:https://stormers.tmtickets.co.za/EDP/Event/Index/63
+END:VEVENT
+BEGIN:VEVENT
+DESCRIPTION:DHL Stormers take on the Bristol Bears in their first game of the Investec Champions Cup Tournament.
+DTEND:20261017T215959Z
+DTSTART:20261017T141500Z
+SUMMARY:DHL Stormers vs Bristol Bears 
+UID:abaa4f0f5ce435b5@greenpoint-stadium-scraper
+END:VEVENT
+BEGIN:VEVENT
 DTSTART;VALUE=DATE:20270227
 DTEND;VALUE=DATE:20270301
 DESCRIPTION:Pride march and festival through Green Point\, Sea Point and De Waterkant.\n\nMore info: https://cptpride.org/
 SUMMARY:Cape Town Pride Parade
 UID:c0d265b987e13c7a@greenpoint-stadium-scraper
 URL:https://cptpride.org/
+END:VEVENT
+BEGIN:VEVENT
+DESCRIPTION:DHL Stormers takes on Benetton Rugby in the Vodacom United Rugby Championship Tournament.
+DTEND:20270417T215959Z
+DTSTART:20270417T140000Z
+SUMMARY:DHL Stormers vs Benetton Rugby
+UID:9120199ba819e401@greenpoint-stadium-scraper
 END:VEVENT
 BEGIN:VEVENT
 DESCRIPTION:Monthly art-and-culture evening — CBD galleries and venues open late (16:00–23:00)\, bringing foot traffic and parking pressure to the city centre.\n\nMore info: https://first-thursdays.co.za/
@@ -256,12 +328,33 @@ UID:58b654d14b45f9f9@greenpoint-stadium-scraper
 URL:https://capetowncarnival.com/
 END:VEVENT
 BEGIN:VEVENT
+DESCRIPTION:DHL Stormers take on the Irish rugby team Ulster in the Vodacom United Rugby Championship Tournament.
+DTEND:20261031T215959Z
+DTSTART:20261031T114500Z
+SUMMARY:DHL Stormers vs Ulster 
+UID:55503b6b4174225c@greenpoint-stadium-scraper
+END:VEVENT
+BEGIN:VEVENT
+DESCRIPTION:DHL Stormers take on the Welsh rugby team Scarlets in the Vodacom United Rugby Championship Tournament.
+DTEND:20261024T215959Z
+DTSTART:20261024T140000Z
+SUMMARY:DHL Stormers vs Scarlets 
+UID:beea5a2924607e41@greenpoint-stadium-scraper
+END:VEVENT
+BEGIN:VEVENT
 DESCRIPTION:Monthly art-and-culture evening — CBD galleries and venues open late (16:00–23:00)\, bringing foot traffic and parking pressure to the city centre.\n\nMore info: https://first-thursdays.co.za/
 DTEND:20270401T210000Z
 DTSTART:20270401T140000Z
 SUMMARY:First Thursdays
 UID:6da66b9e400f2eac@greenpoint-stadium-scraper
 URL:https://first-thursdays.co.za/
+END:VEVENT
+BEGIN:VEVENT
+DESCRIPTION:DHL Stormers takes on Benetton Rugby in the Vodacom United Rugby Championship Tournament.
+DTEND:20270424T215959Z
+DTSTART:20270424T160500Z
+SUMMARY:DHL Stormers vs Munster 
+UID:c1cb777fe4d0d2c4@greenpoint-stadium-scraper
 END:VEVENT
 BEGIN:VEVENT
 DESCRIPTION:Monthly art-and-culture evening — CBD galleries and venues open late (16:00–23:00)\, bringing foot traffic and parking pressure to the city centre.\n\nMore info: https://first-thursdays.co.za/
@@ -274,7 +367,7 @@ END:VEVENT
 BEGIN:VEVENT
 DESCRIPTION:Witness the Springboks take on the All Blacks in the Rugby's Greatest Rivalry Tour.
 DTEND:20260829T215959Z
-DTSTART:20260829T150000Z
+DTSTART:20260829T151000Z
 SUMMARY:Springboks vs All Blacks 
 UID:01417c313ae5c633@greenpoint-stadium-scraper
 END:VEVENT
@@ -318,6 +411,13 @@ LOCATION:CTICC\, Cape Town CBD
 SUMMARY:Cape Town International Jazz Festival
 UID:10bc51c08b6134b9@greenpoint-stadium-scraper
 URL:https://www.capetownjazzfest.com/
+END:VEVENT
+BEGIN:VEVENT
+DESCRIPTION:DHL Stormers take on Hollywoodbets Sharks in the 2026/7 Vodacom United Rugby Championship season.
+DTEND:20261010T215959Z
+DTSTART:20261010T140000Z
+SUMMARY:DHL Stormers vs Hollywoodbets Sharks
+UID:1ba0ab520ed94a08@greenpoint-stadium-scraper
 END:VEVENT
 BEGIN:VEVENT
 DTSTART;VALUE=DATE:20261018

@@ -33,8 +33,11 @@ def fetch_stadium_api(floor: str, page_size: int = 100) -> dict:
     empty) instead of crashing the whole build — merge_events() then preserves the
     previously published calendar rather than wiping it.
     """
+    # The stadium site moved to api.dhlstadium.co.za; the old
+    # content-dhlstadium.azurewebsites.net endpoint is frozen (last event Aug 2026)
+    # and misses newer fixtures. Same Strapi shape, so get_api_events() is unchanged.
     base = (
-        "https://content-dhlstadium.azurewebsites.net/api/events?"
+        "https://api.dhlstadium.co.za/api/events?"
         f"filters[event][daterange][start][$gte]={floor}"
         "&populate[0]=event.image&populate[1]=event.daterange&populate[2]=thumbnail"
     )
