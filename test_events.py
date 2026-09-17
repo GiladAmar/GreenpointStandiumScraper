@@ -229,6 +229,92 @@ class TestTwoOceansDates:
             assert events.two_oceans_end_date(year) == events.two_oceans_start_date(year) + timedelta(days=1)
 
 
+class TestSlaveRouteDate:
+    def test_2026(self):
+        assert events.slave_route_date(2026) == date(2026, 10, 18)  # 3rd Sunday
+
+    def test_2027(self):
+        assert events.slave_route_date(2027) == date(2027, 10, 17)
+
+    def test_always_sunday(self):
+        for year in range(2025, 2032):
+            assert events.slave_route_date(year).weekday() == 6
+
+    def test_always_october(self):
+        for year in range(2025, 2032):
+            assert events.slave_route_date(year).month == 10
+
+    def test_always_third_week(self):
+        for year in range(2025, 2032):
+            assert 15 <= events.slave_route_date(year).day <= 21
+
+
+class TestJazzFestivalDates:
+    def test_2026(self):
+        assert events.jazz_festival_dates(2026) == (date(2026, 3, 27), date(2026, 3, 28))
+
+    def test_start_always_friday(self):
+        for year in range(2025, 2032):
+            assert events.jazz_festival_dates(year)[0].weekday() == 4
+
+    def test_starts_in_march(self):
+        # The festival opens on the last Friday of March; the Saturday can spill
+        # into 1 April in years where that Friday is the 31st (e.g. 2028).
+        for year in range(2025, 2032):
+            assert events.jazz_festival_dates(year)[0].month == 3
+
+    def test_end_is_day_after_start(self):
+        for year in range(2025, 2032):
+            start, end = events.jazz_festival_dates(year)
+            assert end == start + timedelta(days=1)
+
+
+class TestAfricaEnergyIndabaDates:
+    def test_2026(self):
+        assert events.africa_energy_indaba_dates(2026) == (date(2026, 3, 3), date(2026, 3, 5))
+
+    def test_start_always_first_tuesday(self):
+        for year in range(2025, 2032):
+            start = events.africa_energy_indaba_dates(year)[0]
+            assert start.weekday() == 1 and start.day <= 7
+
+    def test_span_is_tue_to_thu(self):
+        for year in range(2025, 2032):
+            start, end = events.africa_energy_indaba_dates(year)
+            assert end == start + timedelta(days=2)
+
+
+class TestEnlitAfricaDates:
+    def test_2026(self):
+        assert events.enlit_africa_dates(2026) == (date(2026, 5, 19), date(2026, 5, 21))
+
+    def test_start_always_third_tuesday(self):
+        for year in range(2025, 2032):
+            start = events.enlit_africa_dates(year)[0]
+            assert start.weekday() == 1 and 15 <= start.day <= 21
+
+    def test_always_may(self):
+        for year in range(2025, 2032):
+            start, end = events.enlit_africa_dates(year)
+            assert start.month == 5 and end.month == 5
+
+
+class TestFameWeekDates:
+    def test_2026(self):
+        assert events.fame_week_dates(2026) == (date(2026, 10, 28), date(2026, 11, 1))
+
+    def test_start_always_last_wednesday_of_october(self):
+        for year in range(2025, 2032):
+            start = events.fame_week_dates(year)[0]
+            assert start.weekday() == 2 and start.month == 10
+            assert (start + timedelta(weeks=1)).month != 10  # no later Wed in Oct
+
+    def test_span_is_five_days(self):
+        for year in range(2025, 2032):
+            start, end = events.fame_week_dates(year)
+            assert end == start + timedelta(days=4)
+
+
 # ── Fetch function structure (network mocked out) ─────────────────────────────
 
 CALCULATED_FETCHERS = [
@@ -240,13 +326,25 @@ CALCULATED_FETCHERS = [
     ("fetch_minstrel_carnival","Minstrel Carnival (Kaapse Klopse)"),
     ("fetch_new_year_v_and_a", "V&A Waterfront New Year's Eve"),
     ("fetch_sona",             "State of the Nation Address (SONA)"),
+    ("fetch_slave_route",      "Slave Route Challenge"),
+    ("fetch_jazz_festival",    "Cape Town International Jazz Festival"),
+    ("fetch_africa_energy_indaba", "Africa Energy Indaba"),
+    ("fetch_enlit_africa",     "Enlit Africa"),
+    ("fetch_fame_week",        "FAME Week Africa"),
 ]
 
-ALL_FETCHERS = CALCULATED_FETCHERS + [
+# Scrape-only events: no dependable calendar rule, so offline they return a
+# name-only dict (and are left off the calendar until a date can be read).
+SCRAPE_ONLY_FETCHERS = [
     ("fetch_ct_marathon",      "Sanlam Cape Town Marathon"),
     ("fetch_cape_epic",        "Absa Cape Epic"),
-    ("fetch_knysna_cycle_tour","Knysna Cycle Tour"),
+    ("fetch_friendship_run",   "International Friendship Run"),
+    ("fetch_big_walk",         "Cape Town Big Walk"),
+    ("fetch_africa_oil_week",  "Africa Oil Week"),
+    ("fetch_comic_con",        "Comic Con Cape Town"),
 ]
+
+ALL_FETCHERS = CALCULATED_FETCHERS + SCRAPE_ONLY_FETCHERS
 
 
 @pytest.mark.parametrize("fn_name,expected_name", ALL_FETCHERS)
@@ -290,3 +388,80 @@ def test_end_date_not_before_start_date(fn_name, _):
     start = date.fromisoformat(result["start_date"])
     end   = date.fromisoformat(result["end_date"])
     assert end >= start
+
+
+@pytest.mark.parametrize("fn_name,_", SCRAPE_ONLY_FETCHERS)
+def test_scrape_only_fetchers_have_no_offline_date(fn_name, _):
+    """Scrape-only events must not invent a date when the network is unavailable."""
+    with patch("test.safe_get", return_value=None):
+        result = getattr(events, fn_name)()
+    assert "start_date" not in result, f"{fn_name} fabricated a date offline"
+
+
+# ── Scrape robustness (mock official pages, no live network) ───────────────────
+# Every event that scrapes must extract a *future* date from a representative page,
+# proving its regex/JSON-LD parsing works. Dates are built relative to today so the
+# tests never go stale.
+
+NEXT_YEAR = date.today().year + 1
+
+SCRAPE_SAMPLES = [
+    # (fn_name, page_html, expected_start, expected_end)
+    ("fetch_ct_marathon",
+     f"<p>Race weekend: 23 - 24 May {NEXT_YEAR}</p>", f"{NEXT_YEAR}-05-23", f"{NEXT_YEAR}-05-24"),
+    ("fetch_slave_route",
+     f"<p>The race takes place on 18 October {NEXT_YEAR}.</p>", f"{NEXT_YEAR}-10-18", f"{NEXT_YEAR}-10-18"),
+    ("fetch_friendship_run",
+     f"<p>Join the fun on 22 May {NEXT_YEAR}!</p>", f"{NEXT_YEAR}-05-22", f"{NEXT_YEAR}-05-22"),
+    ("fetch_big_walk",
+     f"<p>Big Walk day: 15 March {NEXT_YEAR}</p>", f"{NEXT_YEAR}-03-15", f"{NEXT_YEAR}-03-15"),
+    ("fetch_jazz_festival",
+     f"<h1>27 - 28 March {NEXT_YEAR}</h1>", f"{NEXT_YEAR}-03-27", f"{NEXT_YEAR}-03-28"),
+    ("fetch_africa_oil_week",
+     f"<p>Conference: 14 - 17 September {NEXT_YEAR}</p>", f"{NEXT_YEAR}-09-14", f"{NEXT_YEAR}-09-17"),
+    ("fetch_africa_energy_indaba",
+     f"<p>3 - 5 March {NEXT_YEAR}</p>", f"{NEXT_YEAR}-03-03", f"{NEXT_YEAR}-03-05"),
+    ("fetch_enlit_africa",
+     f"<p>19 - 21 May {NEXT_YEAR}</p>", f"{NEXT_YEAR}-05-19", f"{NEXT_YEAR}-05-21"),
+    ("fetch_comic_con",
+     f"<p>See you on 30 April {NEXT_YEAR}</p>", f"{NEXT_YEAR}-04-30", f"{NEXT_YEAR}-04-30"),
+    ("fetch_fame_week",
+     f"<p>28 October – 1 November {NEXT_YEAR}</p>", f"{NEXT_YEAR}-10-28", f"{NEXT_YEAR}-11-01"),
+]
+
+
+@pytest.mark.parametrize("fn_name,html,exp_start,exp_end", SCRAPE_SAMPLES)
+def test_fetcher_scrapes_official_date(fn_name, html, exp_start, exp_end):
+    with patch("test.safe_get", return_value=html):
+        result = getattr(events, fn_name)()
+    assert result["start_date"] == exp_start
+    assert result["end_date"] == exp_end
+
+
+def test_scrape_prefers_jsonld_over_stray_text():
+    """schema.org Event JSON-LD is trusted ahead of any loose date on the page."""
+    html = (
+        f'<script type="application/ld+json">'
+        f'{{"@type":"Event","startDate":"{NEXT_YEAR}-09-15","endDate":"{NEXT_YEAR}-09-18"}}'
+        f'</script><p>Newsletter sent 1 January {NEXT_YEAR}</p>'
+    )
+    with patch("test.safe_get", return_value=html):
+        result = events.fetch_africa_oil_week()
+    assert result["start_date"] == f"{NEXT_YEAR}-09-15"
+    assert result["end_date"] == f"{NEXT_YEAR}-09-18"
+
+
+def test_scrape_ignores_stale_date_and_uses_calendar_fallback():
+    """A past/stale date must be rejected; a calculated fetcher then uses its rule."""
+    with patch("test.safe_get", return_value="<p>Last held on 5 January 2000</p>"):
+        result = events.fetch_jazz_festival()
+    start = date.fromisoformat(result["start_date"])
+    assert start >= date.today()
+    assert start.month == 3  # fell back to the last-Friday-of-March anchor
+
+
+def test_scrape_only_ignores_stale_date_and_stays_off_calendar():
+    """A scrape-only event with only a stale date returns name-only (no fabrication)."""
+    with patch("test.safe_get", return_value="<p>Archive: 5 January 2000</p>"):
+        result = events.fetch_africa_oil_week()
+    assert "start_date" not in result

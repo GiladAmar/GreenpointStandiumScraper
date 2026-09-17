@@ -17,7 +17,16 @@ Includes:
 - Minstrel Carnival (Kaapse Klopse)
 - V&A Waterfront New Year's Eve
 - Investing in African Mining Indaba (CTICC, early February)
-- Knysna Cycle Tour
+- State of the Nation Address (SONA)
+- Slave Route Challenge
+- International Friendship Run
+- Cape Town Big Walk
+- Cape Town International Jazz Festival (CTICC)
+- Africa Oil Week (CTICC)
+- Africa Energy Indaba (CTICC)
+- Enlit Africa (CTICC)
+- Comic Con Cape Town (CTICC)
+- FAME Week Africa (CTICC)
 
 Features:
 - Handles '18 - 19 October 2025', '15th of March 2025', 'March 15th, 2025', etc.
@@ -91,8 +100,39 @@ EVENT_DESCRIPTIONS: Dict[str, str] = {
         "Africa's largest mining investment conference at the CTICC (7 000+ "
         "delegates: ministers, mining houses, financiers). Heavy congestion around "
         "the Foreshore and CBD for the week.",
-    "Knysna Cycle Tour":
-        "Mountain-bike and road cycle races around Knysna on the Garden Route.",
+    "Slave Route Challenge":
+        "Heritage road race (21.1 km / 10 km / 5 km) starting at the City Hall on "
+        "Darling Street and winding through District Six, the Company's Gardens, "
+        "Bo-Kaap, the DHL Stadium and Fort Wynyard. CBD and Green Point road closures "
+        "through the morning.",
+    "International Friendship Run":
+        "Curtain-raiser fun run of the Cape Town Marathon weekend, starting and "
+        "finishing at the DHL Stadium forecourt through Mouille Point and Green Point. "
+        "Short Atlantic-seaboard road closures.",
+    "Cape Town Big Walk":
+        "Mass-participation charity walk (5–10 km) starting in Green Point and "
+        "following the Sea Point Promenade. Atlantic-seaboard road and parking "
+        "restrictions through the morning.",
+    "Cape Town International Jazz Festival":
+        "Africa's largest jazz festival (~35 000 attendees) at the CTICC over a "
+        "weekend. Heavy evening congestion and parking pressure around the Foreshore "
+        "and CBD.",
+    "Africa Oil Week":
+        "Major oil-and-gas conference at the CTICC drawing thousands of delegates. "
+        "Congestion around the Foreshore and CBD for the week.",
+    "Africa Energy Indaba":
+        "Energy conference and exhibition at the CTICC (early March). Congestion "
+        "around the Foreshore and CBD.",
+    "Enlit Africa":
+        "Africa's largest power, energy and water conference at the CTICC (May). "
+        "Congestion around the Foreshore and CBD.",
+    "Comic Con Cape Town":
+        "Large pop-culture convention at the CTICC (30 000+ attendees) around the "
+        "late-April long weekend. Heavy crowds and parking pressure around the "
+        "Foreshore and CBD.",
+    "FAME Week Africa":
+        "Creative-industries conference and exhibition at the CTICC (late October / "
+        "early November). Congestion around the Foreshore and CBD.",
     "First Thursdays":
         "Monthly art-and-culture evening — CBD galleries and venues open late "
         "(16:00–23:00), bringing foot traffic and parking pressure to the city centre.",
@@ -188,6 +228,42 @@ def sona_date(year: int) -> date:
     official date once Parliament/gov.za publishes it.
     """
     return nth_weekday_of_month(year, 2, 2, 3)  # 2nd (n=2) Thursday (weekday=3) of Feb
+
+def slave_route_date(year: int) -> date:
+    """Slave Route Challenge: best-guess = 3rd Sunday of October.
+
+    Recent editions run in mid-October (2026: Sun 18 Oct); the race has moved dates
+    historically (it was previously staged in March), so this is only an anchor that
+    fetch_slave_route() overrides with the scraped official date.
+    """
+    return nth_weekday_of_month(year, 10, 3, 6)  # 3rd Sunday of October
+
+def jazz_festival_dates(year: int) -> tuple[date, date]:
+    """Cape Town International Jazz Festival: Fri–Sat of the last weekend of March.
+
+    2026 ran Fri–Sat 27–28 March. The programme has occasionally slipped into early
+    April, so this is an anchor that fetch_jazz_festival() overrides when scraped.
+    """
+    fri = last_weekday_of_month(year, 3, 4)  # last Friday of March
+    return fri, fri + timedelta(days=1)       # Fri–Sat
+
+def africa_energy_indaba_dates(year: int) -> tuple[date, date]:
+    """Africa Energy Indaba: Tue–Thu of the first week of March (2026: 3–5 March)."""
+    tue = nth_weekday_of_month(year, 3, 1, 1)  # first Tuesday of March
+    return tue, tue + timedelta(days=2)         # Tue–Thu
+
+def enlit_africa_dates(year: int) -> tuple[date, date]:
+    """Enlit Africa: Tue–Thu of the third week of May (2026: 19–21 May)."""
+    tue = nth_weekday_of_month(year, 5, 3, 1)  # 3rd Tuesday of May
+    return tue, tue + timedelta(days=2)         # Tue–Thu
+
+def fame_week_dates(year: int) -> tuple[date, date]:
+    """FAME Week Africa: last Wednesday of October into early November.
+
+    2026 runs Wed–Sun 28 Oct – 1 Nov; anchored on the last Wednesday of October.
+    """
+    wed = last_weekday_of_month(year, 10, 2)   # last Wednesday of October
+    return wed, wed + timedelta(days=4)          # Wed–Sun (into early November)
 
 # ------------------------------------------------------------
 # Utilities
@@ -316,6 +392,28 @@ def generic_date_hunt(text: str) -> Optional[Dict[str, str]]:
 # Site-specific extractors
 # ------------------------------------------------------------
 
+def scrape_event_date(*urls: str) -> Optional[Dict[str, str]]:
+    """Scrape official page(s) for a single upcoming event date.
+
+    Tries each URL in turn, preferring machine-readable schema.org Event JSON-LD
+    and falling back to a generic text date hunt. Only accepts a date that is in a
+    recent year (this year or next) and has not already passed — this guards against
+    picking up a stale prior edition or an unrelated date elsewhere on the page.
+    Returns ``{'start_date', 'end_date'}`` or ``None`` when nothing valid is found.
+    """
+    today = date.today()
+    for url in urls:
+        html = safe_get(url)
+        if not html:
+            continue
+        for hit in (jsonld_event_dates(html), generic_date_hunt(html_to_text(html))):
+            if not hit:
+                continue
+            year = int(hit["start_date"][:4])
+            if is_recent_date(year) and date.fromisoformat(hit["end_date"]) >= today:
+                return hit
+    return None
+
 def fetch_site(name: str, url: str, site_patterns: Optional[List[Pattern]] = None) -> Optional[Dict[str, str]]:
     """Fetch a site, extract visible text, and find the event date."""
     html = safe_get(url)
@@ -371,10 +469,22 @@ def fetch_two_oceans() -> Optional[Dict[str, str]]:
     return {"name": name, "url": url}
 
 def fetch_ct_marathon() -> Optional[Dict[str, str]]:
-    patterns = [
-        re.compile(rf"(?P<d1>\d{{1,2}})(?:st|nd|rd|th)?\s*{SEP_REGEX}\s*(?P<d2>\d{{1,2}})(?:st|nd|rd|th)?\s*(?:of\s+)?(?P<mon>Oct(?:ober)?)\s*,?\s*(?P<year>20\d{{2}})", re.IGNORECASE),
-    ]
-    return fetch_site("Sanlam Cape Town Marathon", "https://www.capetownmarathon.com/", patterns)
+    """Sanlam Cape Town Marathon — links Green Point, the CBD, Sea Point and the
+    southern suburbs.
+
+    The race has drifted off its old October slot (2026 ran on 23–24 May), so we no
+    longer assume a month: scrape the date robustly (JSON-LD, else any-month text
+    hunt), guarded to a recent, still-future edition. There is no reliable calendar
+    rule to fall back on, so if the scrape fails the event is left off until it can
+    be read again.
+    """
+    name = "Sanlam Cape Town Marathon"
+    url = "https://www.capetownmarathon.com/"
+    location = "Green Point / Sea Point / CBD / southern suburbs"
+    hit = scrape_event_date(url)
+    if hit:
+        return {"name": name, "url": url, "location": location, **hit}
+    return {"name": name, "url": url, "location": location}
 
 def fetch_cape_epic() -> Optional[Dict[str, str]]:
     patterns = [
@@ -509,11 +619,158 @@ def fetch_sona() -> Optional[Dict[str, str]]:
                     "start_date": str(d), "end_date": str(d)}
     return {"name": name, "url": url, "location": location}
 
-def fetch_knysna_cycle_tour() -> Optional[Dict[str, str]]:
-    patterns = [
-        re.compile(rf"(?P<d1>\d{{1,2}})(?:st|nd|rd|th)?\s*(?P<mon1>June?)\s*{SEP_REGEX}\s*(?P<d2>\d{{1,2}})(?:st|nd|rd|th)?\s*(?P<mon2>July?)\s*,?\s*(?P<year>20\d{{2}})", re.IGNORECASE),
-    ]
-    return fetch_site("Knysna Cycle Tour", "https://knysnacycle.co.za/", patterns)
+def fetch_slave_route() -> Optional[Dict[str, str]]:
+    """Slave Route Challenge — heritage road race from the City Hall through the CBD.
+
+    Scrape the official date (JSON-LD / text), else the 3rd-Sunday-of-October anchor.
+    """
+    name = "Slave Route Challenge"
+    url = "https://www.slaveroute.co.za/"
+    location = "Cape Town CBD (City Hall, District Six, Bo-Kaap, DHL Stadium)"
+    hit = scrape_event_date(url)
+    if hit:
+        return {"name": name, "url": url, "location": location, **hit}
+    today = date.today()
+    for year in range(today.year, today.year + 2):
+        d = slave_route_date(year)
+        if d >= today:
+            return {"name": name, "url": url, "location": location,
+                    "start_date": str(d), "end_date": str(d)}
+    return {"name": name, "url": url, "location": location}
+
+def fetch_friendship_run() -> Optional[Dict[str, str]]:
+    """International Friendship Run — curtain-raiser of the Cape Town Marathon weekend.
+
+    Shares the marathon weekend on the Atlantic seaboard; the date tracks the marathon
+    (which no longer has a fixed month), so this is scrape-only with no calendar-rule
+    fallback — it stays off the calendar until an official date can be read.
+    """
+    name = "International Friendship Run"
+    url = "https://www.capetownmarathon.com/"
+    location = "Green Point / Mouille Point (DHL Stadium forecourt)"
+    hit = scrape_event_date("https://www.capetownmarathon.com/friendship-run/", url)
+    if hit:
+        return {"name": name, "url": url, "location": location, **hit}
+    return {"name": name, "url": url, "location": location}
+
+def fetch_big_walk() -> Optional[Dict[str, str]]:
+    """Cape Town Big Walk — mass charity walk along the Sea Point Promenade.
+
+    Recent editions have shifted and been postponed, so there is no dependable rule:
+    scrape-only, left off the calendar until an official date can be read.
+    """
+    name = "Cape Town Big Walk"
+    url = "https://capetownbigwalk.com/"
+    location = "Green Point / Sea Point Promenade (Atlantic Seaboard)"
+    hit = scrape_event_date(url)
+    if hit:
+        return {"name": name, "url": url, "location": location, **hit}
+    return {"name": name, "url": url, "location": location}
+
+def fetch_jazz_festival() -> Optional[Dict[str, str]]:
+    """Cape Town International Jazz Festival — CTICC, last weekend of March.
+
+    Scrape the official date (JSON-LD / text), else the last-Friday-of-March anchor.
+    """
+    name = "Cape Town International Jazz Festival"
+    url = "https://www.capetownjazzfest.com/"
+    location = "CTICC, Cape Town CBD"
+    hit = scrape_event_date(url)
+    if hit:
+        return {"name": name, "url": url, "location": location, **hit}
+    today = date.today()
+    for year in range(today.year, today.year + 2):
+        start, end = jazz_festival_dates(year)
+        if start >= today:
+            return {"name": name, "url": url, "location": location,
+                    "start_date": str(start), "end_date": str(end)}
+    return {"name": name, "url": url, "location": location}
+
+def fetch_africa_oil_week() -> Optional[Dict[str, str]]:
+    """Africa Oil Week — major oil-and-gas conference at the CTICC.
+
+    The month jumps between September and October year to year, so there is no reliable
+    rule: scrape-only, left off the calendar until an official date can be read.
+    """
+    name = "Africa Oil Week"
+    url = "https://africaoilweek.com/"
+    location = "CTICC / Cape Town CBD"
+    hit = scrape_event_date(url)
+    if hit:
+        return {"name": name, "url": url, "location": location, **hit}
+    return {"name": name, "url": url, "location": location}
+
+def fetch_africa_energy_indaba() -> Optional[Dict[str, str]]:
+    """Africa Energy Indaba — CTICC energy conference, first week of March.
+
+    Scrape the official date (JSON-LD / text), else the first-Tuesday-of-March anchor.
+    """
+    name = "Africa Energy Indaba"
+    url = "https://www.africaenergyindaba.com/"
+    location = "CTICC, Cape Town CBD"
+    hit = scrape_event_date(url)
+    if hit:
+        return {"name": name, "url": url, "location": location, **hit}
+    today = date.today()
+    for year in range(today.year, today.year + 2):
+        start, end = africa_energy_indaba_dates(year)
+        if start >= today:
+            return {"name": name, "url": url, "location": location,
+                    "start_date": str(start), "end_date": str(end)}
+    return {"name": name, "url": url, "location": location}
+
+def fetch_enlit_africa() -> Optional[Dict[str, str]]:
+    """Enlit Africa — CTICC power/energy conference, third week of May.
+
+    Scrape the official date (JSON-LD / text), else the 3rd-Tuesday-of-May anchor.
+    """
+    name = "Enlit Africa"
+    url = "https://www.enlit-africa.com/"
+    location = "CTICC, Cape Town CBD"
+    hit = scrape_event_date(url)
+    if hit:
+        return {"name": name, "url": url, "location": location, **hit}
+    today = date.today()
+    for year in range(today.year, today.year + 2):
+        start, end = enlit_africa_dates(year)
+        if start >= today:
+            return {"name": name, "url": url, "location": location,
+                    "start_date": str(start), "end_date": str(end)}
+    return {"name": name, "url": url, "location": location}
+
+def fetch_comic_con() -> Optional[Dict[str, str]]:
+    """Comic Con Cape Town — large pop-culture convention at the CTICC.
+
+    Held around the late-April long weekend but not every year (the next edition is
+    2027), so there is no dependable rule: scrape-only, left off until an official date
+    can be read.
+    """
+    name = "Comic Con Cape Town"
+    url = "https://www.comicconcapetown.com/"
+    location = "CTICC, Cape Town CBD"
+    hit = scrape_event_date(url)
+    if hit:
+        return {"name": name, "url": url, "location": location, **hit}
+    return {"name": name, "url": url, "location": location}
+
+def fetch_fame_week() -> Optional[Dict[str, str]]:
+    """FAME Week Africa — CTICC creative-industries conference, late Oct / early Nov.
+
+    Scrape the official date (JSON-LD / text), else the last-Wednesday-of-October anchor.
+    """
+    name = "FAME Week Africa"
+    url = "https://fameweekafrica.com/"
+    location = "CTICC, Cape Town CBD"
+    hit = scrape_event_date(url)
+    if hit:
+        return {"name": name, "url": url, "location": location, **hit}
+    today = date.today()
+    for year in range(today.year, today.year + 2):
+        start, end = fame_week_dates(year)
+        if start >= today:
+            return {"name": name, "url": url, "location": location,
+                    "start_date": str(start), "end_date": str(end)}
+    return {"name": name, "url": url, "location": location}
 
 def get_first_thursdays(year: int) -> List[Dict[str, str]]:
     """Return a list of 'First Thursdays' events for each month in the given year."""
@@ -551,7 +808,15 @@ def fetch_all_events() -> List[Dict[str, str]]:
         fetch_new_year_v_and_a,
         fetch_mining_indaba,
         fetch_sona,
-        fetch_knysna_cycle_tour,
+        fetch_slave_route,
+        fetch_friendship_run,
+        fetch_big_walk,
+        fetch_jazz_festival,
+        fetch_africa_oil_week,
+        fetch_africa_energy_indaba,
+        fetch_enlit_africa,
+        fetch_comic_con,
+        fetch_fame_week,
     ]
     results: List[Dict[str, str]] = []
     for fn in extractors:

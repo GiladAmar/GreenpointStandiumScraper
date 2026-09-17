@@ -10,6 +10,15 @@ UID:67e7f6493c10737b@greenpoint-stadium-scraper
 URL:https://first-thursdays.co.za/
 END:VEVENT
 BEGIN:VEVENT
+DTSTART;VALUE=DATE:20270302
+DTEND;VALUE=DATE:20270306
+DESCRIPTION:Energy conference and exhibition at the CTICC (early March). Congestion around the Foreshore and CBD.\n\nMore info: https://www.africaenergyindaba.com/
+LOCATION:CTICC\, Cape Town CBD
+SUMMARY:Africa Energy Indaba
+UID:7a92f8c43ce9ae63@greenpoint-stadium-scraper
+URL:https://www.africaenergyindaba.com/
+END:VEVENT
+BEGIN:VEVENT
 DESCRIPTION:Monthly art-and-culture evening — CBD galleries and venues open late (16:00–23:00)\, bringing foot traffic and parking pressure to the city centre.\n\nMore info: https://first-thursdays.co.za/
 DTEND:20260205T210000Z
 DTSTART:20260205T140000Z
@@ -90,9 +99,19 @@ UID:0c8ca35aee5ff7ae@greenpoint-stadium-scraper
 URL:https://first-thursdays.co.za/
 END:VEVENT
 BEGIN:VEVENT
+DTSTART;VALUE=DATE:20261028
+DTEND;VALUE=DATE:20261103
+DESCRIPTION:Creative-industries conference and exhibition at the CTICC (late October / early November). Congestion around the Foreshore and CBD.\n\nMore info: https://fameweekafrica.com/
+LOCATION:CTICC\, Cape Town CBD
+SUMMARY:FAME Week Africa
+UID:cd57e18d4e4aa26e@greenpoint-stadium-scraper
+URL:https://fameweekafrica.com/
+END:VEVENT
+BEGIN:VEVENT
 DTSTART;VALUE=DATE:20270522
 DTEND;VALUE=DATE:20270525
 DESCRIPTION:City-centre marathon (IAAF-labelled). Road closures around Green Point\, Sea Point\, the CBD and southern suburbs.\n\nMore info: https://www.capetownmarathon.com/
+LOCATION:Green Point / Sea Point / CBD / southern suburbs
 SUMMARY:Sanlam Cape Town Marathon
 UID:e96644db6dac49c0@greenpoint-stadium-scraper
 URL:https://www.capetownmarathon.com/
@@ -115,14 +134,6 @@ UID:a44dd55a1f38ee31@greenpoint-stadium-scraper
 URL:https://www.parliament.gov.za/state-of-the-nation-address
 END:VEVENT
 BEGIN:VEVENT
-DTSTART;VALUE=DATE:20270711
-DTEND;VALUE=DATE:20270713
-DESCRIPTION:Mountain-bike and road cycle races around Knysna on the Garden Route.\n\nMore info: https://knysnacycle.co.za/
-SUMMARY:Knysna Cycle Tour
-UID:703cdd8e2ecdcb56@greenpoint-stadium-scraper
-URL:https://knysnacycle.co.za/
-END:VEVENT
-BEGIN:VEVENT
 DESCRIPTION:Monthly art-and-culture evening — CBD galleries and venues open late (16:00–23:00)\, bringing foot traffic and parking pressure to the city centre.\n\nMore info: https://first-thursdays.co.za/
 DTEND:20271104T210000Z
 DTSTART:20271104T140000Z
@@ -137,6 +148,15 @@ DTSTART:20260305T140000Z
 SUMMARY:First Thursdays
 UID:d73857d38b872a67@greenpoint-stadium-scraper
 URL:https://first-thursdays.co.za/
+END:VEVENT
+BEGIN:VEVENT
+DTSTART;VALUE=DATE:20270511
+DTEND;VALUE=DATE:20270515
+DESCRIPTION:Africa's largest power\, energy and water conference at the CTICC (May). Congestion around the Foreshore and CBD.\n\nMore info: https://www.enlit-africa.com/
+LOCATION:CTICC\, Cape Town CBD
+SUMMARY:Enlit Africa
+UID:65223db0b6b76b86@greenpoint-stadium-scraper
+URL:https://www.enlit-africa.com/
 END:VEVENT
 BEGIN:VEVENT
 DESCRIPTION:Monthly art-and-culture evening — CBD galleries and venues open late (16:00–23:00)\, bringing foot traffic and parking pressure to the city centre.\n\nMore info: https://first-thursdays.co.za/
@@ -235,6 +255,15 @@ UID:58b654d14b45f9f9@greenpoint-stadium-scraper
 URL:https://capetowncarnival.com/
 END:VEVENT
 BEGIN:VEVENT
+DTSTART;VALUE=DATE:20270522
+DTEND;VALUE=DATE:20270525
+DESCRIPTION:Curtain-raiser fun run of the Cape Town Marathon weekend\, starting and finishing at the DHL Stadium forecourt through Mouille Point and Green Point. Short Atlantic-seaboard road closures.\n\nMore info: https://www.capetownmarathon.com/
+LOCATION:Green Point / Mouille Point (DHL Stadium forecourt)
+SUMMARY:International Friendship Run
+UID:29cbf1bfa1ac8a8e@greenpoint-stadium-scraper
+URL:https://www.capetownmarathon.com/
+END:VEVENT
+BEGIN:VEVENT
 DESCRIPTION:Monthly art-and-culture evening — CBD galleries and venues open late (16:00–23:00)\, bringing foot traffic and parking pressure to the city centre.\n\nMore info: https://first-thursdays.co.za/
 DTEND:20270401T210000Z
 DTSTART:20270401T140000Z
@@ -288,6 +317,24 @@ DTSTART:20261203T140000Z
 SUMMARY:First Thursdays
 UID:76d7846bad06c633@greenpoint-stadium-scraper
 URL:https://first-thursdays.co.za/
+END:VEVENT
+BEGIN:VEVENT
+DTSTART;VALUE=DATE:20270326
+DTEND;VALUE=DATE:20270329
+DESCRIPTION:Africa's largest jazz festival (~35 000 attendees) at the CTICC over a weekend. Heavy evening congestion and parking pressure around the Foreshore and CBD.\n\nMore info: https://www.capetownjazzfest.com/
+LOCATION:CTICC\, Cape Town CBD
+SUMMARY:Cape Town International Jazz Festival
+UID:10bc51c08b6134b9@greenpoint-stadium-scraper
+URL:https://www.capetownjazzfest.com/
+END:VEVENT
+BEGIN:VEVENT
+DTSTART;VALUE=DATE:20261018
+DTEND;VALUE=DATE:20261020
+DESCRIPTION:Heritage road race (21.1 km / 10 km / 5 km) starting at the City Hall on Darling Street and winding through District Six\, the Company's Gardens\, Bo-Kaap\, the DHL Stadium and Fort Wynyard. CBD and Green Point road closures through the morning.\n\nMore info: https://www.slaveroute.co.za/
+LOCATION:Cape Town CBD (City Hall\, District Six\, Bo-Kaap\, DHL Stadium)
+SUMMARY:Slave Route Challenge
+UID:6c89b1519b80a222@greenpoint-stadium-scraper
+URL:https://www.slaveroute.co.za/
 END:VEVENT
 BEGIN:VEVENT
 DESCRIPTION:Monthly art-and-culture evening — CBD galleries and venues open late (16:00–23:00)\, bringing foot traffic and parking pressure to the city centre.\n\nMore info: https://first-thursdays.co.za/

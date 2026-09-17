@@ -118,10 +118,9 @@ def add_cape_town_events() -> List[Event]:
     """
     Fetch Cape Town major events via test.py scrapers and return as Event objects.
 
-    Events include: Cape Town Cycle Tour, Two Oceans Marathon, Sanlam Cape Town
-    Marathon, Absa Cape Epic, The Gun Run, Cape Town Carnival, Cape Town Pride
-    Parade, Minstrel Carnival (Kaapse Klopse), V&A Waterfront New Year's Eve,
-    Investing in African Mining Indaba, Knysna Cycle Tour.
+    Events include the major Cape Town races, parades and CTICC conferences that
+    drive road closures and congestion around Green Point, the Atlantic seaboard and
+    the CBD (see test.EVENT_DESCRIPTIONS for the full, current list).
 
     Each event carries a short context blurb (from test.EVENT_DESCRIPTIONS)
     describing what it is and how it affects Green Point / seaboard / CBD traffic.

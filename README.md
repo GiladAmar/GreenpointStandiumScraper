@@ -60,10 +60,18 @@ if the scrape fails.
 | Cape Town Cycle Tour | 2nd Sunday of March | CBD, Green Point, Sea Point, peninsula |
 | Absa Cape Epic | March | Western Cape (start/finish traffic) |
 | Two Oceans Marathon | Easter Sat–Sun | Southern suburbs, peninsula |
-| Sanlam Cape Town Marathon | May | Green Point, Sea Point, CBD, suburbs |
+| Sanlam Cape Town Marathon | Varies (May in 2026) | Green Point, Sea Point, CBD, suburbs |
 | Investing in African Mining Indaba | Early February (Mon–Thu) | Foreshore / CBD (CTICC) |
 | State of the Nation Address (SONA) | Evening, ~2nd Thursday of February | CBD (City Hall / Grand Parade / Parliament precinct) |
-| Knysna Cycle Tour | June–July | Knysna |
+| Slave Route Challenge | ~3rd Sunday of October | CBD, District Six, Bo-Kaap, DHL Stadium |
+| International Friendship Run | Cape Town Marathon weekend | Green Point, Mouille Point (seaboard) |
+| Cape Town Big Walk | Varies (recently March) | Green Point, Sea Point Promenade |
+| Cape Town International Jazz Festival | Last weekend of March | Foreshore / CBD (CTICC) |
+| Africa Oil Week | Sept–Oct | Foreshore / CBD (CTICC) |
+| Africa Energy Indaba | Early March (Tue–Thu) | Foreshore / CBD (CTICC) |
+| Enlit Africa | Mid-to-late May (Tue–Thu) | Foreshore / CBD (CTICC) |
+| Comic Con Cape Town | Late-April long weekend | Foreshore / CBD (CTICC) |
+| FAME Week Africa | Late October / early November | Foreshore / CBD (CTICC) |
 
 ### 3. Calculated recurring events — fixed calendar rules
 Predictable annual events computed directly (no scrape needed).
