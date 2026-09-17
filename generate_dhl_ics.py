@@ -414,7 +414,11 @@ def get_city_events(records: Iterable[Dict[str, str]]) -> List[CalEvent]:
                 # back to the start day alone rather than an invalid event.
                 print(f"Warning: '{record['name']}' ends before it starts; "
                       f"publishing {start_raw} only")
-                end = start + timedelta(days=1) if not isinstance(start, datetime) else start
+                end = (
+                    start.replace(hour=23, minute=59, second=59, microsecond=0)
+                    if isinstance(start, datetime)
+                    else start + timedelta(days=1)
+                )
             events.append(
                 CalEvent(
                     name=record["name"],

@@ -31,7 +31,8 @@ CBD / Green Point / Atlantic-seaboard traffic and publishes them as `dhl_stadium
    and `--check-health` fails the workflow, every run until it recovers, when one that
    used to read a live date stops doing so. That comparison is against each source's
    `last_live`, not against the previous run: the workflow commits the report it just
-   wrote, so a pairwise diff would alarm once and then accept broken as the new normal. When you touch a scraper, still:
+   wrote, so a pairwise diff would alarm once and then accept broken as the new normal.
+   When you touch a scraper, still:
    - Run the fetcher and check `source` is what you expect, not just that a date came back.
    - Fetch the target page (`city_events.safe_get(url)` for the exact bytes the scraper
      sees, and WebFetch for the human-rendered view) and read the real date on the site.
