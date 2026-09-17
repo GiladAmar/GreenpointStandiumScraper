@@ -325,6 +325,10 @@ def try_patterns(text: str, patterns: List[Pattern]) -> Optional[Dict[str, str]]
         if gd.get("d1") and gd.get("mon1") and gd.get("d2") and gd.get("mon2"):
             start = parse_iso_date(gd["d1"], gd["mon1"], year)
             end = parse_iso_date(gd["d2"], gd["mon2"], year)
+            if end < start:
+                # A range that crosses New Year carries a single year, e.g.
+                # '31 December - 1 January 2027'; the second date is the year after.
+                end = parse_iso_date(gd["d2"], gd["mon2"], str(year_int + 1))
             return {"start_date": start, "end_date": end}
 
         # Single-month range e.g. '18 - 19 October 2025'

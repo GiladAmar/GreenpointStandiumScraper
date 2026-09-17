@@ -900,6 +900,67 @@ def test_different_fixtures_are_left_alone():
     assert len(gen.dedupe_events(fixtures)) == 2
 
 
+# ── Canonical naming ──────────────────────────────────────────────────────────
+
+def test_a_lone_record_still_gets_the_canonical_name():
+    """Whether both sources are in range varies run to run, and a name that flips
+    is a UID that flips — which puts the same race on the calendar twice."""
+    stadium = timed("OUTsurance Gun Run", datetime(2026, 9, 12, 6, 0, tzinfo=SAST),
+                    category=gen.CATEGORY_STADIUM)
+    assert gen.dedupe_events([stadium])[0].name == "The Gun Run"
+
+
+def test_a_renamed_record_does_not_duplicate_preserved_history():
+    stadium = timed("OUTsurance Gun Run", datetime(2026, 9, 12, 6, 0, tzinfo=SAST),
+                    category=gen.CATEGORY_STADIUM)
+    history = gen.stamp_events(
+        [all_day("The Gun Run", date(2026, 9, 12), category=gen.CATEGORY_CITY)], []
+    )
+    merged = gen.merge_events(gen.dedupe_events([stadium]), history)
+    assert [event.name for event in merged] == ["The Gun Run"]
+
+
+def test_an_unaliased_name_is_left_alone():
+    fixture = timed("DHL Stormers vs Sharks", datetime(2026, 10, 10, 19, 0, tzinfo=SAST))
+    assert gen.dedupe_events([fixture])[0].name == "DHL Stormers vs Sharks"
+
+
+# ── Malformed input ───────────────────────────────────────────────────────────
+
+def test_a_corrupt_existing_calendar_stops_the_build(tmp_path):
+    """Treating it as empty would discard all preserved history and leave the
+    shrink guard with nothing to compare against."""
+    broken = tmp_path / "broken.ics"
+    broken.write_text("BEGIN:VCALENDAR\nthis is not an ics file")
+    with pytest.raises(gen.CalendarBuildError, match="could not parse"):
+        gen.load_existing_events(str(broken))
+
+
+def test_a_missing_calendar_is_simply_the_first_run(tmp_path):
+    assert gen.load_existing_events(str(tmp_path / "absent.ics")) == []
+
+
+def test_a_range_crossing_new_year_gets_the_following_year_for_its_end():
+    hit = events.generic_date_hunt("Festival runs 31 December - 1 January 2027")
+    assert hit == {"start_date": "2027-12-31", "end_date": "2028-01-01"}
+
+
+def test_an_inverted_range_is_never_published_as_an_invalid_event():
+    """DTEND before DTSTART is not a valid event; fall back to the start day."""
+    record = {"name": "Broken", "url": "", "start_date": "2027-12-31",
+              "end_date": "2027-01-01"}
+    published = gen.get_city_events([record])
+    assert len(published) == 1
+    assert published[0].start == date(2027, 12, 31)
+    assert published[0].end == date(2028, 1, 1)
+
+
+def test_a_naive_api_timestamp_is_read_as_utc_not_local_time():
+    """Otherwise the same payload yields different times locally and in CI."""
+    assert gen._parse_api_datetime("2026-10-10T17:00:00") == \
+        gen._parse_api_datetime("2026-10-10T17:00:00.000Z")
+
+
 # ── Fail-closed guards ────────────────────────────────────────────────────────
 
 def _published(count, category=gen.CATEGORY_STADIUM):
@@ -981,32 +1042,52 @@ def test_stadium_horizon_is_quiet_for_a_healthy_feed():
 
 # ── Health report ─────────────────────────────────────────────────────────────
 
+def _health(source, last_live, key="fetch_jazz_festival"):
+    return {"sources": {key: {"source": source, "last_live": last_live}}}
+
+
 def test_health_flags_a_scraper_that_fell_back_to_its_calendar_rule():
-    previous = {"sources": {"fetch_jazz_festival": {"source": "text", "start_date": "2027-03-26"}}}
-    current = {"sources": {"fetch_jazz_festival": {"source": "computed", "start_date": "2027-03-26"}}}
-    assert gen.compare_health(previous, current) == [
-        "fetch_jazz_festival: no longer reads its live date (text -> computed)"
-    ]
+    degradations = gen.find_degradations(_health("computed", "2027-01-05"))
+    assert len(degradations) == 1
+    assert "has not read a live date since 2027-01-05" in degradations[0]
 
 
 def test_health_flags_a_scraper_that_lost_its_date_entirely():
-    previous = {"sources": {"fetch_big_walk": {"source": "text", "start_date": "2027-03-15"}}}
-    current = {"sources": {"fetch_big_walk": {"source": "none", "start_date": None}}}
-    degradations = gen.compare_health(previous, current)
+    degradations = gen.find_degradations(_health("none", "2027-01-05", "fetch_big_walk"))
     assert len(degradations) == 1 and "fetch_big_walk" in degradations[0]
 
 
 def test_health_is_quiet_when_a_scraper_stays_healthy():
-    previous = {"sources": {"fetch_jazz_festival": {"source": "text", "start_date": "2027-03-26"}}}
-    current = {"sources": {"fetch_jazz_festival": {"source": "jsonld", "start_date": "2027-03-27"}}}
-    assert gen.compare_health(previous, current) == []
+    assert gen.find_degradations(_health("jsonld", "2027-02-01")) == []
 
 
-def test_health_ignores_a_source_that_was_already_computed():
+def test_health_ignores_a_source_that_never_read_a_live_date():
     """Only a *regression* is news; an event with no scrapable date never had one."""
-    previous = {"sources": {"fetch_gun_run": {"source": "computed", "start_date": "2027-09-12"}}}
-    current = {"sources": {"fetch_gun_run": {"source": "computed", "start_date": "2027-09-12"}}}
-    assert gen.compare_health(previous, current) == []
+    assert gen.find_degradations(_health("computed", None, "fetch_gun_run")) == []
+
+
+def test_a_scraper_that_stays_broken_is_reported_on_every_run():
+    """The workflow commits the report it just wrote, so comparing each run against
+    the previous one would alarm once and then treat broken as the new normal."""
+    live = [{"fetcher": "fetch_jazz_festival", "name": "Jazz", "source": "jsonld",
+             "start_date": "2027-03-26", "end_date": "2027-03-27"}]
+    broken = [{**live[0], "source": "computed"}]
+
+    first = gen.build_health(live, [], [], {})
+    assert first["degradations"] == []
+
+    second = gen.build_health(broken, [], [], first)
+    third = gen.build_health(broken, [], [], second)   # compares against a degraded report
+    assert second["degradations"], "the break must be reported"
+    assert third["degradations"] == second["degradations"], "and keep being reported"
+
+
+def test_a_recovered_scraper_goes_quiet_again():
+    live = [{"fetcher": "fetch_jazz_festival", "name": "Jazz", "source": "jsonld",
+             "start_date": "2027-03-26", "end_date": "2027-03-27"}]
+    broken = [{**live[0], "source": "computed"}]
+    degraded = gen.build_health(broken, [], [], gen.build_health(live, [], [], {}))
+    assert gen.build_health(live, [], [], degraded)["degradations"] == []
 
 
 def test_health_check_exit_status(tmp_path):

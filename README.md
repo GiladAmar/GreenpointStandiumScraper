@@ -102,8 +102,9 @@ so the build is designed to fail loudly rather than publish something broken.
   whether the date published came off the live site (`jsonld` / `title` / `text`)
   or from a calendar rule used as a fallback (`computed`), or whether there was
   no date at all (`none`). `python generate_dhl_ics.py --check-health` exits
-  non-zero when a scraper that used to read a live date has stopped — the failure
-  a fallback would otherwise hide indefinitely.
+  non-zero when a scraper that used to read a live date has stopped, and keeps
+  failing every run until it recovers — the failure a fallback would otherwise
+  hide indefinitely.
 
 - **It watches for a frozen feed.** The stadium endpoint has silently stalled
   before while still answering normally. A feed whose newest event is less than

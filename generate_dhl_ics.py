@@ -329,8 +329,16 @@ def fetch_stadium_api(floor: str, page_size: int = 100) -> dict:
 
 
 def _parse_api_datetime(value: str) -> datetime:
-    """Parse an ISO timestamp from the API into a SAST-aware datetime."""
-    return datetime.fromisoformat(value.replace("Z", "+00:00")).astimezone(SAST)
+    """Parse an ISO timestamp from the API into a SAST-aware datetime.
+
+    The API emits UTC with a trailing Z. A value that arrives without any offset
+    is read as UTC too, not as the runner's local timezone — otherwise the same
+    payload would produce different times on a developer's machine and in CI.
+    """
+    parsed = datetime.fromisoformat(value.replace("Z", "+00:00"))
+    if parsed.tzinfo is None:
+        parsed = parsed.replace(tzinfo=timezone.utc)
+    return parsed.astimezone(SAST)
 
 
 def get_api_events(resp: Any) -> List[CalEvent]:
@@ -400,6 +408,13 @@ def get_city_events(records: Iterable[Dict[str, str]]) -> List[CalEvent]:
             else:
                 start = date.fromisoformat(start_raw)
                 end = date.fromisoformat(end_raw) + timedelta(days=1)  # exclusive
+            if end <= start:
+                # A misparsed range (e.g. one that crosses New Year and carries a
+                # single year) would otherwise publish DTEND before DTSTART. Fall
+                # back to the start day alone rather than an invalid event.
+                print(f"Warning: '{record['name']}' ends before it starts; "
+                      f"publishing {start_raw} only")
+                end = start + timedelta(days=1) if not isinstance(start, datetime) else start
             events.append(
                 CalEvent(
                     name=record["name"],
@@ -457,7 +472,12 @@ def _combine(group: List[CalEvent], canonical: Optional[str]) -> CalEvent:
     this calendar.
     """
     if len(group) == 1:
-        return group[0]
+        # Still rename: whether both sources are in range varies run to run, and a
+        # name that flips is a UID that flips. Without this the Gun Run appears
+        # twice — once as preserved history under its canonical name, once fresh
+        # under the sponsor name the stadium uses.
+        solo = group[0]
+        return replace(solo, name=canonical) if canonical else solo
 
     ordered = sorted(
         group,
@@ -601,15 +621,23 @@ def parse_calendar(raw: bytes) -> List[CalEvent]:
 
 
 def load_existing_events(path: str) -> List[CalEvent]:
-    """Load events from a previously published .ics, if present."""
+    """Load events from a previously published .ics, if present.
+
+    A missing file is the first run and fine. A file that is present but cannot
+    be read is not: treating it as empty would discard every preserved past event
+    and leave the shrink guard with nothing to compare against, so a corrupt
+    calendar would be silently republished with its history gone.
+    """
     if not os.path.exists(path):
         return []
     try:
         with open(path, "rb") as handle:
             return parse_calendar(handle.read())
     except Exception as exc:
-        print(f"Warning: could not parse existing {path}: {exc}")
-        return []
+        raise CalendarBuildError(
+            f"could not parse the existing {path}: {exc}. Refusing to overwrite it; "
+            "fix or remove the file to rebuild the calendar from scratch."
+        ) from exc
 
 
 def build_calendar(events: List[CalEvent]) -> Calendar:
@@ -790,24 +818,27 @@ def load_health(path: str) -> dict:
         return {}
 
 
-def compare_health(previous: dict, current: dict) -> List[str]:
-    """List the sources that have got worse since the previous run.
+def find_degradations(health: dict) -> List[str]:
+    """List the sources that have stopped reading their date off the live site.
 
     This is the check CLAUDE.md convention 1 describes doing by hand: spotting a
-    scraper that has stopped reading the live site and is coasting on its computed
-    fallback, which looks fine on the calendar but is a date nobody confirmed.
+    scraper that is coasting on its computed fallback, which looks fine on the
+    calendar but is a date nobody confirmed.
+
+    Each source carries ``last_live`` — when it last read a real date — carried
+    forward from run to run. Comparing against that rather than against the
+    previous run's report matters: the workflow commits the report it just wrote,
+    so a pairwise comparison would find the degraded state already recorded next
+    time and go quiet, alarming exactly once for a scraper that stays broken.
     """
     degradations: List[str] = []
-    old_sources = previous.get("sources") or {}
-    for key, entry in (current.get("sources") or {}).items():
-        old = old_sources.get(key)
-        if not old:
-            continue
-        was, now = old.get("source"), entry.get("source")
-        if was in SCRAPED_SOURCES and now not in SCRAPED_SOURCES:
-            degradations.append(f"{key}: no longer reads its live date ({was} -> {now})")
-        elif old.get("start_date") and not entry.get("start_date"):
-            degradations.append(f"{key}: lost its date (was {old['start_date']})")
+    for key, entry in (health.get("sources") or {}).items():
+        last_live = entry.get("last_live")
+        if last_live and entry.get("source") not in SCRAPED_SOURCES:
+            degradations.append(
+                f"{key}: has not read a live date since {last_live} "
+                f"(now falling back to '{entry.get('source')}')"
+            )
     return degradations
 
 
@@ -820,14 +851,21 @@ def build_health(
 ) -> dict:
     """Assemble the health report published alongside the calendar."""
     moment = now or datetime.now(timezone.utc)
+    old_sources = previous.get("sources") or {}
     sources: Dict[str, dict] = {}
     for record in records:
         key = record.get("fetcher") or record["name"]
         if key == FIRST_THURSDAYS_FETCHER:  # one computed rule, 24 identical records
             continue
+        source = record.get("source", "none")
+        # Carried forward so a scraper that stays broken keeps being reported.
+        last_live = (old_sources.get(key) or {}).get("last_live")
+        if source in SCRAPED_SOURCES:
+            last_live = moment.date().isoformat()
         sources[key] = {
             "name": record.get("name", ""),
-            "source": record.get("source", "none"),
+            "source": source,
+            "last_live": last_live,
             "start_date": record.get("start_date"),
             "end_date": record.get("end_date"),
             "url": record.get("url", ""),
@@ -852,7 +890,7 @@ def build_health(
         "sources": sources,
         "warnings": warnings,
     }
-    current["degradations"] = compare_health(previous, current) + warnings
+    current["degradations"] = find_degradations(current) + warnings
     return current
 
 

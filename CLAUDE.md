@@ -16,8 +16,9 @@ CBD / Green Point / Atlantic-seaboard traffic and publishes them as `dhl_stadium
   `merge_events()` preserves past events from the existing file and `stamp_events()`
   assigns UID/DTSTAMP/SEQUENCE. Entry point is `main()` (guarded by `__main__`).
 - `test_events.py` — pytest suite. Run: `python3 -m pytest test_events.py -q`.
-- Outputs: `dhl_stadium.ics` (the calendar), `events.json` (the raw scrape) and
-  `health.json` (per-source provenance + anything that degraded since the last run).
+- Outputs, all regenerated and committed by each run: `dhl_stadium.ics` (the calendar),
+  `events.json` (the raw scrape) and `health.json` (per-source provenance, including
+  `last_live` — when each scraper last read a real date — plus anything degraded).
 - CI (`.github/workflows/update_icl.yml`) runs the tests, then `generate_dhl_ics.py` on the
   1st & 15th, commits the three outputs, and finally runs `--check-health`.
 
@@ -27,8 +28,10 @@ CBD / Green Point / Atlantic-seaboard traffic and publishes them as `dhl_stadium
    just new ones.** A scraper can silently fall back to its computed rule forever while the
    site has moved or its date has drifted. `health.json` now does most of this watching for
    you: every record carries a `source` (`jsonld` / `title` / `text` / `computed` / `none`),
-   and `--check-health` fails the workflow when one that used to read a live date stops
-   doing so. When you touch a scraper, still:
+   and `--check-health` fails the workflow, every run until it recovers, when one that
+   used to read a live date stops doing so. That comparison is against each source's
+   `last_live`, not against the previous run: the workflow commits the report it just
+   wrote, so a pairwise diff would alarm once and then accept broken as the new normal. When you touch a scraper, still:
    - Run the fetcher and check `source` is what you expect, not just that a date came back.
    - Fetch the target page (`city_events.safe_get(url)` for the exact bytes the scraper
      sees, and WebFetch for the human-rendered view) and read the real date on the site.
