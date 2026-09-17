@@ -465,3 +465,45 @@ def test_scrape_only_ignores_stale_date_and_stays_off_calendar():
     with patch("test.safe_get", return_value="<p>Archive: 5 January 2000</p>"):
         result = events.fetch_africa_oil_week()
     assert "start_date" not in result
+
+
+# ── DHL Stadium API pagination (mock network) ─────────────────────────────────
+# The stadium API paginates (default 25/page); fetching only page 1 silently drops
+# later events (e.g. a full season, or a multi-day booking on page 2).
+
+import generate_dhl_ics as gen
+
+
+def _fake_response(payload):
+    class _R:
+        def raise_for_status(self):
+            pass
+
+        def json(self):
+            return payload
+    return _R()
+
+
+def test_stadium_api_follows_all_pages():
+    page1 = {"data": [{"id": 1}],
+             "meta": {"pagination": {"page": 1, "pageSize": 1, "pageCount": 2, "total": 2}}}
+    page2 = {"data": [{"id": 2}],
+             "meta": {"pagination": {"page": 2, "pageSize": 1, "pageCount": 2, "total": 2}}}
+    seen = []
+
+    def fake_get(url, timeout=None):
+        seen.append(url)
+        return _fake_response(page2 if "pagination[page]=2" in url else page1)
+
+    with patch("generate_dhl_ics.requests.get", side_effect=fake_get):
+        resp = gen.fetch_stadium_api("2025-01-01T00:00:00.000Z", page_size=1)
+
+    assert [d["id"] for d in resp["data"]] == [1, 2]          # both pages merged
+    assert any("pagination[page]=2" in u for u in seen)        # page 2 was requested
+
+
+def test_stadium_api_returns_partial_on_error():
+    """A network/API failure must not crash the build — return what we have."""
+    with patch("generate_dhl_ics.requests.get", side_effect=RuntimeError("network down")):
+        resp = gen.fetch_stadium_api("2025-01-01T00:00:00.000Z")
+    assert resp == {"data": []}

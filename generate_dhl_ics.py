@@ -19,12 +19,43 @@ ICS_PATH = "dhl_stadium.ics"
 API_FLOOR = (datetime.now(timezone.utc) - timedelta(days=60)).strftime(
     "%Y-%m-%dT%H:%M:%S.000Z"
 )
-url = (
-    "https://content-dhlstadium.azurewebsites.net/api/events?"
-    f"filters[event][daterange][start][$gte]={API_FLOOR}"
-    "&populate[0]=event.image&populate[1]=event.daterange&populate[2]=thumbnail"
-)
-resp = requests.get(url).json()
+
+
+def fetch_stadium_api(floor: str, page_size: int = 100) -> dict:
+    """Fetch every page of the stadium events API and merge them into one response.
+
+    The API (Strapi) paginates and defaults to a page size of 25, so a single
+    request silently drops any events beyond the first page — e.g. a full season
+    of fixtures, or a multi-day booking like 'We Are Africa'. We follow
+    ``meta.pagination.pageCount`` and concatenate every page's ``data``.
+
+    On any network/parse error we log and return whatever was gathered (possibly
+    empty) instead of crashing the whole build — merge_events() then preserves the
+    previously published calendar rather than wiping it.
+    """
+    base = (
+        "https://content-dhlstadium.azurewebsites.net/api/events?"
+        f"filters[event][daterange][start][$gte]={floor}"
+        "&populate[0]=event.image&populate[1]=event.daterange&populate[2]=thumbnail"
+    )
+    all_data: list = []
+    page = 1
+    try:
+        while True:
+            r = requests.get(
+                f"{base}&pagination[page]={page}&pagination[pageSize]={page_size}",
+                timeout=30,
+            )
+            r.raise_for_status()
+            payload = r.json()
+            all_data.extend(payload.get("data", []))
+            pagination = payload.get("meta", {}).get("pagination", {}) or {}
+            if page >= (pagination.get("pageCount") or 1):
+                break
+            page += 1
+    except Exception as e:
+        print(f"Warning: stadium API fetch failed on page {page}: {e}")
+    return {"data": all_data}
 
 
 def apply_link(event: Event, link: str, description: str = "", label: str = "More info") -> None:
@@ -236,19 +267,24 @@ def merge_events(fresh: List[Event], existing: List[Event]) -> List[Event]:
     return list(merged.values())
 
 
-cal: Calendar = Calendar()
+def main() -> None:
+    """Build the calendar from all sources and write it to ICS_PATH."""
+    resp = fetch_stadium_api(API_FLOOR)
+    now = datetime.now().year
+    fresh_events: List[Event] = (
+        get_api_events(resp)
+        + add_first_thursdays([now, now + 1])
+        + add_cape_town_events()
+    )
+    all_events: List[Event] = merge_events(fresh_events, load_existing_events(ICS_PATH))
+    # Sort events by start datetime robustly
+    all_events.sort(key=get_event_start_dt)
+    cal: Calendar = Calendar()
+    for event in all_events:
+        cal.events.add(event)
+    with open(ICS_PATH, "w") as f:
+        f.write(cal.serialize())
 
-now: int = datetime.now().year
-fresh_events: List[Event] = (
-    get_api_events(resp)
-    + add_first_thursdays([now, now + 1])
-    + add_cape_town_events()
-)
-all_events: List[Event] = merge_events(fresh_events, load_existing_events(ICS_PATH))
-# Sort events by start datetime robustly
-all_events.sort(key=get_event_start_dt)
-for event in all_events:
-    cal.events.add(event)
 
-with open(ICS_PATH, "w") as f:
-    f.write(cal.serialize())
+if __name__ == "__main__":
+    main()
