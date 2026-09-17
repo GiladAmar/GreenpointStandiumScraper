@@ -29,10 +29,11 @@ END:VEVENT
 BEGIN:VEVENT
 DTSTART;VALUE=DATE:20270321
 DTEND;VALUE=DATE:20270330
-DESCRIPTION:Eight-day mountain-bike stage race across the Western Cape\; the start and finish stages disrupt local traffic.\n\nMore info: https://www.cape-epic.com/
+DESCRIPTION:Eight-day mountain-bike stage race across the Western Cape\; the start and finish stages disrupt local traffic.\n\nMore info: https://www.epic-series.com/capeepic
+LOCATION:Western Cape (Cape Town start/finish stages)
 SUMMARY:Absa Cape Epic
 UID:b0454e35a738cacb@greenpoint-stadium-scraper
-URL:https://www.cape-epic.com/
+URL:https://www.epic-series.com/capeepic
 END:VEVENT
 BEGIN:VEVENT
 DESCRIPTION:The DHL Stormers take on the legendary All Blacks on 7 August for the friendly match part of the Rugby's Greatest Rivalry Tour.\n\nTicket Sales: https://springboks.tmtickets.co.za/Events
@@ -53,10 +54,10 @@ END:VEVENT
 BEGIN:VEVENT
 DTSTART;VALUE=DATE:20270912
 DTEND;VALUE=DATE:20270914
-DESCRIPTION:Half marathon and 10 km along the Atlantic seaboard. Closures on Green Point\, Sea Point and Mouille Point roads.\n\nMore info: https://thegunrun.co.za/
+DESCRIPTION:Half marathon and 10 km along the Atlantic seaboard. Closures on Green Point\, Sea Point and Mouille Point roads.\n\nMore info: https://www.outsurance.co.za/gunrun/
 SUMMARY:The Gun Run
 UID:c0e59b6d76fdeee0@greenpoint-stadium-scraper
-URL:https://thegunrun.co.za/
+URL:https://www.outsurance.co.za/gunrun/
 END:VEVENT
 BEGIN:VEVENT
 DESCRIPTION:Monthly art-and-culture evening — CBD galleries and venues open late (16:00–23:00)\, bringing foot traffic and parking pressure to the city centre.\n\nMore info: https://first-thursdays.co.za/
@@ -101,11 +102,11 @@ END:VEVENT
 BEGIN:VEVENT
 DTSTART;VALUE=DATE:20261028
 DTEND;VALUE=DATE:20261103
-DESCRIPTION:Creative-industries conference and exhibition at the CTICC (late October / early November). Congestion around the Foreshore and CBD.\n\nMore info: https://fameweekafrica.com/
+DESCRIPTION:Creative-industries conference and exhibition at the CTICC (late October / early November). Congestion around the Foreshore and CBD.\n\nMore info: https://www.fameweekafrica.com/
 LOCATION:CTICC\, Cape Town CBD
 SUMMARY:FAME Week Africa
 UID:cd57e18d4e4aa26e@greenpoint-stadium-scraper
-URL:https://fameweekafrica.com/
+URL:https://www.fameweekafrica.com/
 END:VEVENT
 BEGIN:VEVENT
 DTSTART;VALUE=DATE:20270522
@@ -152,11 +153,11 @@ END:VEVENT
 BEGIN:VEVENT
 DTSTART;VALUE=DATE:20270511
 DTEND;VALUE=DATE:20270515
-DESCRIPTION:Africa's largest power\, energy and water conference at the CTICC (May). Congestion around the Foreshore and CBD.\n\nMore info: https://www.enlit-africa.com/
+DESCRIPTION:Africa's largest power\, energy and water conference at the CTICC (May). Congestion around the Foreshore and CBD.\n\nMore info: https://wearevuka.com/energy/enlit-africa/
 LOCATION:CTICC\, Cape Town CBD
 SUMMARY:Enlit Africa
 UID:65223db0b6b76b86@greenpoint-stadium-scraper
-URL:https://www.enlit-africa.com/
+URL:https://wearevuka.com/energy/enlit-africa/
 END:VEVENT
 BEGIN:VEVENT
 DESCRIPTION:Monthly art-and-culture evening — CBD galleries and venues open late (16:00–23:00)\, bringing foot traffic and parking pressure to the city centre.\n\nMore info: https://first-thursdays.co.za/

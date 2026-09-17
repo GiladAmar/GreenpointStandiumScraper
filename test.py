@@ -487,16 +487,26 @@ def fetch_ct_marathon() -> Optional[Dict[str, str]]:
     return {"name": name, "url": url, "location": location}
 
 def fetch_cape_epic() -> Optional[Dict[str, str]]:
-    patterns = [
-        re.compile(rf"(?P<d1>\d{{1,2}})(?:st|nd|rd|th)?\s*{SEP_REGEX}\s*(?P<d2>\d{{1,2}})(?:st|nd|rd|th)?\s*(?:of\s+)?(?P<mon>Mar(?:ch)?)\s*,?\s*(?P<year>20\d{{2}})", re.IGNORECASE),
-    ]
-    return fetch_site("Absa Cape Epic", "https://www.cape-epic.com/", patterns)
+    """Absa Cape Epic — eight-day MTB stage race; Cape Town start/finish traffic.
+
+    The old cape-epic.com domain now redirects to epic-series.com; we point straight
+    at the canonical page and scrape robustly (recent + future guard). There is no
+    dependable calendar rule, so it stays off the calendar if the scrape fails.
+    """
+    name = "Absa Cape Epic"
+    url = "https://www.epic-series.com/capeepic"
+    location = "Western Cape (Cape Town start/finish stages)"
+    hit = scrape_event_date(url)
+    if hit:
+        return {"name": name, "url": url, "location": location, **hit}
+    return {"name": name, "url": url, "location": location}
 
 def fetch_gun_run() -> Optional[Dict[str, str]]:
     # 2nd Sunday of September
-    # Source: https://thegunrun.co.za/
+    # Source: https://www.outsurance.co.za/gunrun/ (thegunrun.co.za is dead; now the
+    # OUTsurance Gun Run)
     name = "The Gun Run"
-    url = "https://thegunrun.co.za/"
+    url = "https://www.outsurance.co.za/gunrun/"
     today = date.today()
     for year in range(today.year, today.year + 2):
         d = gun_run_date(year)
@@ -691,6 +701,11 @@ def fetch_africa_oil_week() -> Optional[Dict[str, str]]:
 
     The month jumps between September and October year to year, so there is no reliable
     rule: scrape-only, left off the calendar until an official date can be read.
+
+    NOTE: as of the last audit the official domain (africaoilweek.com) refuses
+    connections, so this reliably returns name-only and the event does not appear.
+    Revisit the URL if the event resurfaces (see also African Energy Week, aecweek.com,
+    a separate CTICC energy event).
     """
     name = "Africa Oil Week"
     url = "https://africaoilweek.com/"
@@ -725,7 +740,7 @@ def fetch_enlit_africa() -> Optional[Dict[str, str]]:
     Scrape the official date (JSON-LD / text), else the 3rd-Tuesday-of-May anchor.
     """
     name = "Enlit Africa"
-    url = "https://www.enlit-africa.com/"
+    url = "https://wearevuka.com/energy/enlit-africa/"  # enlit-africa.com redirects here
     location = "CTICC, Cape Town CBD"
     hit = scrape_event_date(url)
     if hit:
@@ -745,8 +760,10 @@ def fetch_comic_con() -> Optional[Dict[str, str]]:
     2027), so there is no dependable rule: scrape-only, left off until an official date
     can be read.
     """
+    # Official site is comicconafrica.co.za; use the Cape Town page specifically —
+    # the site root defaults to the Johannesburg edition (a different, Sept date).
     name = "Comic Con Cape Town"
-    url = "https://www.comicconcapetown.com/"
+    url = "https://comicconafrica.co.za/ccct-home-page/"
     location = "CTICC, Cape Town CBD"
     hit = scrape_event_date(url)
     if hit:
@@ -759,7 +776,7 @@ def fetch_fame_week() -> Optional[Dict[str, str]]:
     Scrape the official date (JSON-LD / text), else the last-Wednesday-of-October anchor.
     """
     name = "FAME Week Africa"
-    url = "https://fameweekafrica.com/"
+    url = "https://www.fameweekafrica.com/"  # bare domain has an expired cert; www works
     location = "CTICC, Cape Town CBD"
     hit = scrape_event_date(url)
     if hit:

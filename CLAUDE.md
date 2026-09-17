@@ -18,13 +18,23 @@ CBD / Green Point / Atlantic-seaboard traffic and publishes them as `dhl_stadium
 
 ## Conventions (keep to these)
 
-1. **When adding or changing a scraper, look at the real page HTML and confirm the parser
-   actually works.** Don't rely on the computed fallback masking a broken scrape. Fetch the
-   target page (or its JSON-LD), verify `scrape_event_date`/regex extracts the correct date,
-   and add a test that feeds representative mock HTML (see `SCRAPE_SAMPLES` in
-   `test_events.py`) asserting the extracted date — plus a date-rule test for any computed
-   fallback. Also confirm API shapes (e.g. Strapi pagination — always follow `pageCount`,
-   never assume one page).
+1. **Download the real page HTML and confirm the parser actually works — for existing
+   scrapers, not just new ones.** Don't rely on a computed fallback masking a broken scrape
+   (a scraper can silently fall back forever while the site has moved or its date has
+   drifted). When testing a feature, audit the current scrapers too:
+   - Run each fetcher and note what it returns (scraped date vs computed fallback).
+   - Fetch each target page (`test.safe_get(url)` for the exact bytes the scraper sees, and
+     WebFetch for the human-rendered view) and read the real date on the site.
+   - Compare the two. Watch for: **URL drift** (301 redirects, moved/rebranded domains,
+     expired/mismatched TLS certs, dead domains — check with `requests.get`), a page that
+     defaults to the *wrong* edition (e.g. Comic Con's root shows Johannesburg, not Cape
+     Town), and dates that have moved off the month a regex assumed (the marathon left
+     October). Fix the URL/parser/rule as needed; leave scrape-only events off-calendar
+     rather than publishing a wrong or duplicated date.
+   - Add a test feeding representative mock HTML (see `SCRAPE_SAMPLES` in `test_events.py`)
+     asserting the extracted date, plus a date-rule test for any computed fallback.
+   - Confirm API shapes too (e.g. Strapi pagination — always follow `pageCount`, never
+     assume one page), and periodically re-check every reference/"More info" URL is alive.
 
 2. **Use South African time.** All datetimes use `SAST = ZoneInfo("Africa/Johannesburg")`
    (defined in both modules). Timed events carry SAST tzinfo; all-day events use

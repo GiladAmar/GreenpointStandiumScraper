@@ -409,6 +409,8 @@ SCRAPE_SAMPLES = [
     # (fn_name, page_html, expected_start, expected_end)
     ("fetch_ct_marathon",
      f"<p>Race weekend: 23 - 24 May {NEXT_YEAR}</p>", f"{NEXT_YEAR}-05-23", f"{NEXT_YEAR}-05-24"),
+    ("fetch_cape_epic",
+     f"<h1>March 21 - 28, {NEXT_YEAR}</h1>", f"{NEXT_YEAR}-03-21", f"{NEXT_YEAR}-03-28"),
     ("fetch_slave_route",
      f"<p>The race takes place on 18 October {NEXT_YEAR}.</p>", f"{NEXT_YEAR}-10-18", f"{NEXT_YEAR}-10-18"),
     ("fetch_friendship_run",
