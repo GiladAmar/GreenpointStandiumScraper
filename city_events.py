@@ -905,12 +905,25 @@ def fetch_all_events() -> List[Dict[str, str]]:
     return results
 
 
-def main() -> None:
-    events = fetch_all_events()
+EVENTS_PATH = "events.json"
+
+
+def dump_events(events: List[Dict[str, str]], path: str = EVENTS_PATH) -> None:
+    """Write the scraped records to JSON.
+
+    Shared with the calendar builder so that the published events.json comes from
+    the same scrape as the published calendar, rather than a second run of every
+    fetcher that could disagree with it.
+    """
     out = {"updated": datetime.now(timezone.utc).isoformat(), "events": events}
-    with open("events.json", "w", encoding="utf-8") as f:
+    with open(path, "w", encoding="utf-8") as f:
         json.dump(out, f, indent=2, ensure_ascii=False)
-    logging.info(f"Saved {len(events)} events to events.json")
+        f.write("\n")
+    logging.info(f"Saved {len(events)} events to {path}")
+
+
+def main() -> None:
+    dump_events(fetch_all_events())
 
 if __name__ == "__main__":
     main()

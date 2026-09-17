@@ -29,7 +29,7 @@ from zoneinfo import ZoneInfo
 import requests
 from icalendar import Calendar, Event, Timezone, vDuration
 
-from city_events import SCRAPED_SOURCES, fetch_all_events
+from city_events import EVENTS_PATH, SCRAPED_SOURCES, dump_events, fetch_all_events
 
 SAST = ZoneInfo("Africa/Johannesburg")
 ICS_PATH = "dhl_stadium.ics"
@@ -827,7 +827,7 @@ def check_health_file(path: str = HEALTH_PATH) -> int:
 
 
 def generate(ics_path: str = ICS_PATH, health_path: str = HEALTH_PATH,
-             *, allow_shrink: bool = False) -> dict:
+             events_path: str = EVENTS_PATH, *, allow_shrink: bool = False) -> dict:
     """Build the calendar and the health report, and write both."""
     existing = load_existing_events(ics_path)
 
@@ -850,6 +850,7 @@ def generate(ics_path: str = ICS_PATH, health_path: str = HEALTH_PATH,
     with open(health_path, "w", encoding="utf-8") as handle:
         json.dump(health, handle, indent=2, ensure_ascii=False)
         handle.write("\n")
+    dump_events(records, events_path)
 
     print(
         f"Wrote {len(stamped)} events to {ics_path} "

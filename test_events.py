@@ -935,8 +935,10 @@ STADIUM_PAYLOAD = _api_payload([
 def _build(tmp_path, payload=STADIUM_PAYLOAD, **kwargs):
     ics = tmp_path / "out.ics"
     health = tmp_path / "health.json"
-    with patch.object(gen, "fetch_stadium_api", return_value=payload),          patch("city_events.safe_get", return_value=None):
-        report = gen.generate(str(ics), str(health), **kwargs)
+    events = tmp_path / "events.json"
+    with patch.object(gen, "fetch_stadium_api", return_value=payload), \
+            patch("city_events.safe_get", return_value=None):
+        report = gen.generate(str(ics), str(health), str(events), **kwargs)
     return ics, health, report
 
 
@@ -963,7 +965,7 @@ def test_a_failed_stadium_fetch_leaves_the_published_file_untouched(tmp_path):
     with patch.object(gen, "fetch_stadium_api", return_value={"data": []}), \
          patch("city_events.safe_get", return_value=None):
         with pytest.raises(gen.CalendarBuildError):
-            gen.generate(str(ics), str(health))
+            gen.generate(str(ics), str(health), str(tmp_path / "events.json"))
     assert ics.read_bytes() == before
 
 
