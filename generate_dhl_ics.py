@@ -29,7 +29,13 @@ from zoneinfo import ZoneInfo
 import requests
 from icalendar import Calendar, Event, Timezone, vDuration
 
-from city_events import EVENTS_PATH, SCRAPED_SOURCES, dump_events, fetch_all_events
+from city_events import (
+    EVENTS_PATH,
+    FIRST_THURSDAYS_FETCHER,
+    SCRAPED_SOURCES,
+    dump_events,
+    fetch_all_events,
+)
 
 SAST = ZoneInfo("Africa/Johannesburg")
 ICS_PATH = "dhl_stadium.ics"
@@ -84,8 +90,34 @@ DUPLICATE_WINDOW = timedelta(days=7)
 
 # A description ends with "<label>: <url>", appended so clients that ignore the
 # URL property still show the link. Parsed back off on read so it is not doubled.
-LINK_LINE = re.compile(r"(?:\A|\n)[ \t]*(?P<label>[^\n:]{1,60}): (?P<url>\S+)[ \t]*\Z")
+# The label is matched non-greedily so one containing ": " (the stadium's own link
+# text is free-form) still leaves the URL in the url group.
+MAX_LINK_LABEL = 200
+LINK_LINE = re.compile(r"(?:\A|\n)[ \t]*(?P<label>[^\n]{1,%d}?): (?P<url>\S+)[ \t]*\Z" % MAX_LINK_LABEL)
 DEFAULT_LINK_LABEL = "More info"
+
+
+def normalise_text(value: str) -> str:
+    """Put text into the form a round-trip through the published file returns.
+
+    Writing an ICS rewrites line endings and reading strips surrounding
+    whitespace, so a description that has not been through this normalisation
+    compares unequal to its own published copy — which would bump its SEQUENCE
+    and DTSTAMP on every single rebuild, defeating the stable-rebuild guarantee
+    and committing a changed file from every CI run.
+    """
+    return re.sub(r"\r\n?", "\n", value or "").strip()
+
+
+def normalise_label(value: str) -> str:
+    """Normalise a link label, which has to survive as a single line.
+
+    A label is written into the description as "<label>: <url>", so a newline in
+    it would be read back as a different label (or lose the line entirely), and
+    one longer than the parser allows would not be recognised at all.
+    """
+    label = re.sub(r"\s+", " ", value or "").strip()
+    return label if 0 < len(label) <= MAX_LINK_LABEL else DEFAULT_LINK_LABEL
 
 
 class StadiumApiError(RuntimeError):
@@ -124,12 +156,16 @@ class CalEvent:
     dtstamp: Optional[datetime] = None
 
     def __post_init__(self) -> None:
+        # Normalise on the way in, so an event always equals its own published
+        # copy and a rebuild that changes nothing really does change nothing.
+        self.name = normalise_text(self.name)
+        self.description = normalise_text(self.description)
+        self.location = normalise_text(self.location)
         # A label with no link to hang off is meaningless, and letting one linger
         # makes an event's fingerprint differ from the same event read back out of
         # the published file (where an absent URL leaves nothing to recover the
         # label from), which would bump its SEQUENCE on every single rebuild.
-        if not self.url:
-            self.link_label = DEFAULT_LINK_LABEL
+        self.link_label = normalise_label(self.link_label) if self.url else DEFAULT_LINK_LABEL
 
     @property
     def all_day(self) -> bool:
@@ -232,9 +268,12 @@ def split_description(text: str, url: str) -> Tuple[str, str]:
     Without this a read-modify-write cycle would append a second copy of the link
     line every time the file is regenerated.
     """
-    text = (text or "").strip()
+    text = normalise_text(text)
     match = LINK_LINE.search(text)
-    if not match or (url and match.group("url") != url):
+    # Only strip a line this event's own URL property accounts for. A blurb that
+    # merely ends in some other link is the author's text, not our doing, and
+    # removing it would delete it permanently on the next republish.
+    if not match or not url or match.group("url") != url:
         return text, DEFAULT_LINK_LABEL
     return text[: match.start()].strip(), match.group("label")
 
@@ -393,6 +432,21 @@ def canonical_key(name: str) -> Tuple[str, Optional[str]]:
     return re.sub(r"[^a-z0-9]+", " ", name.lower()).strip(), None
 
 
+def last_covered_day(event: CalEvent) -> date:
+    """The last calendar day the event actually occupies.
+
+    All-day ends are exclusive, so the last day is the one before; a timed event
+    occupies the day it ends on, unless it ends exactly at midnight. Getting this
+    wrong shortens a merged event by a day.
+    """
+    if event.all_day:
+        return event.end - timedelta(days=1)
+    end = event.end_instant
+    if (end.hour, end.minute, end.second, end.microsecond) == (0, 0, 0, 0):
+        return end.date() - timedelta(days=1)
+    return end.date()
+
+
 def _combine(group: List[CalEvent], canonical: Optional[str]) -> CalEvent:
     """Collapse events that are the same disruption into one entry.
 
@@ -421,7 +475,7 @@ def _combine(group: List[CalEvent], canonical: Optional[str]) -> CalEvent:
         # Mixed timed/all-day members collapse to all-day: an all-day member has no
         # times to preserve, so the union can only be expressed as whole days.
         start: Union[date, datetime] = start_source.start_instant.date()
-        end: Union[date, datetime] = end_source.end_instant.date()
+        end: Union[date, datetime] = last_covered_day(end_source) + timedelta(days=1)
         if end <= start:
             end = start + timedelta(days=1)
     else:
@@ -769,7 +823,7 @@ def build_health(
     sources: Dict[str, dict] = {}
     for record in records:
         key = record.get("fetcher") or record["name"]
-        if key == "get_first_thursdays":  # one computed rule, 24 identical records
+        if key == FIRST_THURSDAYS_FETCHER:  # one computed rule, 24 identical records
             continue
         sources[key] = {
             "name": record.get("name", ""),
@@ -835,9 +889,15 @@ def generate(ics_path: str = ICS_PATH, health_path: str = HEALTH_PATH,
     stadium_events = get_api_events(resp)
     records = fetch_all_events()
     city_events = get_city_events(records)
+    # First Thursdays come from an unconditional calendar rule, so they would keep
+    # the city list non-empty even with every real scraper dead. The guard is given
+    # the scraped events only, or it could never fire.
+    scraped_city = get_city_events(
+        record for record in records if record.get("fetcher") != FIRST_THURSDAYS_FETCHER
+    )
 
     fresh = dedupe_events(stadium_events + city_events)
-    check_regression(stadium_events, city_events, fresh, existing, allow_shrink=allow_shrink)
+    check_regression(stadium_events, scraped_city, fresh, existing, allow_shrink=allow_shrink)
 
     merged = merge_events(fresh, existing)
     stamped = stamp_events(merged, existing)

@@ -813,6 +813,11 @@ def fetch_fame_week() -> Dict[str, str]:
     )
 
 
+# Named so callers can tell these apart from the scraped events: they come from an
+# unconditional rule and are always present, however the real scrapers fare.
+FIRST_THURSDAYS_FETCHER = "get_first_thursdays"
+
+
 def get_first_thursdays(year: int) -> List[Dict[str, str]]:
     """Return a 'First Thursdays' event (16:00–23:00 SAST) for each month of a year.
 
@@ -896,7 +901,7 @@ def fetch_all_events() -> List[Dict[str, str]]:
     now = datetime.now().year
     for year in (now, now + 1):
         for item in get_first_thursdays(year):
-            item["fetcher"] = "get_first_thursdays"
+            item["fetcher"] = FIRST_THURSDAYS_FETCHER
             results.append(item)
 
     # Attach a context blurb to every event (empty string if we have none).

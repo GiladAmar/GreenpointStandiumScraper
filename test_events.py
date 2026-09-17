@@ -699,6 +699,64 @@ def test_a_label_without_a_link_is_discarded():
     assert event.link_label == gen.DEFAULT_LINK_LABEL
 
 
+# ── Text normalisation (stable rebuilds) ─────────────────────────────────────
+# Anything a rebuild cannot reproduce exactly bumps SEQUENCE and DTSTAMP every
+# run: clients re-notify about events that have not moved and CI commits a
+# changed file every time. Text is normalised on the way in so an event always
+# equals its own published copy.
+
+DRIFTY_TEXT = [
+    ("windows line endings", "Line one.\r\nLine two."),
+    ("bare carriage return", "Line one.\rLine two."),
+    ("surrounding padding", "   Line one.   "),
+    ("long enough to fold", "word " * 40),
+    ("tabs and unicode", "Caf\u00e9 \u2014 35 000 riders\tR50"),
+    ("ical special characters", "Gates open; parking closed, per notice\\route"),
+]
+
+
+@pytest.mark.parametrize("label,text", DRIFTY_TEXT, ids=[label for label, _ in DRIFTY_TEXT])
+@pytest.mark.parametrize("field", ["description", "name", "location"])
+def test_text_survives_a_round_trip_unchanged(label, text, field):
+    kwargs = {"description": "d", "url": "https://e.test/", field: text}
+    if field == "name":
+        event = gen.CalEvent(start=date(2027, 1, 1), end=date(2027, 1, 2), **kwargs)
+    else:
+        event = gen.CalEvent("X", date(2027, 1, 1), date(2027, 1, 2), **kwargs)
+    stamped = gen.stamp_events([event], [])
+    parsed = gen.parse_calendar(gen.build_calendar(stamped).to_ical())
+    assert gen.fingerprint(parsed[0]) == gen.fingerprint(stamped[0])
+
+
+@pytest.mark.parametrize("label", [
+    "Tickets: book now",          # the stadium's link text is free-form
+    "T" * 70,                     # longer than a label is usually expected to be
+    "T" * 300,                    # longer than the parser accepts at all
+    "Buy\ntickets",               # a newline would break the link line
+])
+def test_link_labels_survive_a_round_trip(label):
+    event = gen.CalEvent("X", date(2027, 1, 1), date(2027, 1, 2),
+                         description="Blurb.", url="https://e.test/", link_label=label)
+    stamped = gen.stamp_events([event], [])
+    parsed = gen.parse_calendar(gen.build_calendar(stamped).to_ical())
+    assert gen.fingerprint(parsed[0]) == gen.fingerprint(stamped[0])
+
+
+def test_a_blurb_ending_in_someone_elses_link_is_left_alone():
+    """Only the link line we appended may be stripped.
+
+    An event with no URL of its own whose blurb happens to end in a link would
+    otherwise lose that line permanently on the next republish.
+    """
+    blurb = "Road closures apply.\n\nCity notice: https://other.test/page"
+    assert gen.split_description(blurb, "") == (blurb, gen.DEFAULT_LINK_LABEL)
+
+
+def test_a_link_line_for_a_different_url_is_left_alone():
+    blurb = "Road closures apply.\n\nCity notice: https://other.test/page"
+    assert gen.split_description(blurb, "https://ours.test/")[0] == blurb
+
+
 # ── Calendar round-trip ───────────────────────────────────────────────────────
 
 SAMPLE_EVENTS = [
@@ -800,6 +858,33 @@ def test_consecutive_days_of_one_tournament_collapse_into_one_entry():
     assert merged[0].end == days[1].end
 
 
+def test_a_merged_span_covers_the_last_day_its_members_reach():
+    """A timed member occupies the day it ends on; the all-day union must include it.
+
+    Using its end date directly as the exclusive end publishes an event that
+    finishes a day early.
+    """
+    expo = timed("Sanlam Cape Town Marathon Expo", datetime(2027, 5, 22, 9, 0, tzinfo=SAST),
+                 hours=79, category=gen.CATEGORY_STADIUM)  # runs to 17:00 on the 25th
+    race = all_day("Sanlam Cape Town Marathon", date(2027, 5, 24),
+                   category=gen.CATEGORY_CITY)
+    merged = gen.dedupe_events([expo, race])
+    assert len(merged) == 1
+    assert merged[0].start == date(2027, 5, 22)
+    assert merged[0].end == date(2027, 5, 26)  # exclusive: covers through the 25th
+
+
+@pytest.mark.parametrize("event,expected", [
+    (all_day("One day", date(2027, 5, 24)), date(2027, 5, 24)),
+    (all_day("Three days", date(2027, 5, 24), days=3), date(2027, 5, 26)),
+    (timed("Evening", datetime(2027, 5, 24, 19, 0, tzinfo=SAST)), date(2027, 5, 24)),
+    (gen.CalEvent("To midnight", datetime(2027, 5, 24, 19, 0, tzinfo=SAST),
+                  datetime(2027, 5, 25, 0, 0, tzinfo=SAST)), date(2027, 5, 24)),
+])
+def test_last_covered_day(event, expected):
+    assert gen.last_covered_day(event) == expected
+
+
 def test_separate_editions_of_the_same_event_are_not_merged():
     """Two First Thursdays a month apart are different events, not duplicates."""
     months = [timed("First Thursdays", datetime(2027, month, 4, 16, 0, tzinfo=SAST))
@@ -833,6 +918,23 @@ def test_guard_blocks_a_build_with_no_city_events():
     stadium = _published(3)
     with pytest.raises(gen.CalendarBuildError, match="city scrapers produced no dated"):
         gen.check_regression(stadium, [], stadium, [])
+
+
+def test_guard_still_fires_when_only_first_thursdays_survive(tmp_path):
+    """First Thursdays come from an unconditional rule, so they are always there.
+
+    Counting them as city events makes the "no city events" guard unreachable: a
+    total collapse of all nineteen real scrapers would publish silently.
+    """
+    with patch.object(events, "EXTRACTORS", []):   # every real scraper dead
+        records = events.fetch_all_events()
+    assert records, "First Thursdays should still be produced"
+    scraped = gen.get_city_events(
+        r for r in records if r.get("fetcher") != events.FIRST_THURSDAYS_FETCHER
+    )
+    stadium = _published(3)
+    with pytest.raises(gen.CalendarBuildError, match="city scrapers produced no dated"):
+        gen.check_regression(stadium, scraped, stadium, [])
 
 
 def test_guard_blocks_a_collapse_in_upcoming_events():
