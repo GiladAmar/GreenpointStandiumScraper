@@ -192,15 +192,18 @@ def _as_instant(value: Union[date, datetime]) -> datetime:
 
 
 def _uid_date(value: Union[date, datetime]) -> date:
-    """The date a UID is keyed on.
+    """The date a UID is keyed on: the day the event starts, in SAST.
 
-    Timed events key on their UTC date, which is what the original UID scheme
-    used; changing that would hand every existing subscriber a duplicate of every
-    event, so it stays as it is.
+    It has to be the same day however the event is expressed. Keying timed events
+    on their UTC date (as the original scheme did) while all-day events use their
+    own date makes the two disagree for anything starting before 02:00 SAST — and
+    dedupe can turn a timed event into an all-day one, so the same event would
+    carry different UIDs depending on whether both sources happened to be in range
+    that run, and be published twice.
     """
     if isinstance(value, datetime):
         aware = value if value.tzinfo else value.replace(tzinfo=SAST)
-        return aware.astimezone(timezone.utc).date()
+        return aware.astimezone(SAST).date()
     return value
 
 
@@ -466,6 +469,18 @@ def last_covered_day(event: CalEvent) -> date:
     return end.date()
 
 
+def canonicalise(event: CalEvent) -> CalEvent:
+    """Publish an event under its canonical name, whatever name it arrived under.
+
+    Applied to preserved history as well as to fresh events: the UID is derived
+    from the name, so an event kept under the name it was first published with
+    would not collide with the same event coming back renamed from the fresh
+    fetch, and the calendar would carry both.
+    """
+    _, canonical = canonical_key(event.name)
+    return replace(event, name=canonical) if canonical and event.name != canonical else event
+
+
 def _combine(group: List[CalEvent], canonical: Optional[str]) -> CalEvent:
     """Collapse events that are the same disruption into one entry.
 
@@ -480,8 +495,7 @@ def _combine(group: List[CalEvent], canonical: Optional[str]) -> CalEvent:
         # name that flips is a UID that flips. Without this the Gun Run appears
         # twice — once as preserved history under its canonical name, once fresh
         # under the sponsor name the stadium uses.
-        solo = group[0]
-        return replace(solo, name=canonical) if canonical else solo
+        return canonicalise(group[0])
 
     ordered = sorted(
         group,
@@ -723,10 +737,15 @@ def merge_events(fresh: List[CalEvent], existing: List[CalEvent]) -> List[CalEve
     merged: Dict[str, CalEvent] = {}
     for event in existing:
         if is_past(event):
-            uid = event.uid or make_uid(event.name, event.start)
+            event = canonicalise(event)
+            # Recomputed, never taken from the file: a preserved event whose stored
+            # UID disagrees with its name and date would not collide with the same
+            # event coming back from the fresh fetch (the API look-back reaches into
+            # the past), so both would be published and stay duplicated for good.
+            uid = make_uid(event.name, event.start)
             merged[uid] = replace(event, uid=uid)
     for event in fresh:
-        uid = event.uid or make_uid(event.name, event.start)
+        uid = make_uid(event.name, event.start)
         merged[uid] = replace(event, uid=uid)
     return sorted(merged.values(), key=lambda ev: (ev.start_instant, ev.name))
 

@@ -69,10 +69,15 @@ CBD / Green Point / Atlantic-seaboard traffic and publishes them as `dhl_stadium
    but it only catches a feed that has stopped moving — a feed that has moved *host* still
    needs a human to notice the site and the calendar disagree.
 
-5. **Never change the UID scheme.** `make_uid()` hashes `name|start-date`, with timed events
-   keyed on their UTC date. A different scheme hands every existing subscriber a duplicate
-   of every event. If a name must change, prefer a `CANONICAL_NAMES` entry over editing the
-   name at the source, and expect the UID to move with it.
+5. **Never change the UID scheme, and keep the calendar consistent with it.**
+   `make_uid()` hashes `name|start-date`, the start date being the SAST calendar day
+   however the event is expressed. A different scheme hands every existing subscriber a
+   duplicate of every event. `test_every_published_event_uid_matches_the_scheme` asserts
+   the invariant `uid == make_uid(name, start)` holds for every event in the published
+   file — if you ever have to change the scheme, regenerate the whole calendar in the same
+   commit, or preserved past events inside the API look-back will be published twice. If a
+   name must change, prefer a `CANONICAL_NAMES` entry over editing the name at the source,
+   and expect the UID to move with it.
 
 ## Gotchas
 - **The build fails closed.** `check_regression()` refuses to publish when either source

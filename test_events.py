@@ -665,6 +665,50 @@ def test_uid_scheme_matches_the_already_published_calendar():
     )
 
 
+def test_uid_is_keyed_on_the_same_day_however_the_event_is_expressed():
+    """Dedupe can turn a timed event into an all-day one, so the two must agree.
+
+    Keying timed events on their UTC date makes them disagree for anything starting
+    before 02:00 SAST, and the same event then carries different UIDs depending on
+    whether both sources were in range that run.
+    """
+    midnight = datetime(2026, 9, 12, 0, 0, tzinfo=SAST)  # 2026-09-11 in UTC
+    assert gen.make_uid("X", midnight) == gen.make_uid("X", date(2026, 9, 12))
+
+
+def test_a_midnight_event_is_not_published_twice_when_it_gets_merged():
+    stadium = gen.CalEvent("OUTsurance Gun Run", datetime(2026, 9, 12, 0, 0, tzinfo=SAST),
+                           datetime(2026, 9, 12, 12, 0, tzinfo=SAST),
+                           category=gen.CATEGORY_STADIUM)
+    history = gen.stamp_events(
+        [all_day("The Gun Run", date(2026, 9, 12), category=gen.CATEGORY_CITY)], []
+    )
+    merged = gen.merge_events(gen.dedupe_events([stadium]), history)
+    assert [event.name for event in merged] == ["The Gun Run"]
+
+
+def test_every_published_event_uid_matches_the_scheme():
+    """The published calendar must satisfy uid == make_uid(name, start).
+
+    merge_events() preserves past events and the API look-back re-fetches recent
+    ones, so an event in the file whose UID the scheme no longer reproduces does
+    not collide with its own fresh copy — both get published and stay duplicated.
+    """
+    published = gen.load_existing_events(gen.ICS_PATH)
+    assert published, "the published calendar should not be empty"
+    stale = [e.name for e in published if e.uid != gen.make_uid(e.name, e.start)]
+    assert not stale, f"UIDs no longer reproducible from name + start: {stale}"
+
+
+def test_a_preserved_event_with_a_stale_uid_is_not_duplicated():
+    """Belt and braces: even a hand-edited file must not produce two of one event."""
+    yesterday = date.today() - timedelta(days=2)
+    stored = gen.stamp_events([all_day("Race", yesterday)], [])
+    tampered = [replace(stored[0], uid="hand-edited@example.com")]
+    fresh = [all_day("Race", yesterday)]
+    assert len(gen.merge_events(fresh, tampered)) == 1
+
+
 def test_all_day_event_is_past_the_day_after_it_ends():
     """An all-day event's exclusive end is midnight, so date maths is off by a day.
 
@@ -918,6 +962,28 @@ def test_a_renamed_record_does_not_duplicate_preserved_history():
     )
     merged = gen.merge_events(gen.dedupe_events([stadium]), history)
     assert [event.name for event in merged] == ["The Gun Run"]
+
+
+def test_history_published_under_an_old_name_is_not_duplicated_by_its_fresh_copy():
+    """The UID follows the name, so preserved history has to be renamed too.
+
+    Otherwise an event first published under its sponsor name and later re-served
+    by the API inside the look-back window appears twice, under both names.
+    """
+    yesterday = date.today() - timedelta(days=2)
+    history = gen.stamp_events(
+        [all_day("OUTsurance Gun Run", yesterday, category=gen.CATEGORY_STADIUM)], []
+    )
+    fresh = gen.dedupe_events(
+        [all_day("OUTsurance Gun Run", yesterday, category=gen.CATEGORY_STADIUM)]
+    )
+    merged = gen.merge_events(fresh, history)
+    assert [event.name for event in merged] == ["The Gun Run"]
+
+
+def test_every_published_event_already_uses_its_canonical_name():
+    for event in gen.load_existing_events(gen.ICS_PATH):
+        assert gen.canonicalise(event).name == event.name, event.name
 
 
 def test_an_unaliased_name_is_left_alone():
