@@ -150,15 +150,6 @@ UID:d73857d38b872a67@greenpoint-stadium-scraper
 URL:https://first-thursdays.co.za/
 END:VEVENT
 BEGIN:VEVENT
-DTSTART;VALUE=DATE:20270511
-DTEND;VALUE=DATE:20270515
-DESCRIPTION:Africa's largest power\, energy and water conference at the CTICC (May). Congestion around the Foreshore and CBD.\n\nMore info: https://www.enlit-africa.com/
-LOCATION:CTICC\, Cape Town CBD
-SUMMARY:Enlit Africa
-UID:65223db0b6b76b86@greenpoint-stadium-scraper
-URL:https://www.enlit-africa.com/
-END:VEVENT
-BEGIN:VEVENT
 DESCRIPTION:Monthly art-and-culture evening — CBD galleries and venues open late (16:00–23:00)\, bringing foot traffic and parking pressure to the city centre.\n\nMore info: https://first-thursdays.co.za/
 DTEND:20270603T210000Z
 DTSTART:20270603T140000Z
@@ -253,6 +244,15 @@ DESCRIPTION:Night-time street parade on the Green Point Fan Walk. Somerset Road 
 SUMMARY:Cape Town Carnival
 UID:58b654d14b45f9f9@greenpoint-stadium-scraper
 URL:https://capetowncarnival.com/
+END:VEVENT
+BEGIN:VEVENT
+DTSTART;VALUE=DATE:20270518
+DTEND;VALUE=DATE:20270522
+DESCRIPTION:Africa's largest power\, energy and water conference at the CTICC (May). Congestion around the Foreshore and CBD.\n\nMore info: https://www.enlit-africa.com/
+LOCATION:CTICC\, Cape Town CBD
+SUMMARY:Enlit Africa
+UID:c8d06ee6e07494ab@greenpoint-stadium-scraper
+URL:https://www.enlit-africa.com/
 END:VEVENT
 BEGIN:VEVENT
 DTSTART;VALUE=DATE:20270522
