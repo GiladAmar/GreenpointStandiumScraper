@@ -2,18 +2,20 @@ BEGIN:VCALENDAR
 VERSION:2.0
 PRODID:ics.py - http://git.io/lLljaA
 BEGIN:VEVENT
-DESCRIPTION:Monthly art-and-culture evening — CBD galleries and venues open late (16:00–23:00)\, bringing foot traffic and parking pressure to the city centre.
+DESCRIPTION:Monthly art-and-culture evening — CBD galleries and venues open late (16:00–23:00)\, bringing foot traffic and parking pressure to the city centre.\n\nMore info: https://first-thursdays.co.za/
 DTEND:20270304T210000Z
 DTSTART:20270304T140000Z
 SUMMARY:First Thursdays
 UID:67e7f6493c10737b@greenpoint-stadium-scraper
+URL:https://first-thursdays.co.za/
 END:VEVENT
 BEGIN:VEVENT
-DESCRIPTION:Monthly art-and-culture evening — CBD galleries and venues open late (16:00–23:00)\, bringing foot traffic and parking pressure to the city centre.
+DESCRIPTION:Monthly art-and-culture evening — CBD galleries and venues open late (16:00–23:00)\, bringing foot traffic and parking pressure to the city centre.\n\nMore info: https://first-thursdays.co.za/
 DTEND:20260205T210000Z
 DTSTART:20260205T140000Z
 SUMMARY:First Thursdays
 UID:d2372f93c76bc23c@greenpoint-stadium-scraper
+URL:https://first-thursdays.co.za/
 END:VEVENT
 BEGIN:VEVENT
 DESCRIPTION:Join us for the season finale of the 2025 FIM World Supercross Championship on December 13.\n
@@ -32,16 +34,18 @@ END:VEVENT
 BEGIN:VEVENT
 DTSTART;VALUE=DATE:20270321
 DTEND;VALUE=DATE:20270330
-DESCRIPTION:Eight-day mountain-bike stage race across the Western Cape\; the start and finish stages disrupt local traffic.
+DESCRIPTION:Eight-day mountain-bike stage race across the Western Cape\; the start and finish stages disrupt local traffic.\n\nMore info: https://www.cape-epic.com/
 SUMMARY:Absa Cape Epic
 UID:b0454e35a738cacb@greenpoint-stadium-scraper
+URL:https://www.cape-epic.com/
 END:VEVENT
 BEGIN:VEVENT
-DESCRIPTION:The DHL Stormers take on the legendary All Blacks on 7 August for the friendly match part of the Rugby's Greatest Rivalry Tour.
+DESCRIPTION:The DHL Stormers take on the legendary All Blacks on 7 August for the friendly match part of the Rugby's Greatest Rivalry Tour.\n\nTicket Sales: https://springboks.tmtickets.co.za/Events
 DTEND:20260807T215959Z
 DTSTART:20260807T170000Z
 SUMMARY:DHL Stormers vs All Blacks 
 UID:a30c186bf8a8844b@greenpoint-stadium-scraper
+URL:https://springboks.tmtickets.co.za/Events
 END:VEVENT
 BEGIN:VEVENT
 DESCRIPTION:We're hosting one of the Western Cape’s largest inter-school athletics events\,  for a day of elite competition and school spirit.
@@ -72,11 +76,12 @@ SUMMARY:Minstrel Parade (Kaapse Klopse)
 UID:1e0030ce4f282255@greenpoint-stadium-scraper
 END:VEVENT
 BEGIN:VEVENT
-DESCRIPTION:Monthly art-and-culture evening — CBD galleries and venues open late (16:00–23:00)\, bringing foot traffic and parking pressure to the city centre.
+DESCRIPTION:Monthly art-and-culture evening — CBD galleries and venues open late (16:00–23:00)\, bringing foot traffic and parking pressure to the city centre.\n\nMore info: https://first-thursdays.co.za/
 DTEND:20260402T210000Z
 DTSTART:20260402T140000Z
 SUMMARY:First Thursdays
 UID:d525f44b4faa1872@greenpoint-stadium-scraper
+URL:https://first-thursdays.co.za/
 END:VEVENT
 BEGIN:VEVENT
 DESCRIPTION:SACO 2025 International Conference | 4–5 November at DHL Stadium
@@ -88,16 +93,18 @@ END:VEVENT
 BEGIN:VEVENT
 DTSTART;VALUE=DATE:20270102
 DTEND;VALUE=DATE:20270104
-DESCRIPTION:The Cape Town Minstrel Carnival (Kaapse Klopse)\, a large minstrel festival held annually on 2 January. The parade moves through the CBD\, Bo-Kaap and Green Point\, closing Somerset Road and Green Point Main Road for the day.
+DESCRIPTION:The Cape Town Minstrel Carnival (Kaapse Klopse)\, a large minstrel festival held annually on 2 January. The parade moves through the CBD\, Bo-Kaap and Green Point\, closing Somerset Road and Green Point Main Road for the day.\n\nMore info: https://en.wikipedia.org/wiki/Kaapse_Klopse
 SUMMARY:Minstrel Carnival (Kaapse Klopse)
 UID:06989d96fc0d0200@greenpoint-stadium-scraper
+URL:https://en.wikipedia.org/wiki/Kaapse_Klopse
 END:VEVENT
 BEGIN:VEVENT
-DESCRIPTION:Monthly art-and-culture evening — CBD galleries and venues open late (16:00–23:00)\, bringing foot traffic and parking pressure to the city centre.
+DESCRIPTION:Monthly art-and-culture evening — CBD galleries and venues open late (16:00–23:00)\, bringing foot traffic and parking pressure to the city centre.\n\nMore info: https://first-thursdays.co.za/
 DTEND:20260507T210000Z
 DTSTART:20260507T140000Z
 SUMMARY:First Thursdays
 UID:7852f43c017a1570@greenpoint-stadium-scraper
+URL:https://first-thursdays.co.za/
 END:VEVENT
 BEGIN:VEVENT
 DESCRIPTION:DHL Stormers take on Edinburgh Rugby. 
@@ -114,25 +121,28 @@ SUMMARY:Sanlam Cape Town Marathon Expo
 UID:ea832eaa0f4887f6@greenpoint-stadium-scraper
 END:VEVENT
 BEGIN:VEVENT
-DESCRIPTION:Monthly art-and-culture evening — CBD galleries and venues open late (16:00–23:00)\, bringing foot traffic and parking pressure to the city centre.
+DESCRIPTION:Monthly art-and-culture evening — CBD galleries and venues open late (16:00–23:00)\, bringing foot traffic and parking pressure to the city centre.\n\nMore info: https://first-thursdays.co.za/
 DTEND:20260604T210000Z
 DTSTART:20260604T140000Z
 SUMMARY:First Thursdays
 UID:3a4a38c165d8f559@greenpoint-stadium-scraper
+URL:https://first-thursdays.co.za/
 END:VEVENT
 BEGIN:VEVENT
-DESCRIPTION:Monthly art-and-culture evening — CBD galleries and venues open late (16:00–23:00)\, bringing foot traffic and parking pressure to the city centre.
+DESCRIPTION:Monthly art-and-culture evening — CBD galleries and venues open late (16:00–23:00)\, bringing foot traffic and parking pressure to the city centre.\n\nMore info: https://first-thursdays.co.za/
 DTEND:20260806T210000Z
 DTSTART:20260806T140000Z
 SUMMARY:First Thursdays
 UID:c9e279b3933f19ba@greenpoint-stadium-scraper
+URL:https://first-thursdays.co.za/
 END:VEVENT
 BEGIN:VEVENT
-DESCRIPTION:Monthly art-and-culture evening — CBD galleries and venues open late (16:00–23:00)\, bringing foot traffic and parking pressure to the city centre.
+DESCRIPTION:Monthly art-and-culture evening — CBD galleries and venues open late (16:00–23:00)\, bringing foot traffic and parking pressure to the city centre.\n\nMore info: https://first-thursdays.co.za/
 DTEND:20270204T210000Z
 DTSTART:20270204T140000Z
 SUMMARY:First Thursdays
 UID:0c8ca35aee5ff7ae@greenpoint-stadium-scraper
+URL:https://first-thursdays.co.za/
 END:VEVENT
 BEGIN:VEVENT
 DESCRIPTION:HSBC SVNS returns to DHL Stadium for a weekend of world-class rugby\, live music\, food\, and unforgettable vibes.
@@ -142,18 +152,20 @@ SUMMARY:HSBC SVNS Cape Town
 UID:f97c4fe79d6dd529@greenpoint-stadium-scraper
 END:VEVENT
 BEGIN:VEVENT
-DESCRIPTION:Monthly art-and-culture evening — CBD galleries and venues open late (16:00–23:00)\, bringing foot traffic and parking pressure to the city centre.
+DESCRIPTION:Monthly art-and-culture evening — CBD galleries and venues open late (16:00–23:00)\, bringing foot traffic and parking pressure to the city centre.\n\nMore info: https://first-thursdays.co.za/
 DTEND:20270902T210000Z
 DTSTART:20270902T140000Z
 SUMMARY:First Thursdays
 UID:170a43d6993ee0fa@greenpoint-stadium-scraper
+URL:https://first-thursdays.co.za/
 END:VEVENT
 BEGIN:VEVENT
 DTSTART;VALUE=DATE:20270522
 DTEND;VALUE=DATE:20270525
-DESCRIPTION:City-centre marathon (IAAF-labelled). Road closures around Green Point\, Sea Point\, the CBD and southern suburbs.
+DESCRIPTION:City-centre marathon (IAAF-labelled). Road closures around Green Point\, Sea Point\, the CBD and southern suburbs.\n\nMore info: https://www.capetownmarathon.com/
 SUMMARY:Sanlam Cape Town Marathon
 UID:e96644db6dac49c0@greenpoint-stadium-scraper
+URL:https://www.capetownmarathon.com/
 END:VEVENT
 BEGIN:VEVENT
 DESCRIPTION:DHL Stormers take on Connacht Rugby. DHL Stormers XXIII will also take Vodacom Bulls U23 in a friendly match.\n
@@ -170,11 +182,12 @@ SUMMARY:Caroline's White Wine Review
 UID:37fd7751cc0af691@greenpoint-stadium-scraper
 END:VEVENT
 BEGIN:VEVENT
-DESCRIPTION:Monthly art-and-culture evening — CBD galleries and venues open late (16:00–23:00)\, bringing foot traffic and parking pressure to the city centre.
+DESCRIPTION:Monthly art-and-culture evening — CBD galleries and venues open late (16:00–23:00)\, bringing foot traffic and parking pressure to the city centre.\n\nMore info: https://first-thursdays.co.za/
 DTEND:20260702T210000Z
 DTSTART:20260702T140000Z
 SUMMARY:First Thursdays
 UID:b7fd37516ad2b3e5@greenpoint-stadium-scraper
+URL:https://first-thursdays.co.za/
 END:VEVENT
 BEGIN:VEVENT
 DESCRIPTION:DHL Stormers take on  Dragons RFC. 
@@ -186,16 +199,18 @@ END:VEVENT
 BEGIN:VEVENT
 DTSTART;VALUE=DATE:20270711
 DTEND;VALUE=DATE:20270713
-DESCRIPTION:Mountain-bike and road cycle races around Knysna on the Garden Route.
+DESCRIPTION:Mountain-bike and road cycle races around Knysna on the Garden Route.\n\nMore info: https://knysnacycle.co.za/
 SUMMARY:Knysna Cycle Tour
 UID:703cdd8e2ecdcb56@greenpoint-stadium-scraper
+URL:https://knysnacycle.co.za/
 END:VEVENT
 BEGIN:VEVENT
-DESCRIPTION:Monthly art-and-culture evening — CBD galleries and venues open late (16:00–23:00)\, bringing foot traffic and parking pressure to the city centre.
+DESCRIPTION:Monthly art-and-culture evening — CBD galleries and venues open late (16:00–23:00)\, bringing foot traffic and parking pressure to the city centre.\n\nMore info: https://first-thursdays.co.za/
 DTEND:20271104T210000Z
 DTSTART:20271104T140000Z
 SUMMARY:First Thursdays
 UID:bdffe21a3bc5262e@greenpoint-stadium-scraper
+URL:https://first-thursdays.co.za/
 END:VEVENT
 BEGIN:VEVENT
 DESCRIPTION:Sanlam Cape Town Marathon Expo & Registration\n
@@ -212,11 +227,12 @@ SUMMARY:Stellenbosch FC vs Kaizer Chiefs
 UID:a73f5da824063ac9@greenpoint-stadium-scraper
 END:VEVENT
 BEGIN:VEVENT
-DESCRIPTION:Monthly art-and-culture evening — CBD galleries and venues open late (16:00–23:00)\, bringing foot traffic and parking pressure to the city centre.
+DESCRIPTION:Monthly art-and-culture evening — CBD galleries and venues open late (16:00–23:00)\, bringing foot traffic and parking pressure to the city centre.\n\nMore info: https://first-thursdays.co.za/
 DTEND:20260305T210000Z
 DTSTART:20260305T140000Z
 SUMMARY:First Thursdays
 UID:d73857d38b872a67@greenpoint-stadium-scraper
+URL:https://first-thursdays.co.za/
 END:VEVENT
 BEGIN:VEVENT
 DESCRIPTION:HSBC SVNS returns to DHL Stadium for a weekend of world-class rugby\, live music\, food\, and unforgettable vibes.
@@ -226,46 +242,52 @@ SUMMARY:HSBC SVNS Cape Town
 UID:5d3306d505a1e905@greenpoint-stadium-scraper
 END:VEVENT
 BEGIN:VEVENT
-DESCRIPTION:Monthly art-and-culture evening — CBD galleries and venues open late (16:00–23:00)\, bringing foot traffic and parking pressure to the city centre.
+DESCRIPTION:Monthly art-and-culture evening — CBD galleries and venues open late (16:00–23:00)\, bringing foot traffic and parking pressure to the city centre.\n\nMore info: https://first-thursdays.co.za/
 DTEND:20270603T210000Z
 DTSTART:20270603T140000Z
 SUMMARY:First Thursdays
 UID:034e2855720ab6d9@greenpoint-stadium-scraper
+URL:https://first-thursdays.co.za/
 END:VEVENT
 BEGIN:VEVENT
-DESCRIPTION:Monthly art-and-culture evening — CBD galleries and venues open late (16:00–23:00)\, bringing foot traffic and parking pressure to the city centre.
+DESCRIPTION:Monthly art-and-culture evening — CBD galleries and venues open late (16:00–23:00)\, bringing foot traffic and parking pressure to the city centre.\n\nMore info: https://first-thursdays.co.za/
 DTEND:20260101T210000Z
 DTSTART:20260101T140000Z
 SUMMARY:First Thursdays
 UID:9553b546f4c311b4@greenpoint-stadium-scraper
+URL:https://first-thursdays.co.za/
 END:VEVENT
 BEGIN:VEVENT
 DTSTART;VALUE=DATE:20270208
 DTEND;VALUE=DATE:20270213
-DESCRIPTION:Africa's largest mining investment conference at the CTICC (7 000+ delegates: ministers\, mining houses\, financiers). Heavy congestion around the Foreshore and CBD for the week.
+DESCRIPTION:Africa's largest mining investment conference at the CTICC (7 000+ delegates: ministers\, mining houses\, financiers). Heavy congestion around the Foreshore and CBD for the week.\n\nMore info: https://miningindaba.com/
 SUMMARY:Investing in African Mining Indaba
 UID:ec8e91dcb49816a3@greenpoint-stadium-scraper
+URL:https://miningindaba.com/
 END:VEVENT
 BEGIN:VEVENT
 DTSTART;VALUE=DATE:20270912
 DTEND;VALUE=DATE:20270914
-DESCRIPTION:Half marathon and 10 km along the Atlantic seaboard. Closures on Green Point\, Sea Point and Mouille Point roads.
+DESCRIPTION:Half marathon and 10 km along the Atlantic seaboard. Closures on Green Point\, Sea Point and Mouille Point roads.\n\nMore info: https://thegunrun.co.za/
 SUMMARY:The Gun Run
 UID:c0e59b6d76fdeee0@greenpoint-stadium-scraper
+URL:https://thegunrun.co.za/
 END:VEVENT
 BEGIN:VEVENT
-DESCRIPTION:Monthly art-and-culture evening — CBD galleries and venues open late (16:00–23:00)\, bringing foot traffic and parking pressure to the city centre.
+DESCRIPTION:Monthly art-and-culture evening — CBD galleries and venues open late (16:00–23:00)\, bringing foot traffic and parking pressure to the city centre.\n\nMore info: https://first-thursdays.co.za/
 DTEND:20270107T210000Z
 DTSTART:20270107T140000Z
 SUMMARY:First Thursdays
 UID:bc263faa4ae49d75@greenpoint-stadium-scraper
+URL:https://first-thursdays.co.za/
 END:VEVENT
 BEGIN:VEVENT
-DESCRIPTION:Monthly art-and-culture evening — CBD galleries and venues open late (16:00–23:00)\, bringing foot traffic and parking pressure to the city centre.
+DESCRIPTION:Monthly art-and-culture evening — CBD galleries and venues open late (16:00–23:00)\, bringing foot traffic and parking pressure to the city centre.\n\nMore info: https://first-thursdays.co.za/
 DTEND:20260903T210000Z
 DTSTART:20260903T140000Z
 SUMMARY:First Thursdays
 UID:4b0d224d8b45ab26@greenpoint-stadium-scraper
+URL:https://first-thursdays.co.za/
 END:VEVENT
 BEGIN:VEVENT
 DESCRIPTION:Stellenbosch FC takes on Singida Black Stars in the CAF Confederation Cup.
@@ -275,25 +297,28 @@ SUMMARY:Stellenbosch FC vs Singida Black Stars
 UID:f2b5571186d3bb45@greenpoint-stadium-scraper
 END:VEVENT
 BEGIN:VEVENT
-DESCRIPTION:Monthly art-and-culture evening — CBD galleries and venues open late (16:00–23:00)\, bringing foot traffic and parking pressure to the city centre.
+DESCRIPTION:Monthly art-and-culture evening — CBD galleries and venues open late (16:00–23:00)\, bringing foot traffic and parking pressure to the city centre.\n\nMore info: https://first-thursdays.co.za/
 DTEND:20270506T210000Z
 DTSTART:20270506T140000Z
 SUMMARY:First Thursdays
 UID:4ac1fc5aa335e5f8@greenpoint-stadium-scraper
+URL:https://first-thursdays.co.za/
 END:VEVENT
 BEGIN:VEVENT
 DTSTART;VALUE=DATE:20270227
 DTEND;VALUE=DATE:20270301
-DESCRIPTION:Pride march and festival through Green Point\, Sea Point and De Waterkant.
+DESCRIPTION:Pride march and festival through Green Point\, Sea Point and De Waterkant.\n\nMore info: https://cptpride.org/
 SUMMARY:Cape Town Pride Parade
 UID:c0d265b987e13c7a@greenpoint-stadium-scraper
+URL:https://cptpride.org/
 END:VEVENT
 BEGIN:VEVENT
-DESCRIPTION:Monthly art-and-culture evening — CBD galleries and venues open late (16:00–23:00)\, bringing foot traffic and parking pressure to the city centre.
+DESCRIPTION:Monthly art-and-culture evening — CBD galleries and venues open late (16:00–23:00)\, bringing foot traffic and parking pressure to the city centre.\n\nMore info: https://first-thursdays.co.za/
 DTEND:20271202T210000Z
 DTSTART:20271202T140000Z
 SUMMARY:First Thursdays
 UID:82bf3dfac4e8eb3c@greenpoint-stadium-scraper
+URL:https://first-thursdays.co.za/
 END:VEVENT
 BEGIN:VEVENT
 DESCRIPTION:Experience three days of world-class artistry as the South African International Tattoo Convention takes place from 13–15 March 2026.
@@ -310,32 +335,36 @@ SUMMARY:DHL Stormers vs Vodacom Bulls
 UID:f36b0794ca574c6f@greenpoint-stadium-scraper
 END:VEVENT
 BEGIN:VEVENT
-DESCRIPTION:Monthly art-and-culture evening — CBD galleries and venues open late (16:00–23:00)\, bringing foot traffic and parking pressure to the city centre.
+DESCRIPTION:Monthly art-and-culture evening — CBD galleries and venues open late (16:00–23:00)\, bringing foot traffic and parking pressure to the city centre.\n\nMore info: https://first-thursdays.co.za/
 DTEND:20270701T210000Z
 DTSTART:20270701T140000Z
 SUMMARY:First Thursdays
 UID:41d02b49fd1e0aac@greenpoint-stadium-scraper
+URL:https://first-thursdays.co.za/
 END:VEVENT
 BEGIN:VEVENT
 DTSTART;VALUE=DATE:20261231
 DTEND;VALUE=DATE:20270102
-DESCRIPTION:New Year's Eve fireworks and crowds at the V&A Waterfront. Congestion on Green Point Main Road\, Beach Road\, Helen Suzman Boulevard and Somerset Road.
+DESCRIPTION:New Year's Eve fireworks and crowds at the V&A Waterfront. Congestion on Green Point Main Road\, Beach Road\, Helen Suzman Boulevard and Somerset Road.\n\nMore info: https://www.waterfront.co.za/new-years-eve-celebration
 SUMMARY:V&A Waterfront New Year's Eve
 UID:ef733fac4f436c70@greenpoint-stadium-scraper
+URL:https://www.waterfront.co.za/new-years-eve-celebration
 END:VEVENT
 BEGIN:VEVENT
 DTSTART;VALUE=DATE:20270314
 DTEND;VALUE=DATE:20270316
-DESCRIPTION:The world's largest timed cycle race (~35 000 riders). Road closures sweep the CBD\, Sea Point\, Camps Bay and the Peninsula from early morning.
+DESCRIPTION:The world's largest timed cycle race (~35 000 riders). Road closures sweep the CBD\, Sea Point\, Camps Bay and the Peninsula from early morning.\n\nMore info: https://www.capetowncycletour.com/
 SUMMARY:Cape Town Cycle Tour
 UID:c6bcfbfd19e61751@greenpoint-stadium-scraper
+URL:https://www.capetowncycletour.com/
 END:VEVENT
 BEGIN:VEVENT
 DTSTART;VALUE=DATE:20270320
 DTEND;VALUE=DATE:20270322
-DESCRIPTION:Night-time street parade on the Green Point Fan Walk. Somerset Road and the surrounding streets close for the evening.
+DESCRIPTION:Night-time street parade on the Green Point Fan Walk. Somerset Road and the surrounding streets close for the evening.\n\nMore info: https://capetowncarnival.com/
 SUMMARY:Cape Town Carnival
 UID:58b654d14b45f9f9@greenpoint-stadium-scraper
+URL:https://capetowncarnival.com/
 END:VEVENT
 BEGIN:VEVENT
 DESCRIPTION:DHL Stormers take on Leicester Tigers.
@@ -373,11 +402,12 @@ SUMMARY:Cape Town Cycle Tour Expo
 UID:c4161fd73ca9dce0@greenpoint-stadium-scraper
 END:VEVENT
 BEGIN:VEVENT
-DESCRIPTION:Monthly art-and-culture evening — CBD galleries and venues open late (16:00–23:00)\, bringing foot traffic and parking pressure to the city centre.
+DESCRIPTION:Monthly art-and-culture evening — CBD galleries and venues open late (16:00–23:00)\, bringing foot traffic and parking pressure to the city centre.\n\nMore info: https://first-thursdays.co.za/
 DTEND:20270401T210000Z
 DTSTART:20270401T140000Z
 SUMMARY:First Thursdays
 UID:6da66b9e400f2eac@greenpoint-stadium-scraper
+URL:https://first-thursdays.co.za/
 END:VEVENT
 BEGIN:VEVENT
 DESCRIPTION:DHL Stormers takes on Emirates Lions on 20 December 2025. 
@@ -394,11 +424,12 @@ SUMMARY:SA International Tattoo Convention
 UID:ac704c8357641033@greenpoint-stadium-scraper
 END:VEVENT
 BEGIN:VEVENT
-DESCRIPTION:Monthly art-and-culture evening — CBD galleries and venues open late (16:00–23:00)\, bringing foot traffic and parking pressure to the city centre.
+DESCRIPTION:Monthly art-and-culture evening — CBD galleries and venues open late (16:00–23:00)\, bringing foot traffic and parking pressure to the city centre.\n\nMore info: https://first-thursdays.co.za/
 DTEND:20270805T210000Z
 DTSTART:20270805T140000Z
 SUMMARY:First Thursdays
 UID:284ed2ba7c87b5c8@greenpoint-stadium-scraper
+URL:https://first-thursdays.co.za/
 END:VEVENT
 BEGIN:VEVENT
 DESCRIPTION:This Summit unites school sport educators\, coaches\, and leaders for two days of learning and collaboration.
@@ -452,37 +483,42 @@ END:VEVENT
 BEGIN:VEVENT
 DTSTART;VALUE=DATE:20270327
 DTEND;VALUE=DATE:20270330
-DESCRIPTION:Ultra (56 km) on Easter Saturday and Half (21 km) on Easter Sunday. Closures through the southern suburbs and the peninsula.
+DESCRIPTION:Ultra (56 km) on Easter Saturday and Half (21 km) on Easter Sunday. Closures through the southern suburbs and the peninsula.\n\nMore info: https://www.twooceansmarathon.org.za/
 SUMMARY:Two Oceans Marathon
 UID:8ba75280d4d2ac23@greenpoint-stadium-scraper
+URL:https://www.twooceansmarathon.org.za/
 END:VEVENT
 BEGIN:VEVENT
-DESCRIPTION:Monthly art-and-culture evening — CBD galleries and venues open late (16:00–23:00)\, bringing foot traffic and parking pressure to the city centre.
+DESCRIPTION:Monthly art-and-culture evening — CBD galleries and venues open late (16:00–23:00)\, bringing foot traffic and parking pressure to the city centre.\n\nMore info: https://first-thursdays.co.za/
 DTEND:20271007T210000Z
 DTSTART:20271007T140000Z
 SUMMARY:First Thursdays
 UID:acb7a44ca5cb2bfc@greenpoint-stadium-scraper
+URL:https://first-thursdays.co.za/
 END:VEVENT
 BEGIN:VEVENT
-DESCRIPTION:Monthly art-and-culture evening — CBD galleries and venues open late (16:00–23:00)\, bringing foot traffic and parking pressure to the city centre.
+DESCRIPTION:Monthly art-and-culture evening — CBD galleries and venues open late (16:00–23:00)\, bringing foot traffic and parking pressure to the city centre.\n\nMore info: https://first-thursdays.co.za/
 DTEND:20261001T210000Z
 DTSTART:20261001T140000Z
 SUMMARY:First Thursdays
 UID:7ae726b669d70ade@greenpoint-stadium-scraper
+URL:https://first-thursdays.co.za/
 END:VEVENT
 BEGIN:VEVENT
-DESCRIPTION:Monthly art-and-culture evening — CBD galleries and venues open late (16:00–23:00)\, bringing foot traffic and parking pressure to the city centre.
+DESCRIPTION:Monthly art-and-culture evening — CBD galleries and venues open late (16:00–23:00)\, bringing foot traffic and parking pressure to the city centre.\n\nMore info: https://first-thursdays.co.za/
 DTEND:20261203T210000Z
 DTSTART:20261203T140000Z
 SUMMARY:First Thursdays
 UID:76d7846bad06c633@greenpoint-stadium-scraper
+URL:https://first-thursdays.co.za/
 END:VEVENT
 BEGIN:VEVENT
-DESCRIPTION:Monthly art-and-culture evening — CBD galleries and venues open late (16:00–23:00)\, bringing foot traffic and parking pressure to the city centre.
+DESCRIPTION:Monthly art-and-culture evening — CBD galleries and venues open late (16:00–23:00)\, bringing foot traffic and parking pressure to the city centre.\n\nMore info: https://first-thursdays.co.za/
 DTEND:20261105T210000Z
 DTSTART:20261105T140000Z
 SUMMARY:First Thursdays
 UID:c9ffe84c12d39af0@greenpoint-stadium-scraper
+URL:https://first-thursdays.co.za/
 END:VEVENT
 BEGIN:VEVENT
 DESCRIPTION:South Africa will face Panama in a FIFA International Friendly match.
