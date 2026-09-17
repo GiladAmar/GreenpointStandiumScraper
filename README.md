@@ -27,24 +27,51 @@ You can add this .ics link to your preferred calendar app:
 
 ✅ The calendar auto-updates monthly — no manual refresh needed.
 
+📚 Past events stay on the calendar as a historical record. Each update keeps
+previously-published events that have already happened (even once the stadium
+API stops listing them) and refreshes upcoming events from the live sources, so
+reschedules and cancellations are reflected while history is never lost.
+
 💡 Perfect for staying on top of concerts, matches, and other events at the DHL Stadium.
 
-## 📋 Events included
+## 📋 What the calendar gathers
 
-The calendar aggregates events from multiple sources:
+The calendar aggregates events from three types of source, all of which drive
+traffic and road closures around Green Point, Sea Point and the Atlantic Seaboard.
 
-### DHL Stadium (via official API)
-Live events pulled from the DHL Stadium API, including concerts, rugby matches, and other stadium events.
+### 1. DHL Stadium events — via the official stadium API
+Live events pulled straight from the DHL Stadium (Cape Town Stadium) API. Dates
+update automatically as the stadium publishes them.
 
-### Recurring Cape Town events (scraped from official websites)
-| Event | Typical timing |
+| Category | Examples |
 |---|---|
-| Cape Town Cycle Tour | March |
-| Absa Cape Epic | March |
-| Cape Town Carnival | March |
-| Two Oceans Marathon | April |
-| Knysna Cycle Tour | June–July |
-| The Gun Run | September |
-| Sanlam Cape Town Marathon | October |
-| Minstrel Parade (Kaapse Klopse) | 2 January |
-| First Thursdays | First Thursday of every month, 16:00–23:00 |
+| Rugby (URC & internationals) | DHL Stormers home games, Springboks tests |
+| Football | Cape Town City FC, Stellenbosch FC home games |
+| Concerts & festivals | Stadium concerts, music festivals |
+| Major sporting events | HSBC SVNS Cape Town, World Supercross |
+| Expos & conventions | Cycle Tour Expo, Marathon Expo, conventions |
+
+### 2. Recurring city events — scraped from official websites
+Dates are scraped from each event's official site, with a calendar-rule fallback
+if the scrape fails.
+
+| Event | Typical timing | Area affected |
+|---|---|---|
+| Cape Town Cycle Tour | 2nd Sunday of March | CBD, Green Point, Sea Point, peninsula |
+| Absa Cape Epic | March | Western Cape (start/finish traffic) |
+| Two Oceans Marathon | Easter Sat–Sun | Southern suburbs, peninsula |
+| Sanlam Cape Town Marathon | May | Green Point, Sea Point, CBD, suburbs |
+| Investing in African Mining Indaba | Early February (Mon–Thu) | Foreshore / CBD (CTICC) |
+| Knysna Cycle Tour | June–July | Knysna |
+
+### 3. Calculated recurring events — fixed calendar rules
+Predictable annual events computed directly (no scrape needed).
+
+| Event | Timing | Area affected |
+|---|---|---|
+| Minstrel Carnival (Kaapse Klopse) | 2 January | CBD, Bo-Kaap, Green Point |
+| Cape Town Pride Parade | Last Saturday of February | Green Point, Sea Point, De Waterkant |
+| Cape Town Carnival | Saturday after the Cycle Tour | Green Point / Sea Point (Fan Walk) |
+| The Gun Run | 2nd Sunday of September | Green Point, Sea Point, Mouille Point |
+| V&A Waterfront New Year's Eve | 31 December | Green Point Main Rd, Beach Rd, V&A |
+| First Thursdays | First Thursday of every month, 16:00–23:00 | CBD |

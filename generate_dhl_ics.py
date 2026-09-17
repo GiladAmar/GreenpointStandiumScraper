@@ -1,4 +1,6 @@
-from datetime import datetime, timedelta
+import hashlib
+import os
+from datetime import date, datetime, timedelta, timezone
 from zoneinfo import ZoneInfo
 from test import fetch_all_events
 from typing import Any, List
@@ -8,29 +10,21 @@ from dateutil import parser as date_parser
 from ics import Calendar, Event
 
 SAST = ZoneInfo("Africa/Johannesburg")
+ICS_PATH = "dhl_stadium.ics"
 
-url = "https://content-dhlstadium.azurewebsites.net/api/events?filters[event][daterange][start][$gte]=2025-09-21T14:39:46.411Z&populate[0]=event.image&populate[1]=event.daterange&populate[2]=thumbnail"
+# Query the stadium API from a rolling look-back window rather than a fixed date.
+# Past events are preserved via merge_events() (see below), so the API only needs
+# to supply recent + upcoming events; a small look-back keeps just-passed events
+# fresh even if a scheduled run was missed.
+API_FLOOR = (datetime.now(timezone.utc) - timedelta(days=60)).strftime(
+    "%Y-%m-%dT%H:%M:%S.000Z"
+)
+url = (
+    "https://content-dhlstadium.azurewebsites.net/api/events?"
+    f"filters[event][daterange][start][$gte]={API_FLOOR}"
+    "&populate[0]=event.image&populate[1]=event.daterange&populate[2]=thumbnail"
+)
 resp = requests.get(url).json()
-
-
-def add_minstrel_parade(years: List[int]) -> List[Event]:
-    """
-    Generate 'Minstrel Parade (Kaapse Klopse)' full-day event for January 2 in the given years.
-    Args:
-        years (List[int]): List of years to generate events for.
-    Returns:
-        List[Event]: List of Event objects for Minstrel Parade.
-    """
-    events: List[Event] = []
-    for year in years:
-        event = Event()
-        event.name = "Minstrel Parade (Kaapse Klopse)"
-        event.begin = datetime(year, 1, 2)
-        event.end = datetime(year, 1, 3)  # exclusive end per iCal VALUE=DATE convention
-        event.make_all_day()
-        event.description = "The Cape Town Minstrel Carnival, also known as Kaapse Klopse, is a large minstrel festival held annually on January 2 in Cape Town, South Africa."
-        events.append(event)
-    return events
 
 
 def add_first_thursdays(years: List[int]) -> List[Event]:
@@ -53,7 +47,11 @@ def add_first_thursdays(years: List[int]) -> List[Event]:
             event.name = "First Thursdays"
             event.begin = start_dt
             event.end = end_dt
-            event.description = "Monthly art and culture event in Cape Town."
+            event.description = (
+                "Monthly art-and-culture evening — CBD galleries and venues open "
+                "late (16:00–23:00), bringing foot traffic and parking pressure to "
+                "the city centre."
+            )
             events.append(event)
     return events
 
@@ -97,7 +95,12 @@ def add_cape_town_events() -> List[Event]:
     Fetch Cape Town major events via test.py scrapers and return as Event objects.
 
     Events include: Cape Town Cycle Tour, Two Oceans Marathon, Sanlam Cape Town
-    Marathon, Absa Cape Epic, The Gun Run, Cape Town Carnival, Knysna Cycle Tour.
+    Marathon, Absa Cape Epic, The Gun Run, Cape Town Carnival, Cape Town Pride
+    Parade, Minstrel Carnival (Kaapse Klopse), V&A Waterfront New Year's Eve,
+    Investing in African Mining Indaba, Knysna Cycle Tour.
+
+    Each event carries a short context blurb (from test.EVENT_DESCRIPTIONS)
+    describing what it is and how it affects Green Point / seaboard / CBD traffic.
 
     Returns:
         List[Event]: List of Event objects for Cape Town major events.
@@ -114,6 +117,7 @@ def add_cape_town_events() -> List[Event]:
             try:
                 event = Event()
                 event.name = item["name"]
+                event.description = item.get("description", "")
                 start = datetime.strptime(item["start_date"], "%Y-%m-%d")
                 end = datetime.strptime(
                     item.get("end_date", item["start_date"]), "%Y-%m-%d"
@@ -129,35 +133,97 @@ def add_cape_town_events() -> List[Event]:
     return events
 
 
-def get_event_start_dt(event: Event) -> datetime:
-    """Return the event's start datetime as a datetime object."""
-    begin = event.begin
-    if hasattr(begin, "datetime"):
-        return begin.datetime
-    if isinstance(begin, datetime):
-        return begin
-    if isinstance(begin, str):
-        # Try parsing ISO format
+def _coerce_dt(value: Any) -> datetime:
+    """Best-effort convert an ics/string/datetime value to a datetime."""
+    if hasattr(value, "datetime"):  # ics/Arrow object
+        return value.datetime
+    if isinstance(value, datetime):
+        return value
+    if isinstance(value, str):
         try:
-            return date_parser.parse(begin)
+            return date_parser.parse(value)
         except Exception:
             return datetime.max
     return datetime.max
 
 
+def get_event_start_dt(event: Event) -> datetime:
+    """Return the event's start datetime as a datetime object."""
+    return _coerce_dt(event.begin)
+
+
+def get_event_end_dt(event: Event) -> datetime:
+    """Return the event's end datetime as a datetime object."""
+    return _coerce_dt(event.end)
+
+
+def make_uid(event: Event) -> str:
+    """Deterministic UID from the event's name + start date.
+
+    Stable across runs so calendar clients update events in place instead of
+    treating each regeneration as a brand-new set of events. Two events that
+    share a name (e.g. recurring fixtures, First Thursdays) stay distinct
+    because the start date is part of the key.
+    """
+    start = get_event_start_dt(event)
+    key = f"{event.name}|{start.date().isoformat()}"
+    digest = hashlib.sha1(key.encode("utf-8")).hexdigest()[:16]
+    return f"{digest}@greenpoint-stadium-scraper"
+
+
+def is_past(event: Event) -> bool:
+    """True once the event has finished (end date before today)."""
+    return get_event_end_dt(event).date() < date.today()
+
+
+def load_existing_events(path: str) -> List[Event]:
+    """Load events from a previously published .ics, if present."""
+    if not os.path.exists(path):
+        return []
+    try:
+        with open(path) as f:
+            return list(Calendar(f.read()).events)
+    except Exception as e:
+        print(f"Warning: could not parse existing {path}: {e}")
+        return []
+
+
+def merge_events(fresh: List[Event], existing: List[Event]) -> List[Event]:
+    """Combine freshly fetched events with the previously published calendar.
+
+    Freeze rule:
+      - Past events (already finished) are preserved from the existing file so
+        history survives even after the stadium API stops returning them.
+      - Future events come only from the fresh fetch, so reschedules and
+        cancellations are honoured (no ghost entries for moved fixtures).
+    A fresh copy always wins on UID collision, keeping details up to date.
+    """
+    merged: dict[str, Event] = {}
+    # Seed with historical (past) events from the previously published file.
+    for ev in existing:
+        if is_past(ev):
+            ev.uid = make_uid(ev)
+            merged[ev.uid] = ev
+    # Overlay all fresh events; fresh wins on collision, and adds future events.
+    for ev in fresh:
+        ev.uid = make_uid(ev)
+        merged[ev.uid] = ev
+    return list(merged.values())
+
+
 cal: Calendar = Calendar()
 
 now: int = datetime.now().year
-all_events: List[Event] = (
+fresh_events: List[Event] = (
     get_api_events(resp)
     + add_first_thursdays([now, now + 1])
-    + add_minstrel_parade([now, now + 1])
     + add_cape_town_events()
 )
+all_events: List[Event] = merge_events(fresh_events, load_existing_events(ICS_PATH))
 # Sort events by start datetime robustly
 all_events.sort(key=get_event_start_dt)
 for event in all_events:
     cal.events.add(event)
 
-with open("dhl_stadium.ics", "w") as f:
+with open(ICS_PATH, "w") as f:
     f.write(cal.serialize())

@@ -1,197 +1,250 @@
 {
-  "updated": "2026-03-01T20:25:52.710776+00:00",
+  "updated": "2026-09-17T13:52:11.024880+00:00",
   "events": [
     {
       "name": "Cape Town Cycle Tour",
       "url": "https://www.capetowncycletour.com/",
-      "start_date": "2026-03-08",
-      "end_date": "2026-03-08"
+      "start_date": "2027-03-14",
+      "end_date": "2027-03-14",
+      "description": "The world's largest timed cycle race (~35 000 riders). Road closures sweep the CBD, Sea Point, Camps Bay and the Peninsula from early morning."
     },
     {
       "name": "Two Oceans Marathon",
       "url": "https://www.twooceansmarathon.org.za/",
-      "start_date": "2026-04-04",
-      "end_date": "2026-04-05"
+      "start_date": "2027-03-27",
+      "end_date": "2027-03-28",
+      "description": "Ultra (56 km) on Easter Saturday and Half (21 km) on Easter Sunday. Closures through the southern suburbs and the peninsula."
     },
     {
       "name": "Sanlam Cape Town Marathon",
       "url": "https://www.capetownmarathon.com/",
-      "start_date": "2026-05-23",
-      "end_date": "2026-05-24"
+      "start_date": "2027-05-22",
+      "end_date": "2027-05-23",
+      "description": "City-centre marathon (IAAF-labelled). Road closures around Green Point, Sea Point, the CBD and southern suburbs."
     },
     {
       "name": "Absa Cape Epic",
       "url": "https://www.cape-epic.com/",
-      "start_date": "2026-03-15",
-      "end_date": "2026-03-22"
+      "start_date": "2027-03-21",
+      "end_date": "2027-03-28",
+      "description": "Eight-day mountain-bike stage race across the Western Cape; the start and finish stages disrupt local traffic."
     },
     {
       "name": "The Gun Run",
       "url": "https://thegunrun.co.za/",
-      "start_date": "2026-09-13",
-      "end_date": "2026-09-13"
+      "start_date": "2027-09-12",
+      "end_date": "2027-09-12",
+      "description": "Half marathon and 10 km along the Atlantic seaboard. Closures on Green Point, Sea Point and Mouille Point roads."
     },
     {
       "name": "Cape Town Carnival",
       "url": "https://capetowncarnival.com/",
-      "start_date": "2026-03-14",
-      "end_date": "2026-03-14"
+      "start_date": "2027-03-20",
+      "end_date": "2027-03-20",
+      "description": "Night-time street parade on the Green Point Fan Walk. Somerset Road and the surrounding streets close for the evening."
     },
     {
       "name": "Cape Town Pride Parade",
       "url": "https://cptpride.org/",
       "start_date": "2027-02-27",
-      "end_date": "2027-02-27"
+      "end_date": "2027-02-27",
+      "description": "Pride march and festival through Green Point, Sea Point and De Waterkant."
+    },
+    {
+      "name": "Minstrel Carnival (Kaapse Klopse)",
+      "url": "https://en.wikipedia.org/wiki/Kaapse_Klopse",
+      "start_date": "2027-01-02",
+      "end_date": "2027-01-02",
+      "description": "The Cape Town Minstrel Carnival (Kaapse Klopse), a large minstrel festival held annually on 2 January. The parade moves through the CBD, Bo-Kaap and Green Point, closing Somerset Road and Green Point Main Road for the day."
+    },
+    {
+      "name": "V&A Waterfront New Year's Eve",
+      "url": "https://www.waterfront.co.za/new-years-eve-celebration",
+      "start_date": "2026-12-31",
+      "end_date": "2026-12-31",
+      "description": "New Year's Eve fireworks and crowds at the V&A Waterfront. Congestion on Green Point Main Road, Beach Road, Helen Suzman Boulevard and Somerset Road."
+    },
+    {
+      "name": "Investing in African Mining Indaba",
+      "url": "https://miningindaba.com/",
+      "start_date": "2027-02-08",
+      "end_date": "2027-02-11",
+      "description": "Africa's largest mining investment conference at the CTICC (7 000+ delegates: ministers, mining houses, financiers). Heavy congestion around the Foreshore and CBD for the week."
     },
     {
       "name": "Knysna Cycle Tour",
       "url": "https://knysnacycle.co.za/",
-      "start_date": "2026-07-12",
-      "end_date": "2026-07-12"
+      "start_date": "2027-07-11",
+      "end_date": "2027-07-11",
+      "description": "Mountain-bike and road cycle races around Knysna on the Garden Route."
     },
     {
       "name": "First Thursdays",
-      "start_date": "2026-01-01T16:00:00",
-      "end_date": "2026-01-01T23:00:00",
-      "url": "https://first-thursdays.co.za/"
+      "start_date": "2026-01-01T16:00:00+02:00",
+      "end_date": "2026-01-01T23:00:00+02:00",
+      "url": "https://first-thursdays.co.za/",
+      "description": "Monthly art-and-culture evening — CBD galleries and venues open late (16:00–23:00), bringing foot traffic and parking pressure to the city centre."
     },
     {
       "name": "First Thursdays",
-      "start_date": "2026-02-05T16:00:00",
-      "end_date": "2026-02-05T23:00:00",
-      "url": "https://first-thursdays.co.za/"
+      "start_date": "2026-02-05T16:00:00+02:00",
+      "end_date": "2026-02-05T23:00:00+02:00",
+      "url": "https://first-thursdays.co.za/",
+      "description": "Monthly art-and-culture evening — CBD galleries and venues open late (16:00–23:00), bringing foot traffic and parking pressure to the city centre."
     },
     {
       "name": "First Thursdays",
-      "start_date": "2026-03-05T16:00:00",
-      "end_date": "2026-03-05T23:00:00",
-      "url": "https://first-thursdays.co.za/"
+      "start_date": "2026-03-05T16:00:00+02:00",
+      "end_date": "2026-03-05T23:00:00+02:00",
+      "url": "https://first-thursdays.co.za/",
+      "description": "Monthly art-and-culture evening — CBD galleries and venues open late (16:00–23:00), bringing foot traffic and parking pressure to the city centre."
     },
     {
       "name": "First Thursdays",
-      "start_date": "2026-04-02T16:00:00",
-      "end_date": "2026-04-02T23:00:00",
-      "url": "https://first-thursdays.co.za/"
+      "start_date": "2026-04-02T16:00:00+02:00",
+      "end_date": "2026-04-02T23:00:00+02:00",
+      "url": "https://first-thursdays.co.za/",
+      "description": "Monthly art-and-culture evening — CBD galleries and venues open late (16:00–23:00), bringing foot traffic and parking pressure to the city centre."
     },
     {
       "name": "First Thursdays",
-      "start_date": "2026-05-07T16:00:00",
-      "end_date": "2026-05-07T23:00:00",
-      "url": "https://first-thursdays.co.za/"
+      "start_date": "2026-05-07T16:00:00+02:00",
+      "end_date": "2026-05-07T23:00:00+02:00",
+      "url": "https://first-thursdays.co.za/",
+      "description": "Monthly art-and-culture evening — CBD galleries and venues open late (16:00–23:00), bringing foot traffic and parking pressure to the city centre."
     },
     {
       "name": "First Thursdays",
-      "start_date": "2026-06-04T16:00:00",
-      "end_date": "2026-06-04T23:00:00",
-      "url": "https://first-thursdays.co.za/"
+      "start_date": "2026-06-04T16:00:00+02:00",
+      "end_date": "2026-06-04T23:00:00+02:00",
+      "url": "https://first-thursdays.co.za/",
+      "description": "Monthly art-and-culture evening — CBD galleries and venues open late (16:00–23:00), bringing foot traffic and parking pressure to the city centre."
     },
     {
       "name": "First Thursdays",
-      "start_date": "2026-07-02T16:00:00",
-      "end_date": "2026-07-02T23:00:00",
-      "url": "https://first-thursdays.co.za/"
+      "start_date": "2026-07-02T16:00:00+02:00",
+      "end_date": "2026-07-02T23:00:00+02:00",
+      "url": "https://first-thursdays.co.za/",
+      "description": "Monthly art-and-culture evening — CBD galleries and venues open late (16:00–23:00), bringing foot traffic and parking pressure to the city centre."
     },
     {
       "name": "First Thursdays",
-      "start_date": "2026-08-06T16:00:00",
-      "end_date": "2026-08-06T23:00:00",
-      "url": "https://first-thursdays.co.za/"
+      "start_date": "2026-08-06T16:00:00+02:00",
+      "end_date": "2026-08-06T23:00:00+02:00",
+      "url": "https://first-thursdays.co.za/",
+      "description": "Monthly art-and-culture evening — CBD galleries and venues open late (16:00–23:00), bringing foot traffic and parking pressure to the city centre."
     },
     {
       "name": "First Thursdays",
-      "start_date": "2026-09-03T16:00:00",
-      "end_date": "2026-09-03T23:00:00",
-      "url": "https://first-thursdays.co.za/"
+      "start_date": "2026-09-03T16:00:00+02:00",
+      "end_date": "2026-09-03T23:00:00+02:00",
+      "url": "https://first-thursdays.co.za/",
+      "description": "Monthly art-and-culture evening — CBD galleries and venues open late (16:00–23:00), bringing foot traffic and parking pressure to the city centre."
     },
     {
       "name": "First Thursdays",
-      "start_date": "2026-10-01T16:00:00",
-      "end_date": "2026-10-01T23:00:00",
-      "url": "https://first-thursdays.co.za/"
+      "start_date": "2026-10-01T16:00:00+02:00",
+      "end_date": "2026-10-01T23:00:00+02:00",
+      "url": "https://first-thursdays.co.za/",
+      "description": "Monthly art-and-culture evening — CBD galleries and venues open late (16:00–23:00), bringing foot traffic and parking pressure to the city centre."
     },
     {
       "name": "First Thursdays",
-      "start_date": "2026-11-05T16:00:00",
-      "end_date": "2026-11-05T23:00:00",
-      "url": "https://first-thursdays.co.za/"
+      "start_date": "2026-11-05T16:00:00+02:00",
+      "end_date": "2026-11-05T23:00:00+02:00",
+      "url": "https://first-thursdays.co.za/",
+      "description": "Monthly art-and-culture evening — CBD galleries and venues open late (16:00–23:00), bringing foot traffic and parking pressure to the city centre."
     },
     {
       "name": "First Thursdays",
-      "start_date": "2026-12-03T16:00:00",
-      "end_date": "2026-12-03T23:00:00",
-      "url": "https://first-thursdays.co.za/"
+      "start_date": "2026-12-03T16:00:00+02:00",
+      "end_date": "2026-12-03T23:00:00+02:00",
+      "url": "https://first-thursdays.co.za/",
+      "description": "Monthly art-and-culture evening — CBD galleries and venues open late (16:00–23:00), bringing foot traffic and parking pressure to the city centre."
     },
     {
       "name": "First Thursdays",
-      "start_date": "2027-01-07T16:00:00",
-      "end_date": "2027-01-07T23:00:00",
-      "url": "https://first-thursdays.co.za/"
+      "start_date": "2027-01-07T16:00:00+02:00",
+      "end_date": "2027-01-07T23:00:00+02:00",
+      "url": "https://first-thursdays.co.za/",
+      "description": "Monthly art-and-culture evening — CBD galleries and venues open late (16:00–23:00), bringing foot traffic and parking pressure to the city centre."
     },
     {
       "name": "First Thursdays",
-      "start_date": "2027-02-04T16:00:00",
-      "end_date": "2027-02-04T23:00:00",
-      "url": "https://first-thursdays.co.za/"
+      "start_date": "2027-02-04T16:00:00+02:00",
+      "end_date": "2027-02-04T23:00:00+02:00",
+      "url": "https://first-thursdays.co.za/",
+      "description": "Monthly art-and-culture evening — CBD galleries and venues open late (16:00–23:00), bringing foot traffic and parking pressure to the city centre."
     },
     {
       "name": "First Thursdays",
-      "start_date": "2027-03-04T16:00:00",
-      "end_date": "2027-03-04T23:00:00",
-      "url": "https://first-thursdays.co.za/"
+      "start_date": "2027-03-04T16:00:00+02:00",
+      "end_date": "2027-03-04T23:00:00+02:00",
+      "url": "https://first-thursdays.co.za/",
+      "description": "Monthly art-and-culture evening — CBD galleries and venues open late (16:00–23:00), bringing foot traffic and parking pressure to the city centre."
     },
     {
       "name": "First Thursdays",
-      "start_date": "2027-04-01T16:00:00",
-      "end_date": "2027-04-01T23:00:00",
-      "url": "https://first-thursdays.co.za/"
+      "start_date": "2027-04-01T16:00:00+02:00",
+      "end_date": "2027-04-01T23:00:00+02:00",
+      "url": "https://first-thursdays.co.za/",
+      "description": "Monthly art-and-culture evening — CBD galleries and venues open late (16:00–23:00), bringing foot traffic and parking pressure to the city centre."
     },
     {
       "name": "First Thursdays",
-      "start_date": "2027-05-06T16:00:00",
-      "end_date": "2027-05-06T23:00:00",
-      "url": "https://first-thursdays.co.za/"
+      "start_date": "2027-05-06T16:00:00+02:00",
+      "end_date": "2027-05-06T23:00:00+02:00",
+      "url": "https://first-thursdays.co.za/",
+      "description": "Monthly art-and-culture evening — CBD galleries and venues open late (16:00–23:00), bringing foot traffic and parking pressure to the city centre."
     },
     {
       "name": "First Thursdays",
-      "start_date": "2027-06-03T16:00:00",
-      "end_date": "2027-06-03T23:00:00",
-      "url": "https://first-thursdays.co.za/"
+      "start_date": "2027-06-03T16:00:00+02:00",
+      "end_date": "2027-06-03T23:00:00+02:00",
+      "url": "https://first-thursdays.co.za/",
+      "description": "Monthly art-and-culture evening — CBD galleries and venues open late (16:00–23:00), bringing foot traffic and parking pressure to the city centre."
     },
     {
       "name": "First Thursdays",
-      "start_date": "2027-07-01T16:00:00",
-      "end_date": "2027-07-01T23:00:00",
-      "url": "https://first-thursdays.co.za/"
+      "start_date": "2027-07-01T16:00:00+02:00",
+      "end_date": "2027-07-01T23:00:00+02:00",
+      "url": "https://first-thursdays.co.za/",
+      "description": "Monthly art-and-culture evening — CBD galleries and venues open late (16:00–23:00), bringing foot traffic and parking pressure to the city centre."
     },
     {
       "name": "First Thursdays",
-      "start_date": "2027-08-05T16:00:00",
-      "end_date": "2027-08-05T23:00:00",
-      "url": "https://first-thursdays.co.za/"
+      "start_date": "2027-08-05T16:00:00+02:00",
+      "end_date": "2027-08-05T23:00:00+02:00",
+      "url": "https://first-thursdays.co.za/",
+      "description": "Monthly art-and-culture evening — CBD galleries and venues open late (16:00–23:00), bringing foot traffic and parking pressure to the city centre."
     },
     {
       "name": "First Thursdays",
-      "start_date": "2027-09-02T16:00:00",
-      "end_date": "2027-09-02T23:00:00",
-      "url": "https://first-thursdays.co.za/"
+      "start_date": "2027-09-02T16:00:00+02:00",
+      "end_date": "2027-09-02T23:00:00+02:00",
+      "url": "https://first-thursdays.co.za/",
+      "description": "Monthly art-and-culture evening — CBD galleries and venues open late (16:00–23:00), bringing foot traffic and parking pressure to the city centre."
     },
     {
       "name": "First Thursdays",
-      "start_date": "2027-10-07T16:00:00",
-      "end_date": "2027-10-07T23:00:00",
-      "url": "https://first-thursdays.co.za/"
+      "start_date": "2027-10-07T16:00:00+02:00",
+      "end_date": "2027-10-07T23:00:00+02:00",
+      "url": "https://first-thursdays.co.za/",
+      "description": "Monthly art-and-culture evening — CBD galleries and venues open late (16:00–23:00), bringing foot traffic and parking pressure to the city centre."
     },
     {
       "name": "First Thursdays",
-      "start_date": "2027-11-04T16:00:00",
-      "end_date": "2027-11-04T23:00:00",
-      "url": "https://first-thursdays.co.za/"
+      "start_date": "2027-11-04T16:00:00+02:00",
+      "end_date": "2027-11-04T23:00:00+02:00",
+      "url": "https://first-thursdays.co.za/",
+      "description": "Monthly art-and-culture evening — CBD galleries and venues open late (16:00–23:00), bringing foot traffic and parking pressure to the city centre."
     },
     {
       "name": "First Thursdays",
-      "start_date": "2027-12-02T16:00:00",
-      "end_date": "2027-12-02T23:00:00",
-      "url": "https://first-thursdays.co.za/"
+      "start_date": "2027-12-02T16:00:00+02:00",
+      "end_date": "2027-12-02T23:00:00+02:00",
+      "url": "https://first-thursdays.co.za/",
+      "description": "Monthly art-and-culture evening — CBD galleries and venues open late (16:00–23:00), bringing foot traffic and parking pressure to the city centre."
     }
   ]
 }

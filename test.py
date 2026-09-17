@@ -14,6 +14,9 @@ Includes:
 - The Gun Run
 - Cape Town Carnival
 - Cape Town Pride Parade
+- Minstrel Carnival (Kaapse Klopse)
+- V&A Waterfront New Year's Eve
+- Investing in African Mining Indaba (CTICC, early February)
 - Knysna Cycle Tour
 
 Features:
@@ -30,12 +33,14 @@ import logging
 import re
 from datetime import date, datetime, timedelta, time, timezone
 from typing import Dict, List, Optional, Pattern
-from zoneinfo import ZoneInfo
 
 import requests
 from bs4 import BeautifulSoup
 from dateutil import parser as date_parser
 from dateutil.easter import easter as _easter_sunday
+from zoneinfo import ZoneInfo
+
+SAST = ZoneInfo("Africa/Johannesburg")
 
 # ------------------------------------------------------------
 # Config
@@ -45,13 +50,53 @@ logging.basicConfig(level=logging.INFO, format="%(levelname)s: %(message)s")
 session = requests.Session()
 session.headers.update({"User-Agent": "CapeTownTrafficEventsBot/1.5"})
 
-SAST = ZoneInfo("Africa/Johannesburg")
-
 MONTHS_REGEX = (
-    r"(Jan(?:uary)?|Feb(?:ruary)?|Mar(?:ch)?|Apr(?:il)?|May|Jun(?:e)?|Jul(?:y)?"
-    r"|Aug(?:ust)?|Sep(?:t(?:ember)?)?|Oct(?:ober)?|Nov(?:ember)?|Dec(?:ember)?)"
+    r"(Jan(?:uary)?|Feb(?:ruary)?|Mar(?:ch)?|Apr(?:il)?|May|Jun(?:e)?|Jul(?:y)?|"
+    r"Aug(?:ust)?|Sep(?:t(?:ember)?)?|Oct(?:ober)?|Nov(?:ember)?|Dec(?:ember)?)"
 )
 SEP_REGEX = r"(?:-|–|—|to|until|through|thru)"  # dash or textual range markers
+
+# Short, hard-coded context blurbs keyed by canonical event name. Attached to
+# each event so the calendar entry explains what it is and why it affects
+# Green Point / seaboard / CBD traffic. Purely descriptive — no scraping needed.
+EVENT_DESCRIPTIONS: Dict[str, str] = {
+    "Cape Town Cycle Tour":
+        "The world's largest timed cycle race (~35 000 riders). Road closures "
+        "sweep the CBD, Sea Point, Camps Bay and the Peninsula from early morning.",
+    "Two Oceans Marathon":
+        "Ultra (56 km) on Easter Saturday and Half (21 km) on Easter Sunday. "
+        "Closures through the southern suburbs and the peninsula.",
+    "Sanlam Cape Town Marathon":
+        "City-centre marathon (IAAF-labelled). Road closures around Green Point, "
+        "Sea Point, the CBD and southern suburbs.",
+    "Absa Cape Epic":
+        "Eight-day mountain-bike stage race across the Western Cape; the start "
+        "and finish stages disrupt local traffic.",
+    "The Gun Run":
+        "Half marathon and 10 km along the Atlantic seaboard. Closures on Green "
+        "Point, Sea Point and Mouille Point roads.",
+    "Cape Town Carnival":
+        "Night-time street parade on the Green Point Fan Walk. Somerset Road and "
+        "the surrounding streets close for the evening.",
+    "Cape Town Pride Parade":
+        "Pride march and festival through Green Point, Sea Point and De Waterkant.",
+    "Minstrel Carnival (Kaapse Klopse)":
+        "The Cape Town Minstrel Carnival (Kaapse Klopse), a large minstrel festival "
+        "held annually on 2 January. The parade moves through the CBD, Bo-Kaap and "
+        "Green Point, closing Somerset Road and Green Point Main Road for the day.",
+    "V&A Waterfront New Year's Eve":
+        "New Year's Eve fireworks and crowds at the V&A Waterfront. Congestion on "
+        "Green Point Main Road, Beach Road, Helen Suzman Boulevard and Somerset Road.",
+    "Investing in African Mining Indaba":
+        "Africa's largest mining investment conference at the CTICC (7 000+ "
+        "delegates: ministers, mining houses, financiers). Heavy congestion around "
+        "the Foreshore and CBD for the week.",
+    "Knysna Cycle Tour":
+        "Mountain-bike and road cycle races around Knysna on the Garden Route.",
+    "First Thursdays":
+        "Monthly art-and-culture evening — CBD galleries and venues open late "
+        "(16:00–23:00), bringing foot traffic and parking pressure to the city centre.",
+}
 
 # ------------------------------------------------------------
 # Calendar calculation helpers
@@ -90,6 +135,22 @@ def pride_date(year: int) -> date:
     """Cape Town Pride Parade: last Saturday of February."""
     return last_weekday_of_month(year, 2, 5)
 
+def minstrel_carnival_date(year: int) -> date:
+    """Cape Town Minstrel Carnival (Kaapse Klopse): 2 January each year.
+
+    The parade moves through the CBD, Bo-Kaap and Green Point, closing
+    Somerset Road, Green Point Main Road and surrounds for most of the day.
+    """
+    return date(year, 1, 2)
+
+def new_year_v_and_a_date(year: int) -> date:
+    """V&A Waterfront New Year's Eve celebration: 31 December each year.
+
+    Fireworks and crowds congest Green Point Main Road, Beach Road,
+    Helen Suzman Boulevard and Somerset Road through the evening.
+    """
+    return date(year, 12, 31)
+
 def two_oceans_start_date(year: int) -> date:
     """Two Oceans Ultra: Easter Saturday."""
     return _easter_sunday(year) - timedelta(days=1)
@@ -97,6 +158,21 @@ def two_oceans_start_date(year: int) -> date:
 def two_oceans_end_date(year: int) -> date:
     """Two Oceans Half: Easter Sunday."""
     return _easter_sunday(year)
+
+def mining_indaba_dates(year: int) -> tuple[date, date]:
+    """Investing in African Mining Indaba: Monday–Thursday of early February.
+
+    Empirically the conference starts on the first Monday of February that
+    falls on or after the 3rd (2024: 5–8, 2025: 3–6, 2026: 9–12, 2027: 8–11);
+    when the first Monday would land on 1–2 Feb it shifts a week later. It
+    draws 7 000+ delegates (ministers, mining houses, financiers) and congests
+    the Foreshore/CBD around the CTICC for the week.
+    """
+    first = date(year, 2, 1)
+    monday = first + timedelta(days=(0 - first.weekday()) % 7)  # first Monday
+    if monday.day < 3:
+        monday += timedelta(days=7)
+    return monday, monday + timedelta(days=3)
 
 # ------------------------------------------------------------
 # Utilities
@@ -159,10 +235,34 @@ def try_patterns(text: str, patterns: List[Pattern]) -> Optional[Dict[str, str]]
             end = parse_iso_date(gd["d2"], gd["mon"], year)
             return {"start_date": start, "end_date": end}
 
-        # Single date e.g. '15th of March 2025' or 'March 15th, 2025'
+        # Single date e.g. '15th of March 2025'
         if gd.get("d1") and gd.get("mon"):
             day = parse_iso_date(gd["d1"], gd["mon"], year)
             return {"start_date": day, "end_date": day}
+    return None
+
+def jsonld_event_dates(html: str) -> Optional[Dict[str, str]]:
+    """Extract ISO start/end dates from a schema.org Event JSON-LD block.
+
+    Prefers structured markup over scraped body text: sites that publish
+    schema.org Event data (e.g. miningindaba.com) keep it accurate and
+    machine-readable, and it regenerates automatically for each new edition.
+    """
+    for block in re.findall(
+        r"<script[^>]+application/ld\+json[^>]*>(.*?)</script>", html, re.S | re.I
+    ):
+        try:
+            data = json.loads(block)
+        except Exception:
+            continue
+        for node in (data if isinstance(data, list) else [data]):
+            if not isinstance(node, dict) or node.get("@type") != "Event":
+                continue
+            start = node.get("startDate")
+            if not start:
+                continue
+            end = node.get("endDate") or start
+            return {"start_date": str(start)[:10], "end_date": str(end)[:10]}
     return None
 
 def generic_date_hunt(text: str) -> Optional[Dict[str, str]]:
@@ -303,6 +403,62 @@ def fetch_cape_town_pride() -> Optional[Dict[str, str]]:
             return {"name": name, "url": url, "start_date": str(d), "end_date": str(d)}
     return {"name": name, "url": url}
 
+def fetch_minstrel_carnival() -> Optional[Dict[str, str]]:
+    # 2 January each year (Kaapse Klopse) — parade through the CBD and Green Point
+    # Source: https://en.wikipedia.org/wiki/Kaapse_Klopse
+    name = "Minstrel Carnival (Kaapse Klopse)"
+    url = "https://en.wikipedia.org/wiki/Kaapse_Klopse"
+    today = date.today()
+    for year in range(today.year, today.year + 2):
+        d = minstrel_carnival_date(year)
+        if d >= today:
+            return {"name": name, "url": url, "start_date": str(d), "end_date": str(d)}
+    return {"name": name, "url": url}
+
+def fetch_new_year_v_and_a() -> Optional[Dict[str, str]]:
+    # 31 December each year — V&A Waterfront NYE celebration and fireworks
+    # Source: https://www.waterfront.co.za/new-years-eve-celebration
+    name = "V&A Waterfront New Year's Eve"
+    url = "https://www.waterfront.co.za/new-years-eve-celebration"
+    today = date.today()
+    for year in range(today.year, today.year + 2):
+        d = new_year_v_and_a_date(year)
+        if d >= today:
+            return {"name": name, "url": url, "start_date": str(d), "end_date": str(d)}
+    return {"name": name, "url": url}
+
+def fetch_mining_indaba() -> Optional[Dict[str, str]]:
+    """Investing in African Mining Indaba — early Feb at the CTICC.
+
+    Draws 7 000+ delegates and congests the Foreshore/CBD for the week.
+    Scraped most- to least-reliable:
+      1. schema.org Event JSON-LD (machine-readable ISO startDate/endDate).
+      2. The <title>, which always carries the range e.g. '8-11 Feb 2027'.
+      3. Computed fallback: first Monday of Feb on/after the 3rd, Mon–Thu.
+    """
+    name = "Investing in African Mining Indaba"
+    url = "https://miningindaba.com/"
+    html = safe_get(url)
+    if html:
+        hit = jsonld_event_dates(html)
+        # Guard against a stale block for a previous edition.
+        if hit and is_recent_date(int(hit["start_date"][:4])):
+            return {"name": name, "url": url, **hit}
+        # Fallback: parse the <title> range (kept accurate for SEO).
+        m = re.search(r"<title>[^<]*</title>", html, re.IGNORECASE)
+        if m:
+            hit = generic_date_hunt(m.group(0))
+            if hit:
+                return {"name": name, "url": url, **hit}
+    # Final fallback: computed recurrence when the site is unreachable.
+    logging.warning("Mining Indaba: falling back to computed dates")
+    today = date.today()
+    for year in range(today.year, today.year + 2):
+        start, end = mining_indaba_dates(year)
+        if end >= today:
+            return {"name": name, "url": url, "start_date": str(start), "end_date": str(end)}
+    return {"name": name, "url": url}
+
 def fetch_knysna_cycle_tour() -> Optional[Dict[str, str]]:
     patterns = [
         re.compile(rf"(?P<d1>\d{{1,2}})(?:st|nd|rd|th)?\s*(?P<mon1>June?)\s*{SEP_REGEX}\s*(?P<d2>\d{{1,2}})(?:st|nd|rd|th)?\s*(?P<mon2>July?)\s*,?\s*(?P<year>20\d{{2}})", re.IGNORECASE),
@@ -341,6 +497,9 @@ def fetch_all_events() -> List[Dict[str, str]]:
         fetch_gun_run,
         fetch_cape_town_carnival,
         fetch_cape_town_pride,
+        fetch_minstrel_carnival,
+        fetch_new_year_v_and_a,
+        fetch_mining_indaba,
         fetch_knysna_cycle_tour,
     ]
     results: List[Dict[str, str]] = []
@@ -356,6 +515,9 @@ def fetch_all_events() -> List[Dict[str, str]]:
     now = datetime.now().year
     results.extend(get_first_thursdays(now))
     results.extend(get_first_thursdays(now + 1))
+    # Attach a context blurb to every event (empty string if we have none).
+    for item in results:
+        item.setdefault("description", EVENT_DESCRIPTIONS.get(item.get("name", ""), ""))
     return results
 
 def main() -> None:
