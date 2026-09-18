@@ -308,9 +308,20 @@ def fame_week_dates(year: int) -> tuple[date, date]:
 # Utilities
 # ------------------------------------------------------------
 
+def today_sast() -> date:
+    """Today's date in South African time (CLAUDE.md convention 2).
+
+    Every 'has this happened yet?' decision in edition selection goes through this,
+    so a UTC CI runner and a SAST machine agree on the calendar day — and therefore
+    on the start-date-derived UIDs — instead of disagreeing for the two hours around
+    midnight (and around New Year, where the year drives is_recent_date).
+    """
+    return datetime.now(SAST).date()
+
+
 def is_recent_date(year: int) -> bool:
     """Return True if the year is this year or next."""
-    now = datetime.now().year
+    now = today_sast().year
     return now <= year <= now + 1
 
 def safe_get(url: str) -> Optional[str]:
@@ -367,6 +378,11 @@ def try_patterns(text: str, patterns: List[Pattern]) -> Optional[DateHit]:
         if gd.get("d1") and gd.get("d2") and gd.get("mon"):
             start = parse_iso_date(gd["d1"], gd["mon"], year)
             end = parse_iso_date(gd["d2"], gd["mon"], year)
+            if end < start:
+                # A reversed same-month range like '19 - 18 October'; within one
+                # month it cannot be a New-Year crossing (unlike the branch above),
+                # so read it as the intended 18-19 rather than publishing one day.
+                start, end = end, start
             return {"start_date": start, "end_date": end}
 
         # Single date e.g. '15th of March 2025'
@@ -477,7 +493,7 @@ def _is_upcoming(hit: DateHit) -> bool:
         end_year = int(hit["end_date"][:4])
         return (
             (is_recent_date(start_year) or is_recent_date(end_year))
-            and date.fromisoformat(hit["end_date"]) >= date.today()
+            and date.fromisoformat(hit["end_date"]) >= today_sast()
         )
     except (KeyError, TypeError, ValueError):
         return False
@@ -504,7 +520,7 @@ def next_computed(
     events that are already past.) Falls back to a name-only record if no edition
     lands inside the horizon.
     """
-    today = date.today()
+    today = today_sast()
     for year in range(today.year, today.year + horizon_years):
         computed = rule(year)
         start, end = computed if isinstance(computed, tuple) else (computed, computed)
@@ -722,7 +738,7 @@ def fetch_sona() -> EventRecord:
     name = "State of the Nation Address (SONA)"
     url = "https://www.parliament.gov.za/state-of-the-nation-address"
     location = "Cape Town City Hall, Darling Street, Cape Town"
-    today = date.today()
+    today = today_sast()
 
     # 1 & 2: scrape official pages; accept only a *future* date in a recent year.
     candidates = [url] + [f"https://www.gov.za/SONA{y}" for y in (today.year, today.year + 1)]
@@ -941,7 +957,7 @@ def fetch_all_events() -> List[EventRecord]:
         results.append(data)
 
     # Add First Thursdays events for this year and next year.
-    now = datetime.now().year
+    now = today_sast().year
     for year in (now, now + 1):
         for item in get_first_thursdays(year):
             item["fetcher"] = FIRST_THURSDAYS_FETCHER

@@ -7,7 +7,7 @@ Run with:  pytest test_events.py -v
 import json
 from contextlib import contextmanager
 from dataclasses import replace
-from datetime import date, datetime, timedelta
+from datetime import date, datetime, timedelta, timezone
 from unittest.mock import Mock, patch
 
 import pytest
@@ -570,9 +570,16 @@ def test_next_computed_returns_no_date_outside_its_horizon():
 
 @contextmanager
 def frozen_today(day):
-    """Pin city_events' notion of 'today', so rollover tests are deterministic."""
+    """Pin city_events' notion of 'today', so rollover tests are deterministic.
+
+    Both ``date.today()`` and ``today_sast()`` are pinned: edition selection goes
+    through ``today_sast()`` (which reads ``datetime.now(SAST)``), so pinning only
+    ``date`` would leave ``is_recent_date`` reading the real wall-clock year and make
+    any test with hardcoded years flip once that year arrives.
+    """
     pinned = type("PinnedDate", (date,), {"today": classmethod(lambda cls: day)})
-    with patch.object(events, "date", pinned):
+    with patch.object(events, "date", pinned), \
+            patch.object(events, "today_sast", lambda: day):
         yield
 
 
@@ -603,6 +610,17 @@ def test_is_upcoming_accepts_a_new_year_range_still_in_progress():
         assert not events._is_upcoming(
             {"start_date": "2026-12-30", "end_date": "2026-12-31"}
         )
+
+
+def test_today_sast_uses_south_african_time_not_the_runner_local_zone():
+    """Edition selection must resolve 'today' in SAST (convention 2), so a UTC CI
+    runner and a SAST machine agree on the day across the midnight boundary."""
+    # 2026-12-31 22:30 UTC is already 2027-01-01 00:30 in SAST (+02:00).
+    boundary = datetime(2026, 12, 31, 22, 30, tzinfo=timezone.utc)
+    pinned = type("PinnedDT", (datetime,),
+                  {"now": classmethod(lambda cls, tz=None: boundary.astimezone(tz))})
+    with patch.object(events, "datetime", pinned):
+        assert events.today_sast() == date(2027, 1, 1)
 
 
 # ── DHL Stadium API pagination (mock network) ─────────────────────────────────
@@ -1059,8 +1077,18 @@ def test_a_missing_calendar_is_simply_the_first_run(tmp_path):
 
 
 def test_a_range_crossing_new_year_gets_the_following_year_for_its_end():
-    hit = events.generic_date_hunt("Festival runs 31 December - 1 January 2027")
+    # frozen so is_recent_date(2027) stays true however far in the future this runs.
+    with frozen_today(date(2026, 6, 1)):
+        hit = events.generic_date_hunt("Festival runs 31 December - 1 January 2027")
     assert hit == {"start_date": "2027-12-31", "end_date": "2028-01-01"}
+
+
+def test_a_reversed_same_month_range_is_read_as_the_intended_order():
+    """'19 - 18 October' is a typo for 18-19, not a New-Year crossing; it must parse
+    as the two-day range rather than losing a day to the inverted-range fallback."""
+    with frozen_today(date(2027, 6, 1)):
+        hit = events.generic_date_hunt("Expo 19 - 18 October 2027")
+    assert hit == {"start_date": "2027-10-18", "end_date": "2027-10-19"}
 
 
 def test_an_inverted_range_is_never_published_as_an_invalid_event():

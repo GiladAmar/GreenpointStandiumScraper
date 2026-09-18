@@ -10,6 +10,20 @@ on:
   # master would make the bot's own commit start another run.
   workflow_dispatch: # manual trigger
 
+# The generate-ics job pushes to master. Repos created since Feb 2023 default the
+# workflow token to read-only, so declare the write scope explicitly rather than
+# relying on the account/repo default.
+permissions:
+  contents: write
+
+# Never let two runs (e.g. a manual dispatch during the scheduled run) generate and
+# push concurrently: they would both branch off master and the second push would be
+# rejected non-fast-forward, throwing away a freshly computed calendar. Serialise
+# instead, and let the newer run supersede an in-flight one.
+concurrency:
+  group: generate-dhl-ics
+  cancel-in-progress: true
+
 jobs:
   # The calendar is published straight to master, so the tests gate the build
   # rather than running after it. A broken scraper should never reach the file

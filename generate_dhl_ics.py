@@ -777,9 +777,15 @@ def merge_events(fresh: List[CalEvent], existing: List[CalEvent]) -> List[CalEve
     Freeze rule:
       - Past events (already finished) are preserved from the existing file so
         history survives even after the stadium API stops returning them.
-      - Future events come only from the fresh fetch, so reschedules and
-        cancellations are honoured (no ghost entries for moved fixtures).
+      - Future events come only from the fresh fetch, so a cancelled or moved
+        fixture drops out of the published file rather than lingering.
     A fresh copy always wins on UID collision, keeping details up to date.
+
+    Note this only removes the entry from the *feed*. Whether a subscriber's client
+    then deletes it depends on the client: Google and Apple drop a UID that has
+    vanished, but Outlook's Internet Calendar Subscription does not, so an Outlook
+    subscriber can keep a cancelled fixture as a ghost. A one-way PUBLISH feed has no
+    way to force that per-subscriber delete.
     """
     merged: Dict[str, CalEvent] = {}
     for event in existing:
@@ -902,14 +908,16 @@ class HealthReport(TypedDict):
     """The document written to health.json and read back to gate CI.
 
     Serialised straight to JSON, so it stays a plain mapping rather than a runtime
-    class: the copy read back from disk (see ``load_health``) is untrusted and may
+    class: the copy read back from disk (see ``read_health``) is untrusted and may
     be partial, so the consumers below treat an incoming report as a loose mapping.
     """
     generated_at: str
     calendar: CalendarStats
     stadium: StadiumStats
     sources: Dict[str, SourceHealth]
-    warnings: List[str]
+    # The single actionable list --check-health reads: scrapers that have fallen back
+    # to a computed date, plus any horizon / unreadable-baseline warnings. Kept as one
+    # list rather than a separate `warnings` field that duplicated the same strings.
     degradations: List[str]
 
 
@@ -933,15 +941,6 @@ def read_health(path: str) -> Tuple[Dict[str, Any], Optional[str]]:
     if not isinstance(data, dict) or not isinstance(data.get("sources", {}), dict):
         return {}, f"{path} is not a valid health report"
     return data, None
-
-
-def load_health(path: str) -> Dict[str, Any]:
-    """The previous report as a loose mapping, or ``{}`` if missing/unusable.
-
-    Thin wrapper over :func:`read_health` for callers that only need the baseline
-    and handle a reset elsewhere; every reader still accesses it defensively.
-    """
-    return read_health(path)[0]
 
 
 def find_degradations(health: Mapping[str, Any]) -> List[str]:
@@ -1022,7 +1021,6 @@ def build_health(
             ),
         },
         "sources": sources,
-        "warnings": warnings,
         "degradations": [],
     }
     current["degradations"] = find_degradations(current) + warnings
