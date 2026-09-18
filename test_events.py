@@ -1279,6 +1279,26 @@ def test_health_check_exit_status(tmp_path):
     assert gen.check_health_file(str(dirty)) == 1
 
 
+def test_acknowledged_degradations_are_logged_but_do_not_fail(tmp_path):
+    """A scraper in ACKNOWLEDGED_DEGRADATIONS coasts on its computed rule every year
+    while its site is silent; --check-health must report it but not go red for it,
+    while any other degradation alongside it still fails the job."""
+    key = next(iter(gen.ACKNOWLEDGED_DEGRADATIONS))
+
+    ack_only = tmp_path / "ack.json"
+    ack_only.write_text(json.dumps({"degradations": [
+        f"{key}: has not read a live date since 2026-09-18 (now falling back to 'computed')",
+    ]}))
+    assert gen.check_health_file(str(ack_only)) == 0
+
+    mixed = tmp_path / "mixed.json"
+    mixed.write_text(json.dumps({"degradations": [
+        f"{key}: has not read a live date since 2026-09-18 (now falling back to 'computed')",
+        "fetch_big_walk: has not read a live date since 2027-01-05 (now falling back to 'none')",
+    ]}))
+    assert gen.check_health_file(str(mixed)) == 1
+
+
 def test_health_check_surfaces_a_corrupt_report_without_blocking_the_build(tmp_path):
     """A missing report is the first run (fine); a present-but-unreadable one is a
     failure, because the build treats it as an empty baseline and silently drops the
