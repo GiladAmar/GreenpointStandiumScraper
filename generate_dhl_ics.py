@@ -23,16 +23,19 @@ import re
 import sys
 from dataclasses import dataclass, replace
 from datetime import date, datetime, timedelta, timezone
-from typing import Any, Dict, Iterable, List, Optional, Pattern, Tuple, Union
+from typing import (
+    Any, Dict, Iterable, List, Mapping, Optional, Pattern, Tuple, TypedDict, Union,
+)
 from zoneinfo import ZoneInfo
 
 import requests
-from icalendar import Calendar, Event, Timezone, vDuration
+from icalendar import Calendar, Component, Event, Timezone, vDuration
 
 from city_events import (
     EVENTS_PATH,
     FIRST_THURSDAYS_FETCHER,
     SCRAPED_SOURCES,
+    EventRecord,
     dump_events,
     fetch_all_events,
 )
@@ -410,7 +413,7 @@ def get_api_events(resp: Any) -> List[CalEvent]:
 # City events
 # ------------------------------------------------------------
 
-def get_city_events(records: Iterable[Dict[str, str]]) -> List[CalEvent]:
+def get_city_events(records: Iterable[EventRecord]) -> List[CalEvent]:
     """Convert city-event scraper records into calendar events.
 
     Records with no date are skipped by design: a scrape-only event with no
@@ -607,7 +610,7 @@ def dedupe_events(events: List[CalEvent]) -> List[CalEvent]:
 # Reading and writing the calendar
 # ------------------------------------------------------------
 
-def _component_value(component: Event, name: str) -> str:
+def _component_value(component: Component, name: str) -> str:
     value = component.get(name)
     return str(value) if value is not None else ""
 
@@ -870,8 +873,50 @@ def check_stadium_horizon(
 # Health report
 # ------------------------------------------------------------
 
-def load_health(path: str) -> dict:
-    """Load the previous health report, if any."""
+class SourceHealth(TypedDict):
+    """One scraper's standing in the health report: what it produced and when it
+    last read a real date off the live site (``last_live``)."""
+    name: str
+    source: str
+    last_live: Optional[str]
+    start_date: Optional[str]
+    end_date: Optional[str]
+    url: str
+
+
+class CalendarStats(TypedDict):
+    total: int
+    upcoming: int
+    past: int
+
+
+class StadiumStats(TypedDict):
+    events: int
+    newest_start: Optional[str]
+
+
+class HealthReport(TypedDict):
+    """The document written to health.json and read back to gate CI.
+
+    Serialised straight to JSON, so it stays a plain mapping rather than a runtime
+    class: the copy read back from disk (see ``load_health``) is untrusted and may
+    be partial, so the consumers below treat an incoming report as a loose mapping.
+    """
+    generated_at: str
+    calendar: CalendarStats
+    stadium: StadiumStats
+    sources: Dict[str, SourceHealth]
+    warnings: List[str]
+    degradations: List[str]
+
+
+def load_health(path: str) -> Dict[str, Any]:
+    """Load the previous health report, if any.
+
+    Returns a loose mapping, not a validated :class:`HealthReport`: the file is
+    written by a previous run and may be missing, empty or corrupt, so every reader
+    accesses it defensively.
+    """
     if not os.path.exists(path):
         return {}
     try:
@@ -882,7 +927,7 @@ def load_health(path: str) -> dict:
         return {}
 
 
-def find_degradations(health: dict) -> List[str]:
+def find_degradations(health: Mapping[str, Any]) -> List[str]:
     """List the sources that have stopped reading their date off the live site.
 
     This is the check CLAUDE.md convention 1 describes doing by hand: spotting a
@@ -907,16 +952,16 @@ def find_degradations(health: dict) -> List[str]:
 
 
 def build_health(
-    records: List[Dict[str, str]],
+    records: List[EventRecord],
     events: List[CalEvent],
     warnings: List[str],
-    previous: dict,
+    previous: Mapping[str, Any],
     now: Optional[datetime] = None,
-) -> dict:
+) -> HealthReport:
     """Assemble the health report published alongside the calendar."""
     moment = now or datetime.now(timezone.utc)
     old_sources = previous.get("sources") or {}
-    sources: Dict[str, dict] = {}
+    sources: Dict[str, SourceHealth] = {}
     for record in records:
         key = record.get("fetcher") or record["name"]
         if key == FIRST_THURSDAYS_FETCHER:  # one computed rule, 24 identical records
@@ -936,7 +981,7 @@ def build_health(
         }
 
     stadium = [event for event in events if event.category == CATEGORY_STADIUM]
-    current = {
+    current: HealthReport = {
         "generated_at": moment.isoformat(),
         "calendar": {
             "total": len(events),
@@ -953,6 +998,7 @@ def build_health(
         },
         "sources": sources,
         "warnings": warnings,
+        "degradations": [],
     }
     current["degradations"] = find_degradations(current) + warnings
     return current
@@ -983,7 +1029,7 @@ def check_health_file(path: str = HEALTH_PATH) -> int:
 
 
 def generate(ics_path: str = ICS_PATH, health_path: str = HEALTH_PATH,
-             events_path: str = EVENTS_PATH, *, allow_shrink: bool = False) -> dict:
+             events_path: str = EVENTS_PATH, *, allow_shrink: bool = False) -> HealthReport:
     """Build the calendar and the health report, and write both."""
     existing = load_existing_events(ics_path)
 
