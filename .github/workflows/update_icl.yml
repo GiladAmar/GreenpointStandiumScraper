@@ -5,11 +5,9 @@ on:
   schedule:
     - cron: '0 1 1,15 * *'
 
-  # Run on push to master branch
-  push:
-    branches:
-      - master
-
+  # Time-based only. There is deliberately no push trigger: the job commits a
+  # health.json whose generated_at changes every run, and triggering on push to
+  # master would make the bot's own commit start another run.
   workflow_dispatch: # manual trigger
 
 jobs:
@@ -73,7 +71,7 @@ jobs:
           git config user.name "github-actions[bot]"
           git config user.email "github-actions[bot]@users.noreply.github.com"
 
-          git add dhl_stadium.ics events.json health.json
+          git add dhl_stadium.ics health.json
           if git diff --cached --quiet; then
             echo "No changes to commit"
             exit 0

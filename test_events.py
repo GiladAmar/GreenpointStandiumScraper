@@ -1198,6 +1198,17 @@ def test_health_check_exit_status(tmp_path):
     assert gen.check_health_file(str(dirty)) == 1
 
 
+def test_health_check_surfaces_a_corrupt_report_without_blocking_the_build(tmp_path):
+    """A missing report is the first run (fine); a present-but-unreadable one is a
+    failure, because the build treats it as an empty baseline and silently drops the
+    last_live history. --check-health must go red on it, while generation elsewhere
+    still publishes a calendar."""
+    assert gen.check_health_file(str(tmp_path / "absent.json")) == 0
+    corrupt = tmp_path / "corrupt.json"
+    corrupt.write_text("{ this is not valid json")
+    assert gen.check_health_file(str(corrupt)) == 1
+
+
 # ── End-to-end build ──────────────────────────────────────────────────────────
 
 def _api_payload(entries):
@@ -1216,10 +1227,9 @@ STADIUM_PAYLOAD = _api_payload([
 def _build(tmp_path, payload=STADIUM_PAYLOAD, **kwargs):
     ics = tmp_path / "out.ics"
     health = tmp_path / "health.json"
-    events = tmp_path / "events.json"
     with patch.object(gen, "fetch_stadium_api", return_value=payload), \
             patch("city_events.safe_get", return_value=None):
-        report = gen.generate(str(ics), str(health), str(events), **kwargs)
+        report = gen.generate(str(ics), str(health), **kwargs)
     return ics, health, report
 
 
@@ -1246,7 +1256,7 @@ def test_a_failed_stadium_fetch_leaves_the_published_file_untouched(tmp_path):
     with patch.object(gen, "fetch_stadium_api", return_value={"data": []}), \
          patch("city_events.safe_get", return_value=None):
         with pytest.raises(gen.CalendarBuildError):
-            gen.generate(str(ics), str(health), str(tmp_path / "events.json"))
+            gen.generate(str(ics), str(health))
     assert ics.read_bytes() == before
 
 

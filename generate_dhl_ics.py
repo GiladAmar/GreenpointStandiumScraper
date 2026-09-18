@@ -32,11 +32,9 @@ import requests
 from icalendar import Calendar, Component, Event, Timezone, vDuration
 
 from city_events import (
-    EVENTS_PATH,
     FIRST_THURSDAYS_FETCHER,
     SCRAPED_SOURCES,
     EventRecord,
-    dump_events,
     fetch_all_events,
 )
 
@@ -1013,11 +1011,22 @@ def check_health_file(path: str = HEALTH_PATH) -> int:
 
     Kept separate from the build so a degraded source still publishes a calendar
     (a computed date beats no calendar) while the workflow still goes red.
+
+    A present-but-unreadable report is itself a failure: the build treats it as an
+    empty baseline (so the calendar still publishes), which silently discards the
+    ``last_live`` history and would let a degraded scraper go green. Reading it here
+    rather than through ``load_health`` lets us tell a corrupt file from a missing
+    one and surface it, without ever blocking generation.
     """
-    health = load_health(path)
-    if not health:
+    if not os.path.exists(path):
         print(f"No {path} to check.")
         return 0
+    try:
+        with open(path, encoding="utf-8") as handle:
+            health = json.load(handle)
+    except Exception as exc:
+        print(f"Health check failed: could not parse {path}: {exc}")
+        return 1
     degradations = health.get("degradations") or []
     if not degradations:
         print("Health check passed: no source degraded since the previous run.")
@@ -1029,8 +1038,14 @@ def check_health_file(path: str = HEALTH_PATH) -> int:
 
 
 def generate(ics_path: str = ICS_PATH, health_path: str = HEALTH_PATH,
-             events_path: str = EVENTS_PATH, *, allow_shrink: bool = False) -> HealthReport:
-    """Build the calendar and the health report, and write both."""
+             *, allow_shrink: bool = False) -> HealthReport:
+    """Build the calendar and the health report, and write both.
+
+    events.json is intentionally not written here: it is a debug dump of the raw
+    scrape (see ``city_events.main``), not part of the published pipeline, and
+    committing it only added timestamp churn. Run ``city_events.py`` directly to
+    produce one.
+    """
     existing = load_existing_events(ics_path)
 
     resp = fetch_stadium_api(api_floor())
@@ -1058,7 +1073,6 @@ def generate(ics_path: str = ICS_PATH, health_path: str = HEALTH_PATH,
     with open(health_path, "w", encoding="utf-8") as handle:
         json.dump(health, handle, indent=2, ensure_ascii=False)
         handle.write("\n")
-    dump_events(records, events_path)
 
     print(
         f"Wrote {len(stamped)} events to {ics_path} "

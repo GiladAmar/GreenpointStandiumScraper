@@ -16,11 +16,15 @@ CBD / Green Point / Atlantic-seaboard traffic and publishes them as `dhl_stadium
   `merge_events()` preserves past events from the existing file and `stamp_events()`
   assigns UID/DTSTAMP/SEQUENCE. Entry point is `main()` (guarded by `__main__`).
 - `test_events.py` — pytest suite. Run: `python3 -m pytest test_events.py -q`.
-- Outputs, all regenerated and committed by each run: `dhl_stadium.ics` (the calendar),
-  `events.json` (the raw scrape) and `health.json` (per-source provenance, including
-  `last_live` — when each scraper last read a real date — plus anything degraded).
+- Outputs committed by each run: `dhl_stadium.ics` (the calendar) and `health.json`
+  (per-source provenance, including `last_live` — when each scraper last read a real date —
+  plus anything degraded). `health.json` must stay committed: it carries the `last_live`
+  baseline forward between runs. `events.json` (the raw scrape) is a debug dump written only
+  by running `city_events.py` directly, not by the calendar build, and is not committed.
 - CI (`.github/workflows/update_icl.yml`) runs the tests, then `generate_dhl_ics.py` on the
-  1st & 15th, commits the three outputs, and finally runs `--check-health`.
+  1st & 15th, commits the two outputs, and finally runs `--check-health` (which also goes red
+  on a present-but-unreadable `health.json`). The workflow is time-based only — no push
+  trigger — so the bot's own commit cannot start another run.
 
 ## Conventions (keep to these)
 
