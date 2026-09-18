@@ -925,6 +925,26 @@ def test_the_same_race_from_two_sources_becomes_one_event():
     assert event.url == "https://gunrun.test/"               # curated link wins
 
 
+def test_curated_city_blurb_wins_when_both_records_use_the_canonical_name():
+    """If the stadium titles a fixture exactly as the canonical name, both records
+    tie on the name key. The City record carries the curated blurb/link, so it must
+    still win the metadata rather than the stadium's marketing copy — while the entry
+    keeps filing under the stadium category."""
+    stadium = timed("Sanlam Cape Town Marathon", datetime(2027, 5, 23, 6, 0, tzinfo=SAST),
+                    url="https://tickets.test/", description="Stadium marketing copy",
+                    category=gen.CATEGORY_STADIUM)
+    city = all_day("Sanlam Cape Town Marathon", date(2027, 5, 23),
+                   url="https://capetownmarathon.test/",
+                   description="Road closures through the CBD and seaboard.",
+                   category=gen.CATEGORY_CITY)
+    merged = gen.dedupe_events([stadium, city])
+    assert len(merged) == 1
+    event = merged[0]
+    assert event.description == "Road closures through the CBD and seaboard."
+    assert event.url == "https://capetownmarathon.test/"
+    assert event.category == gen.CATEGORY_STADIUM  # still files under DHL Stadium
+
+
 def test_consecutive_days_of_one_tournament_collapse_into_one_entry():
     days = [timed("HSBC SVNS Cape Town", datetime(2026, 12, day, 7, 0, tzinfo=SAST))
             for day in (5, 6)]
@@ -1207,6 +1227,38 @@ def test_health_check_surfaces_a_corrupt_report_without_blocking_the_build(tmp_p
     corrupt = tmp_path / "corrupt.json"
     corrupt.write_text("{ this is not valid json")
     assert gen.check_health_file(str(corrupt)) == 1
+
+
+def test_read_health_tells_missing_from_malformed(tmp_path):
+    assert gen.read_health(str(tmp_path / "absent.json")) == ({}, None)  # first run
+    good = tmp_path / "good.json"
+    good.write_text(json.dumps({"sources": {}, "degradations": []}))
+    assert gen.read_health(str(good))[1] is None
+    listy = tmp_path / "listy.json"  # parseable JSON, wrong shape
+    listy.write_text(json.dumps({"sources": []}))
+    report, error = gen.read_health(str(listy))
+    assert report == {} and error
+
+
+def test_a_malformed_previous_report_never_crashes_the_build():
+    """Parseable-but-wrong JSON must coerce to an empty baseline, not raise and take
+    the calendar down (health must never block publishing)."""
+    live = [{"fetcher": "fetch_jazz_festival", "name": "Jazz", "source": "jsonld",
+             "start_date": "2027-03-26"}]
+    assert gen.build_health(live, [], [], {"sources": []})["degradations"] == []
+    # a source entry that is a string rather than a mapping
+    assert gen.find_degradations({"sources": {"fetch_x": "oops"}}) == []
+    assert gen.build_health(live, [], [], {"sources": {"fetch_x": "oops"}})["sources"]
+
+
+def test_a_corrupt_previous_report_is_recorded_as_a_degradation(tmp_path):
+    """CI runs the build before --check-health, so the build overwrites a corrupt
+    report with a valid one. The load failure must survive as a degradation in the
+    freshly written report, or --check-health goes green on the lost history."""
+    (tmp_path / "health.json").write_text("{ not valid json")
+    _, health, report = _build(tmp_path)
+    assert any("unusable" in line for line in report["degradations"])
+    assert gen.check_health_file(str(health)) == 1  # surfaced on the fresh report
 
 
 # ── End-to-end build ──────────────────────────────────────────────────────────

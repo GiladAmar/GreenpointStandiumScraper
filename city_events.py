@@ -959,9 +959,10 @@ EVENTS_PATH = "events.json"
 def dump_events(events: List[EventRecord], path: str = EVENTS_PATH) -> None:
     """Write the scraped records to JSON.
 
-    Shared with the calendar builder so that the published events.json comes from
-    the same scrape as the published calendar, rather than a second run of every
-    fetcher that could disagree with it.
+    This is debug output for running ``city_events.py`` directly, not part of the
+    published pipeline: ``generate_dhl_ics.py`` deliberately does not write it, and
+    events.json is not committed. Its ``updated`` timestamp changes every run, which
+    is why the calendar build leaves it out.
     """
     out = {"updated": datetime.now(timezone.utc).isoformat(), "events": events}
     with open(path, "w", encoding="utf-8") as f:

@@ -509,11 +509,13 @@ def canonicalise(event: CalEvent) -> CalEvent:
 def _combine(group: List[CalEvent], canonical: Optional[str]) -> CalEvent:
     """Collapse events that are the same disruption into one entry.
 
-    The span is the union of the members'. Metadata is taken from the curated
-    record first (the one already published under the canonical name, which
-    carries the hand-written traffic blurb), then from the highest-priority
-    source, so the stadium's marketing copy never displaces a blurb written for
-    this calendar.
+    The span is the union of the members'. Metadata (description, link, location)
+    is taken from the curated record first — the one already published under the
+    canonical name, then any City record, which is what carries the hand-written
+    traffic blurb from EVENT_DESCRIPTIONS — so the stadium's marketing copy never
+    displaces a blurb written for this calendar. The published category is still
+    the highest-priority one (below), so the entry files under DHL Stadium while
+    keeping the city blurb.
     """
     if len(group) == 1:
         # Still rename: whether both sources are in range varies run to run, and a
@@ -526,7 +528,10 @@ def _combine(group: List[CalEvent], canonical: Optional[str]) -> CalEvent:
         group,
         key=lambda ev: (
             0 if canonical and ev.name == canonical else 1,
-            -CATEGORY_PRIORITY.get(ev.category, 0),
+            # City records carry the curated blurb/link, so they win metadata even
+            # when both records already match the canonical name (a tie the old
+            # category-priority key broke in the stadium's favour).
+            0 if ev.category == CATEGORY_CITY else 1,
             ev.start_instant,
         ),
     )
@@ -908,21 +913,35 @@ class HealthReport(TypedDict):
     degradations: List[str]
 
 
-def load_health(path: str) -> Dict[str, Any]:
-    """Load the previous health report, if any.
+def read_health(path: str) -> Tuple[Dict[str, Any], Optional[str]]:
+    """Load the previous health report and say whether it was usable.
 
-    Returns a loose mapping, not a validated :class:`HealthReport`: the file is
-    written by a previous run and may be missing, empty or corrupt, so every reader
-    accesses it defensively.
+    Returns ``(report, error)``. A missing file is the first run, so ``({}, None)``.
+    A present file that will not parse, or parses to something that is not a report
+    with a ``sources`` mapping, is coerced to an empty baseline **and** returns an
+    error message — the caller can then keep publishing (health must never block the
+    calendar) while still surfacing the failure, rather than silently discarding the
+    ``last_live`` history and going green. Never raises.
     """
     if not os.path.exists(path):
-        return {}
+        return {}, None
     try:
         with open(path, encoding="utf-8") as handle:
-            return json.load(handle)
+            data = json.load(handle)
     except Exception as exc:
-        print(f"Warning: could not parse existing {path}: {exc}")
-        return {}
+        return {}, f"could not parse {path}: {exc}"
+    if not isinstance(data, dict) or not isinstance(data.get("sources", {}), dict):
+        return {}, f"{path} is not a valid health report"
+    return data, None
+
+
+def load_health(path: str) -> Dict[str, Any]:
+    """The previous report as a loose mapping, or ``{}`` if missing/unusable.
+
+    Thin wrapper over :func:`read_health` for callers that only need the baseline
+    and handle a reset elsewhere; every reader still accesses it defensively.
+    """
+    return read_health(path)[0]
 
 
 def find_degradations(health: Mapping[str, Any]) -> List[str]:
@@ -939,7 +958,12 @@ def find_degradations(health: Mapping[str, Any]) -> List[str]:
     time and go quiet, alarming exactly once for a scraper that stays broken.
     """
     degradations: List[str] = []
-    for key, entry in (health.get("sources") or {}).items():
+    sources = health.get("sources")
+    if not isinstance(sources, dict):
+        return degradations
+    for key, entry in sources.items():
+        if not isinstance(entry, dict):  # a malformed report must not crash the build
+            continue
         last_live = entry.get("last_live")
         if last_live and entry.get("source") not in SCRAPED_SOURCES:
             degradations.append(
@@ -958,15 +982,18 @@ def build_health(
 ) -> HealthReport:
     """Assemble the health report published alongside the calendar."""
     moment = now or datetime.now(timezone.utc)
-    old_sources = previous.get("sources") or {}
+    prev_sources = previous.get("sources")
+    old_sources = prev_sources if isinstance(prev_sources, dict) else {}
     sources: Dict[str, SourceHealth] = {}
     for record in records:
         key = record.get("fetcher") or record["name"]
         if key == FIRST_THURSDAYS_FETCHER:  # one computed rule, 24 identical records
             continue
         source = record.get("source", "none")
-        # Carried forward so a scraper that stays broken keeps being reported.
-        last_live = (old_sources.get(key) or {}).get("last_live")
+        # Carried forward so a scraper that stays broken keeps being reported. A
+        # malformed previous entry (not a mapping) is ignored rather than crashing.
+        prev_entry = old_sources.get(key)
+        last_live = prev_entry.get("last_live") if isinstance(prev_entry, dict) else None
         if source in SCRAPED_SOURCES:
             last_live = moment.date().isoformat()
         sources[key] = {
@@ -1012,22 +1039,21 @@ def check_health_file(path: str = HEALTH_PATH) -> int:
     Kept separate from the build so a degraded source still publishes a calendar
     (a computed date beats no calendar) while the workflow still goes red.
 
-    A present-but-unreadable report is itself a failure: the build treats it as an
-    empty baseline (so the calendar still publishes), which silently discards the
-    ``last_live`` history and would let a degraded scraper go green. Reading it here
-    rather than through ``load_health`` lets us tell a corrupt file from a missing
-    one and surface it, without ever blocking generation.
+    A present-but-unreadable report is itself a failure: ``read_health`` tells a
+    corrupt file from a missing one so it can be surfaced here without blocking the
+    build. Note that when the *build* runs first (as CI does) it overwrites a corrupt
+    report with a valid one before this step sees it, so ``generate`` also records
+    the load failure as a degradation in the report it writes — that is what makes
+    the failure survive to this check.
     """
-    if not os.path.exists(path):
+    report, error = read_health(path)
+    if error:
+        print(f"Health check failed: {error}")
+        return 1
+    if not report:
         print(f"No {path} to check.")
         return 0
-    try:
-        with open(path, encoding="utf-8") as handle:
-            health = json.load(handle)
-    except Exception as exc:
-        print(f"Health check failed: could not parse {path}: {exc}")
-        return 1
-    degradations = health.get("degradations") or []
+    degradations = report.get("degradations") or []
     if not degradations:
         print("Health check passed: no source degraded since the previous run.")
         return 0
@@ -1066,7 +1092,15 @@ def generate(ics_path: str = ICS_PATH, health_path: str = HEALTH_PATH,
     stamped = stamp_events(merged, existing)
 
     warnings = [warning for warning in [check_stadium_horizon(stadium_events)] if warning]
-    health = build_health(records, stamped, warnings, load_health(health_path))
+    previous, prev_error = read_health(health_path)
+    if prev_error:
+        # The build overwrites the old report with a fresh, valid one, so a corrupt
+        # baseline would otherwise vanish before --check-health runs. Recording it as
+        # a degradation carries the failure into the new report instead of losing it.
+        warnings.append(
+            f"previous health report was unusable ({prev_error}); last_live baseline reset"
+        )
+    health = build_health(records, stamped, warnings, previous)
 
     with open(ics_path, "wb") as handle:
         handle.write(build_calendar(stamped).to_ical())

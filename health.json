@@ -1,0 +1,168 @@
+{
+  "generated_at": "2026-09-18T09:15:03.115671+00:00",
+  "calendar": {
+    "total": 79,
+    "upcoming": 42,
+    "past": 37
+  },
+  "stadium": {
+    "events": 39,
+    "newest_start": "2027-04-24"
+  },
+  "sources": {
+    "fetch_cycle_tour": {
+      "name": "Cape Town Cycle Tour",
+      "source": "text",
+      "last_live": "2026-09-18",
+      "start_date": "2027-03-14",
+      "end_date": "2027-03-14",
+      "url": "https://www.capetowncycletour.com/"
+    },
+    "fetch_two_oceans": {
+      "name": "Two Oceans Marathon",
+      "source": "computed",
+      "last_live": null,
+      "start_date": "2027-03-27",
+      "end_date": "2027-03-28",
+      "url": "https://www.twooceansmarathon.org.za/"
+    },
+    "fetch_ct_marathon": {
+      "name": "Sanlam Cape Town Marathon",
+      "source": "text",
+      "last_live": "2026-09-18",
+      "start_date": "2027-05-22",
+      "end_date": "2027-05-23",
+      "url": "https://www.capetownmarathon.com/"
+    },
+    "fetch_cape_epic": {
+      "name": "Absa Cape Epic",
+      "source": "text",
+      "last_live": "2026-09-18",
+      "start_date": "2027-03-21",
+      "end_date": "2027-03-28",
+      "url": "https://www.epic-series.com/capeepic"
+    },
+    "fetch_gun_run": {
+      "name": "The Gun Run",
+      "source": "computed",
+      "last_live": null,
+      "start_date": "2027-09-12",
+      "end_date": "2027-09-12",
+      "url": "https://www.outsurance.co.za/gunrun/"
+    },
+    "fetch_cape_town_carnival": {
+      "name": "Cape Town Carnival",
+      "source": "computed",
+      "last_live": null,
+      "start_date": "2027-03-20",
+      "end_date": "2027-03-20",
+      "url": "https://capetowncarnival.com/"
+    },
+    "fetch_cape_town_pride": {
+      "name": "Cape Town Pride Parade",
+      "source": "computed",
+      "last_live": null,
+      "start_date": "2027-02-27",
+      "end_date": "2027-02-27",
+      "url": "https://cptpride.org/"
+    },
+    "fetch_minstrel_carnival": {
+      "name": "Minstrel Carnival (Kaapse Klopse)",
+      "source": "computed",
+      "last_live": null,
+      "start_date": "2027-01-02",
+      "end_date": "2027-01-02",
+      "url": "https://en.wikipedia.org/wiki/Kaapse_Klopse"
+    },
+    "fetch_new_year_v_and_a": {
+      "name": "V&A Waterfront New Year's Eve",
+      "source": "computed",
+      "last_live": null,
+      "start_date": "2026-12-31",
+      "end_date": "2026-12-31",
+      "url": "https://www.waterfront.co.za/new-years-eve-celebration"
+    },
+    "fetch_mining_indaba": {
+      "name": "Investing in African Mining Indaba",
+      "source": "jsonld",
+      "last_live": "2026-09-18",
+      "start_date": "2027-02-08",
+      "end_date": "2027-02-11",
+      "url": "https://miningindaba.com/"
+    },
+    "fetch_sona": {
+      "name": "State of the Nation Address (SONA)",
+      "source": "computed",
+      "last_live": null,
+      "start_date": "2027-02-11",
+      "end_date": "2027-02-11",
+      "url": "https://www.parliament.gov.za/state-of-the-nation-address"
+    },
+    "fetch_slave_route": {
+      "name": "Slave Route Challenge",
+      "source": "computed",
+      "last_live": null,
+      "start_date": "2026-10-18",
+      "end_date": "2026-10-18",
+      "url": "https://www.slaveroute.co.za/"
+    },
+    "fetch_big_walk": {
+      "name": "Cape Town Big Walk",
+      "source": "none",
+      "last_live": null,
+      "start_date": null,
+      "end_date": null,
+      "url": "https://capetownbigwalk.com/"
+    },
+    "fetch_jazz_festival": {
+      "name": "Cape Town International Jazz Festival",
+      "source": "computed",
+      "last_live": null,
+      "start_date": "2027-03-26",
+      "end_date": "2027-03-27",
+      "url": "https://www.capetownjazzfest.com/"
+    },
+    "fetch_africa_oil_week": {
+      "name": "Africa Oil Week",
+      "source": "none",
+      "last_live": null,
+      "start_date": null,
+      "end_date": null,
+      "url": "https://africaoilweek.com/"
+    },
+    "fetch_africa_energy_indaba": {
+      "name": "Africa Energy Indaba",
+      "source": "text",
+      "last_live": "2026-09-18",
+      "start_date": "2027-03-02",
+      "end_date": "2027-03-04",
+      "url": "https://www.africaenergyindaba.com/"
+    },
+    "fetch_enlit_africa": {
+      "name": "Enlit Africa",
+      "source": "text",
+      "last_live": "2026-09-18",
+      "start_date": "2027-05-11",
+      "end_date": "2027-05-13",
+      "url": "https://wearevuka.com/energy/enlit-africa/"
+    },
+    "fetch_comic_con": {
+      "name": "Comic Con Cape Town",
+      "source": "none",
+      "last_live": null,
+      "start_date": null,
+      "end_date": null,
+      "url": "https://comicconafrica.co.za/ccct-home-page/"
+    },
+    "fetch_fame_week": {
+      "name": "FAME Week Africa",
+      "source": "text",
+      "last_live": "2026-09-18",
+      "start_date": "2026-10-28",
+      "end_date": "2026-11-01",
+      "url": "https://www.fameweekafrica.com/"
+    }
+  },
+  "warnings": [],
+  "degradations": []
+}
