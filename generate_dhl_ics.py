@@ -81,8 +81,10 @@ CATEGORY_PRIORITY = {CATEGORY_STADIUM: 2, CATEGORY_CITY: 1}
 # events is treated as a broken source rather than a real cancellation.
 MIN_RETAINED_FRACTION = 0.5
 # The stadium publishes months ahead; a feed whose newest event is nearly upon us
-# has almost certainly frozen or moved host (it has done both before).
-MIN_STADIUM_HORIZON = timedelta(days=30)
+# has almost certainly frozen or moved host (it has done both before). Kept at 14,
+# not 30, days so a genuine off-season lull (a real fixture two-to-four weeks out)
+# does not trip the alarm and red CI every run — only a near-frozen feed does.
+MIN_STADIUM_HORIZON = timedelta(days=14)
 
 # Events from different sources that are really the same disruption. The value is
 # the name the merged event is published under (and so the key its UID derives
@@ -92,6 +94,10 @@ CANONICAL_NAMES: List[Tuple[Pattern, str]] = [
     (re.compile(r"\bcycle tour\b", re.IGNORECASE), "Cape Town Cycle Tour"),
     (re.compile(r"\btwo oceans\b", re.IGNORECASE), "Two Oceans Marathon"),
     (re.compile(r"\bcape town marathon\b", re.IGNORECASE), "Sanlam Cape Town Marathon"),
+    # A genuine multi-day tournament the stadium feed lists as one event per day.
+    # Only aliased events merge (see dedupe_events), so it must be named to stay one
+    # entry rather than splitting into a VEVENT per day.
+    (re.compile(r"\bSVNS\b", re.IGNORECASE), "HSBC SVNS Cape Town"),
 ]
 # Two records for the same event can sit a few days apart (the expo at the stadium
 # on the Friday, the race itself on the Sunday). Anything further apart is treated
@@ -594,6 +600,15 @@ def dedupe_events(events: List[CalEvent]) -> List[CalEvent]:
 
     merged: List[CalEvent] = []
     for key, group in grouped.items():
+        canonical = canonicals[key]
+        if canonical is None:
+            # Not a curated cross-source alias. Two genuinely different bookings can
+            # share a generic title within the window (e.g. two "Stadium Concert"s a
+            # few days apart); merging by name alone would silently drop one, so each
+            # is published separately. A real multi-day event earns a CANONICAL_NAMES
+            # alias to opt back into merging (see HSBC SVNS).
+            merged.extend(_combine([event], None) for event in group)
+            continue
         group.sort(key=lambda ev: ev.start_instant)
         cluster: List[CalEvent] = [group[0]]
         cluster_end = group[0].end_instant
@@ -602,10 +617,10 @@ def dedupe_events(events: List[CalEvent]) -> List[CalEvent]:
                 cluster.append(event)
                 cluster_end = max(cluster_end, event.end_instant)
             else:
-                merged.append(_combine(cluster, canonicals[key]))
+                merged.append(_combine(cluster, canonical))
                 cluster = [event]
                 cluster_end = event.end_instant
-        merged.append(_combine(cluster, canonicals[key]))
+        merged.append(_combine(cluster, canonical))
     return merged
 
 

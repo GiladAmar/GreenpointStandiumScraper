@@ -1014,6 +1014,30 @@ def test_different_fixtures_are_left_alone():
     assert len(gen.dedupe_events(fixtures)) == 2
 
 
+def test_two_distinct_events_sharing_a_non_alias_title_are_not_merged():
+    """Only curated CANONICAL_NAMES aliases merge. Two genuinely different bookings
+    that share a generic title a few days apart must both survive, not collapse into
+    one entry (which would silently drop a real event)."""
+    concerts = [
+        timed("Stadium Concert", datetime(2027, 3, 3, 19, 0, tzinfo=SAST),
+              category=gen.CATEGORY_STADIUM),
+        timed("Stadium Concert", datetime(2027, 3, 6, 19, 0, tzinfo=SAST),
+              category=gen.CATEGORY_STADIUM),
+    ]
+    assert len(gen.dedupe_events(concerts)) == 2
+
+
+def test_an_aliased_multi_day_tournament_still_merges():
+    """A true multi-day tournament the feed lists per day (HSBC SVNS) is aliased, so
+    it opts back into merging into a single spanning entry."""
+    days = [timed("HSBC SVNS Cape Town", datetime(2026, 12, day, 10, 0, tzinfo=SAST),
+                  category=gen.CATEGORY_STADIUM) for day in (5, 6)]
+    merged = gen.dedupe_events(days)
+    assert len(merged) == 1
+    assert merged[0].start == days[0].start
+    assert merged[0].start_instant.date() == date(2026, 12, 5)
+
+
 # ── Canonical naming ──────────────────────────────────────────────────────────
 
 def test_a_lone_record_still_gets_the_canonical_name():
@@ -1184,6 +1208,15 @@ def test_stadium_horizon_is_quiet_for_a_healthy_feed():
     now = datetime(2026, 9, 17, 12, 0, tzinfo=SAST)
     far = [all_day("Next season", date(2027, 4, 1), category=gen.CATEGORY_STADIUM)]
     assert gen.check_stadium_horizon(far, now) is None
+
+
+def test_stadium_horizon_tolerates_a_real_off_season_lull():
+    """A genuine fixture two-to-three weeks out is a sparse schedule, not a frozen
+    feed. With the 14-day threshold it must stay quiet, or a real off-season lull
+    reds CI every run (it would have tripped the old 30-day threshold)."""
+    now = datetime(2026, 9, 17, 12, 0, tzinfo=SAST)
+    lull = [all_day("Next fixture", date(2026, 10, 7), category=gen.CATEGORY_STADIUM)]  # 20 days
+    assert gen.check_stadium_horizon(lull, now) is None
 
 
 # ── Health report ─────────────────────────────────────────────────────────────

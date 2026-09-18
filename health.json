@@ -1,5 +1,5 @@
 {
-  "generated_at": "2026-09-18T09:43:17.806294+00:00",
+  "generated_at": "2026-09-18T09:54:34.243555+00:00",
   "calendar": {
     "total": 79,
     "upcoming": 42,
@@ -84,7 +84,7 @@
     },
     "fetch_mining_indaba": {
       "name": "Investing in African Mining Indaba",
-      "source": "jsonld",
+      "source": "computed",
       "last_live": "2026-09-18",
       "start_date": "2027-02-08",
       "end_date": "2027-02-11",
@@ -163,5 +163,7 @@
       "url": "https://www.fameweekafrica.com/"
     }
   },
-  "degradations": []
+  "degradations": [
+    "fetch_mining_indaba: has not read a live date since 2026-09-18 (now falling back to 'computed')"
+  ]
 }
