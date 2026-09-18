@@ -42,6 +42,20 @@ SAST = ZoneInfo("Africa/Johannesburg")
 ICS_PATH = "dhl_stadium.ics"
 HEALTH_PATH = "health.json"
 
+# Scrapers whose fall-back to a computed date is known and accepted, keyed by fetcher
+# name. Their sites do not publish the next edition's date until close to the event,
+# so every year they legitimately coast on the computed rule for months. Listed here
+# they are still *reported* by --check-health (so the coasting stays visible), but
+# they do not fail the workflow. Any degradation NOT in this set still turns CI red,
+# which is the whole point of the health check (CLAUDE.md convention 1) — so keep the
+# set tight, and drop an entry the moment its scraper reads a live date again.
+ACKNOWLEDGED_DEGRADATIONS = frozenset(
+    {
+        "fetch_mining_indaba",
+        "fetch_africa_energy_indaba",
+    }
+)
+
 CALENDAR_NAME = "Cape Town Traffic Events"
 CALENDAR_DESCRIPTION = (
     "DHL Stadium fixtures plus the races, parades and CTICC conferences that close "
@@ -1070,10 +1084,33 @@ def check_health_file(path: str = HEALTH_PATH) -> int:
     if not degradations:
         print("Health check passed: no source degraded since the previous run.")
         return 0
+
+    # Acknowledged degradations are still logged so the coasting stays visible, but
+    # they do not fail the job. Only an unacknowledged one turns CI red.
+    acknowledged = [line for line in degradations if _is_acknowledged(line)]
+    blocking = [line for line in degradations if not _is_acknowledged(line)]
+
+    for line in acknowledged:
+        print(f"Health check: acknowledged degradation (not failing):\n  - {line}")
+
+    if not blocking:
+        print("Health check passed: only acknowledged degradations remain.")
+        return 0
     print("Health check failed:")
-    for line in degradations:
+    for line in blocking:
         print(f"  - {line}")
     return 1
+
+
+def _is_acknowledged(line: str) -> bool:
+    """Whether a degradation line belongs to an acknowledged scraper.
+
+    Degradation lines are formatted ``f"{fetcher}: ..."`` (see ``find_degradations``),
+    so match on the ``"{fetcher}: "`` prefix. Horizon / baseline warnings carry no
+    such fetcher prefix and so are never acknowledged — a moving-target problem should
+    always fail the job.
+    """
+    return any(line.startswith(f"{key}: ") for key in ACKNOWLEDGED_DEGRADATIONS)
 
 
 def generate(ics_path: str = ICS_PATH, health_path: str = HEALTH_PATH,

@@ -36,6 +36,11 @@ CBD / Green Point / Atlantic-seaboard traffic and publishes them as `dhl_stadium
    used to read a live date stops doing so. That comparison is against each source's
    `last_live`, not against the previous run: the workflow commits the report it just
    wrote, so a pairwise diff would alarm once and then accept broken as the new normal.
+   A scraper whose site legitimately stays silent for months (an annual conference that
+   only publishes next year's date near the event) can be listed by fetcher name in
+   `ACKNOWLEDGED_DEGRADATIONS` (in `generate_dhl_ics.py`): `--check-health` still logs it
+   but no longer fails the workflow for it, while any *other* degradation still goes red.
+   Keep the set tight and drop an entry the moment its scraper reads a live date again.
    When you touch a scraper, still:
    - Run the fetcher and check `source` is what you expect, not just that a date came back.
    - Fetch the target page (`city_events.safe_get(url)` for the exact bytes the scraper
