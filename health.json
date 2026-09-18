@@ -1,5 +1,5 @@
 {
-  "generated_at": "2026-09-18T09:54:34.243555+00:00",
+  "generated_at": "2026-09-18T10:07:22.356109+00:00",
   "calendar": {
     "total": 79,
     "upcoming": 42,
@@ -132,7 +132,7 @@
     },
     "fetch_africa_energy_indaba": {
       "name": "Africa Energy Indaba",
-      "source": "text",
+      "source": "computed",
       "last_live": "2026-09-18",
       "start_date": "2027-03-02",
       "end_date": "2027-03-04",
@@ -164,6 +164,7 @@
     }
   },
   "degradations": [
-    "fetch_mining_indaba: has not read a live date since 2026-09-18 (now falling back to 'computed')"
+    "fetch_mining_indaba: has not read a live date since 2026-09-18 (now falling back to 'computed')",
+    "fetch_africa_energy_indaba: has not read a live date since 2026-09-18 (now falling back to 'computed')"
   ]
 }
