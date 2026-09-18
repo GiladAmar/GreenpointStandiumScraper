@@ -827,15 +827,34 @@ def test_calendar_carries_the_metadata_clients_display():
     raw = gen.build_calendar(gen.stamp_events(SAMPLE_EVENTS, [])).to_ical().decode()
     for prop in ("X-WR-CALNAME", "X-WR-CALDESC", "X-WR-TIMEZONE", "METHOD:PUBLISH",
                  "REFRESH-INTERVAL;VALUE=DURATION:PT12H", "X-PUBLISHED-TTL:PT12H",
-                 "BEGIN:VTIMEZONE", "TZID:Africa/Johannesburg"):
+                 "BEGIN:VTIMEZONE", "TZID:Africa/Johannesburg",
+                 # RFC 7986: standard counterparts so modern clients name, describe
+                 # and can refresh the calendar without relying on the X-WR-* forms.
+                 f"UID:{gen.CALENDAR_UID}", f"NAME:{gen.CALENDAR_NAME}",
+                 "DESCRIPTION:DHL Stadium", "SOURCE;VALUE=URI:", "LAST-MODIFIED:"):
         assert prop in raw, f"missing {prop}"
     assert raw.count("DTSTAMP:") == len(SAMPLE_EVENTS)  # required by RFC 5545
+    assert raw.count("STATUS:CONFIRMED") == len(SAMPLE_EVENTS)
 
 
 def test_timed_events_are_published_in_sast_not_utc():
     raw = gen.build_calendar(gen.stamp_events(SAMPLE_EVENTS, [])).to_ical().decode()
     assert "DTSTART;TZID=Africa/Johannesburg:20270314T160000" in raw
     assert "DTSTART;VALUE=DATE:20270314" in raw
+
+
+def test_a_timed_record_with_an_offset_serialises_as_africa_johannesburg():
+    """First Thursdays reach get_city_events as ISO strings carrying a +02:00
+    offset; fromisoformat rebuilds that as a fixed-offset tz, which icalendar
+    would otherwise write as TZID="UTC+02:00" — a TZID with no VTIMEZONE and out
+    of step with the stadium events. It must normalise back to the ZoneInfo."""
+    record = {"name": "First Thursdays", "url": "https://first-thursdays.co.za/",
+              "start_date": "2026-11-05T16:00:00+02:00",
+              "end_date": "2026-11-05T23:00:00+02:00", "source": events.SOURCE_COMPUTED}
+    raw = gen.build_calendar(
+        gen.stamp_events(gen.get_city_events([record]), [])).to_ical().decode()
+    assert 'DTSTART;TZID=Africa/Johannesburg:20261105T160000' in raw
+    assert 'UTC+02:00' not in raw
 
 
 def test_rebuilding_unchanged_events_leaves_the_file_identical():

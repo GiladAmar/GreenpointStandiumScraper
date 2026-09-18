@@ -47,6 +47,15 @@ CALENDAR_DESCRIPTION = (
     "roads around Green Point, Sea Point, the Atlantic seaboard and the CBD."
 )
 PRODID = "-//GreenpointStadiumScraper//Cape Town Traffic Events//EN"
+# A stable identifier for the calendar itself (RFC 7986 §5.3), so a client can tell
+# two subscriptions apart and recognise this one across refreshes.
+CALENDAR_UID = "cape-town-traffic-events@greenpoint-stadium-scraper"
+# Where the published feed lives. Emitted as SOURCE (RFC 7986 §5.8) so a client that
+# imports the file rather than subscribing can still find its way back to refresh.
+CALENDAR_SOURCE = (
+    "https://raw.githubusercontent.com/GiladAmar/GreenpointStandiumScraper/"
+    "refs/heads/master/dhl_stadium.ics"
+)
 # Clients are told to re-read the feed twice a day; the file itself is rebuilt on
 # the 1st and 15th, so this only bounds how stale a subscriber can be.
 REFRESH_INTERVAL = timedelta(hours=12)
@@ -189,6 +198,17 @@ def _as_instant(value: Union[date, datetime]) -> datetime:
     if isinstance(value, datetime):
         return value.astimezone(SAST) if value.tzinfo else value.replace(tzinfo=SAST)
     return datetime(value.year, value.month, value.day, tzinfo=SAST)
+
+
+def _to_sast(value: datetime) -> datetime:
+    """Re-express a timed datetime on the SAST ZoneInfo.
+
+    A datetime parsed from an ISO string carries a fixed-offset tzinfo, which
+    icalendar serialises as TZID="UTC+02:00" (a TZID with no VTIMEZONE, and out
+    of step with the stadium events). Converting to the ZoneInfo keeps the same
+    instant while making every timed event serialise as Africa/Johannesburg.
+    """
+    return value.astimezone(SAST) if value.tzinfo else value.replace(tzinfo=SAST)
 
 
 def _uid_date(value: Union[date, datetime]) -> date:
@@ -406,8 +426,12 @@ def get_city_events(records: Iterable[Dict[str, str]]) -> List[CalEvent]:
             start_raw = record["start_date"]
             end_raw = record.get("end_date") or start_raw
             if "T" in start_raw:
-                start: Union[date, datetime] = datetime.fromisoformat(start_raw)
-                end: Union[date, datetime] = datetime.fromisoformat(end_raw)
+                # fromisoformat rebuilds an offset like "+02:00" as a fixed-offset
+                # tzinfo, which icalendar renders as TZID="UTC+02:00" — a TZID with
+                # no matching VTIMEZONE and inconsistent with the stadium events.
+                # Normalise back to the SAST ZoneInfo so every timed event agrees.
+                start: Union[date, datetime] = _to_sast(datetime.fromisoformat(start_raw))
+                end: Union[date, datetime] = _to_sast(datetime.fromisoformat(end_raw))
             else:
                 start = date.fromisoformat(start_raw)
                 end = date.fromisoformat(end_raw) + timedelta(days=1)  # exclusive
@@ -670,12 +694,28 @@ def build_calendar(events: List[CalEvent]) -> Calendar:
     calendar.add("version", "2.0")
     calendar.add("calscale", "GREGORIAN")
     calendar.add("method", "PUBLISH")
+    # RFC 7986 names for the calendar's identity and metadata. Modern clients read
+    # these; the X-WR-* forms below are the older Apple/Google convention, kept so
+    # both generations of client name and describe the subscription correctly.
+    calendar.add("uid", CALENDAR_UID)
+    calendar.add("name", CALENDAR_NAME)
+    calendar.add("description", CALENDAR_DESCRIPTION)
+    calendar.add("source", CALENDAR_SOURCE, parameters={"VALUE": "URI"})
     calendar.add("x-wr-calname", CALENDAR_NAME)
     calendar.add("x-wr-caldesc", CALENDAR_DESCRIPTION)
     calendar.add("x-wr-timezone", "Africa/Johannesburg")
     calendar.add("refresh-interval", REFRESH_INTERVAL, parameters={"VALUE": "DURATION"})
     calendar.add("x-published-ttl", vDuration(REFRESH_INTERVAL))
-    calendar.add_component(Timezone.from_tzid("Africa/Johannesburg"))
+    # LAST-MODIFIED for the calendar as a whole is the most recent event stamp, so it
+    # reflects real content changes and stays byte-stable across a no-op rebuild.
+    stamps = [ev.dtstamp for ev in events if ev.dtstamp]
+    if stamps:
+        calendar.add("last-modified", max(stamps))
+    tz = Timezone.from_tzid("Africa/Johannesburg")
+    # from_tzid stamps a COMMENT ("only works from 1970-01-01 to 2038-01-01") that
+    # some clients surface to the user; drop the noise, the SA offset is fixed anyway.
+    tz.pop("COMMENT", None)
+    calendar.add_component(tz)
 
     for event in events:
         component = Event()
@@ -693,6 +733,7 @@ def build_calendar(events: List[CalEvent]) -> Calendar:
             component.add("location", event.location)
         component.add("categories", [event.category])
         component.add("sequence", event.sequence)
+        component.add("status", "CONFIRMED")
         component.add("last-modified", event.dtstamp)
         component.add("transp", "TRANSPARENT")
         calendar.add_component(component)

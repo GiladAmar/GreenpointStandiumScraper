@@ -3,16 +3,23 @@ VERSION:2.0
 PRODID:-//GreenpointStadiumScraper//Cape Town Traffic Events//EN
 CALSCALE:GREGORIAN
 METHOD:PUBLISH
+DESCRIPTION:DHL Stadium fixtures plus the races\, parades and CTICC confer
+ ences that close roads around Green Point\, Sea Point\, the Atlantic seabo
+ ard and the CBD.
 X-WR-CALDESC:DHL Stadium fixtures plus the races, parades and CTICC confer
  ences that close roads around Green Point, Sea Point, the Atlantic seaboar
  d and the CBD.
+NAME:Cape Town Traffic Events
 X-WR-CALNAME:Cape Town Traffic Events
+LAST-MODIFIED:20260917T221628Z
 REFRESH-INTERVAL;VALUE=DURATION:PT12H
+SOURCE;VALUE=URI:https://raw.githubusercontent.com/GiladAmar/GreenpointSta
+ ndiumScraper/refs/heads/master/dhl_stadium.ics
+UID:cape-town-traffic-events@greenpoint-stadium-scraper
 X-PUBLISHED-TTL:PT12H
 X-WR-TIMEZONE:Africa/Johannesburg
 BEGIN:VTIMEZONE
 TZID:Africa/Johannesburg
-COMMENT:This timezone only works from 1970-01-01 to 2038-01-01.
 BEGIN:STANDARD
 DTSTART:19700101T000000
 TZNAME:SAST
@@ -31,6 +38,7 @@ CATEGORIES:DHL Stadium
 DESCRIPTION:DHL Stormers takes on Leinster in their first home game of the
   2025/6 Vodacom URC season.
 LAST-MODIFIED:20260917T221524Z
+STATUS:CONFIRMED
 TRANSP:TRANSPARENT
 END:VEVENT
 BEGIN:VEVENT
@@ -43,6 +51,7 @@ SEQUENCE:0
 CATEGORIES:DHL Stadium
 DESCRIPTION:DHL Stormers take on Ospreys.
 LAST-MODIFIED:20260917T221524Z
+STATUS:CONFIRMED
 TRANSP:TRANSPARENT
 END:VEVENT
 BEGIN:VEVENT
@@ -56,6 +65,7 @@ CATEGORIES:DHL Stadium
 DESCRIPTION:This Summit unites school sport educators\, coaches\, and lead
  ers for two days of learning and collaboration.
 LAST-MODIFIED:20260917T221524Z
+STATUS:CONFIRMED
 TRANSP:TRANSPARENT
 END:VEVENT
 BEGIN:VEVENT
@@ -69,6 +79,7 @@ CATEGORIES:DHL Stadium
 DESCRIPTION:SACO 2025 International Conference | 4–5 November at DHL Sta
  dium
 LAST-MODIFIED:20260917T213356Z
+STATUS:CONFIRMED
 TRANSP:TRANSPARENT
 END:VEVENT
 BEGIN:VEVENT
@@ -82,6 +93,7 @@ CATEGORIES:DHL Stadium
 DESCRIPTION:Join us for one of the most coveted tasting events on the Sout
  h African wine calendar.
 LAST-MODIFIED:20260917T221524Z
+STATUS:CONFIRMED
 TRANSP:TRANSPARENT
 END:VEVENT
 BEGIN:VEVENT
@@ -95,19 +107,7 @@ CATEGORIES:DHL Stadium
 DESCRIPTION:HSBC SVNS returns to DHL Stadium for a weekend of world-class 
  rugby\, live music\, food\, and unforgettable vibes.
 LAST-MODIFIED:20260917T213356Z
-TRANSP:TRANSPARENT
-END:VEVENT
-BEGIN:VEVENT
-SUMMARY:HSBC SVNS Cape Town
-DTSTART;TZID=Africa/Johannesburg:20261205T100000
-DTEND;TZID=Africa/Johannesburg:20261206T235959
-DTSTAMP:20260917T213356Z
-UID:22b3b3a68c4c17d2@greenpoint-stadium-scraper
-SEQUENCE:1
-CATEGORIES:DHL Stadium
-DESCRIPTION:HSBC SVNS returns to DHL Stadium for a weekend of world-class 
- rugby\, live music\, food\, and unforgettable vibes.
-LAST-MODIFIED:20260917T213356Z
+STATUS:CONFIRMED
 TRANSP:TRANSPARENT
 END:VEVENT
 BEGIN:VEVENT
@@ -121,6 +121,7 @@ CATEGORIES:DHL Stadium
 DESCRIPTION:Join us for the season finale of the 2025 FIM World Supercross
   Championship on December 13.
 LAST-MODIFIED:20260917T221524Z
+STATUS:CONFIRMED
 TRANSP:TRANSPARENT
 END:VEVENT
 BEGIN:VEVENT
@@ -133,6 +134,7 @@ SEQUENCE:0
 CATEGORIES:DHL Stadium
 DESCRIPTION:DHL Stormers takes on Emirates Lions on 20 December 2025.
 LAST-MODIFIED:20260917T221524Z
+STATUS:CONFIRMED
 TRANSP:TRANSPARENT
 END:VEVENT
 BEGIN:VEVENT
@@ -147,351 +149,7 @@ DESCRIPTION:Monthly art-and-culture evening — CBD galleries and venues o
  pen late (16:00–23:00)\, bringing foot traffic and parking pressure to t
  he city centre.\n\nMore info: https://first-thursdays.co.za/
 LAST-MODIFIED:20260917T213356Z
-TRANSP:TRANSPARENT
-URL:https://first-thursdays.co.za/
-END:VEVENT
-BEGIN:VEVENT
-SUMMARY:First Thursdays
-DTSTART;TZID=Africa/Johannesburg:20260205T160000
-DTEND;TZID=Africa/Johannesburg:20260205T230000
-DTSTAMP:20260917T213356Z
-UID:d2372f93c76bc23c@greenpoint-stadium-scraper
-SEQUENCE:0
-CATEGORIES:City Event
-DESCRIPTION:Monthly art-and-culture evening — CBD galleries and venues o
- pen late (16:00–23:00)\, bringing foot traffic and parking pressure to t
- he city centre.\n\nMore info: https://first-thursdays.co.za/
-LAST-MODIFIED:20260917T213356Z
-TRANSP:TRANSPARENT
-URL:https://first-thursdays.co.za/
-END:VEVENT
-BEGIN:VEVENT
-SUMMARY:First Thursdays
-DTSTART;TZID=Africa/Johannesburg:20260305T160000
-DTEND;TZID=Africa/Johannesburg:20260305T230000
-DTSTAMP:20260917T213356Z
-UID:d73857d38b872a67@greenpoint-stadium-scraper
-SEQUENCE:0
-CATEGORIES:City Event
-DESCRIPTION:Monthly art-and-culture evening — CBD galleries and venues o
- pen late (16:00–23:00)\, bringing foot traffic and parking pressure to t
- he city centre.\n\nMore info: https://first-thursdays.co.za/
-LAST-MODIFIED:20260917T213356Z
-TRANSP:TRANSPARENT
-URL:https://first-thursdays.co.za/
-END:VEVENT
-BEGIN:VEVENT
-SUMMARY:First Thursdays
-DTSTART;TZID=Africa/Johannesburg:20260402T160000
-DTEND;TZID=Africa/Johannesburg:20260402T230000
-DTSTAMP:20260917T213356Z
-UID:d525f44b4faa1872@greenpoint-stadium-scraper
-SEQUENCE:0
-CATEGORIES:City Event
-DESCRIPTION:Monthly art-and-culture evening — CBD galleries and venues o
- pen late (16:00–23:00)\, bringing foot traffic and parking pressure to t
- he city centre.\n\nMore info: https://first-thursdays.co.za/
-LAST-MODIFIED:20260917T213356Z
-TRANSP:TRANSPARENT
-URL:https://first-thursdays.co.za/
-END:VEVENT
-BEGIN:VEVENT
-SUMMARY:First Thursdays
-DTSTART;TZID=Africa/Johannesburg:20260507T160000
-DTEND;TZID=Africa/Johannesburg:20260507T230000
-DTSTAMP:20260917T213356Z
-UID:7852f43c017a1570@greenpoint-stadium-scraper
-SEQUENCE:0
-CATEGORIES:City Event
-DESCRIPTION:Monthly art-and-culture evening — CBD galleries and venues o
- pen late (16:00–23:00)\, bringing foot traffic and parking pressure to t
- he city centre.\n\nMore info: https://first-thursdays.co.za/
-LAST-MODIFIED:20260917T213356Z
-TRANSP:TRANSPARENT
-URL:https://first-thursdays.co.za/
-END:VEVENT
-BEGIN:VEVENT
-SUMMARY:First Thursdays
-DTSTART;TZID=Africa/Johannesburg:20260604T160000
-DTEND;TZID=Africa/Johannesburg:20260604T230000
-DTSTAMP:20260917T213356Z
-UID:3a4a38c165d8f559@greenpoint-stadium-scraper
-SEQUENCE:0
-CATEGORIES:City Event
-DESCRIPTION:Monthly art-and-culture evening — CBD galleries and venues o
- pen late (16:00–23:00)\, bringing foot traffic and parking pressure to t
- he city centre.\n\nMore info: https://first-thursdays.co.za/
-LAST-MODIFIED:20260917T213356Z
-TRANSP:TRANSPARENT
-URL:https://first-thursdays.co.za/
-END:VEVENT
-BEGIN:VEVENT
-SUMMARY:First Thursdays
-DTSTART;TZID=Africa/Johannesburg:20260702T160000
-DTEND;TZID=Africa/Johannesburg:20260702T230000
-DTSTAMP:20260917T213356Z
-UID:b7fd37516ad2b3e5@greenpoint-stadium-scraper
-SEQUENCE:0
-CATEGORIES:City Event
-DESCRIPTION:Monthly art-and-culture evening — CBD galleries and venues o
- pen late (16:00–23:00)\, bringing foot traffic and parking pressure to t
- he city centre.\n\nMore info: https://first-thursdays.co.za/
-LAST-MODIFIED:20260917T213356Z
-TRANSP:TRANSPARENT
-URL:https://first-thursdays.co.za/
-END:VEVENT
-BEGIN:VEVENT
-SUMMARY:First Thursdays
-DTSTART;TZID=Africa/Johannesburg:20260806T160000
-DTEND;TZID=Africa/Johannesburg:20260806T230000
-DTSTAMP:20260917T213356Z
-UID:c9e279b3933f19ba@greenpoint-stadium-scraper
-SEQUENCE:0
-CATEGORIES:City Event
-DESCRIPTION:Monthly art-and-culture evening — CBD galleries and venues o
- pen late (16:00–23:00)\, bringing foot traffic and parking pressure to t
- he city centre.\n\nMore info: https://first-thursdays.co.za/
-LAST-MODIFIED:20260917T213356Z
-TRANSP:TRANSPARENT
-URL:https://first-thursdays.co.za/
-END:VEVENT
-BEGIN:VEVENT
-SUMMARY:First Thursdays
-DTSTART;TZID=Africa/Johannesburg:20260903T160000
-DTEND;TZID=Africa/Johannesburg:20260903T230000
-DTSTAMP:20260917T213356Z
-UID:4b0d224d8b45ab26@greenpoint-stadium-scraper
-SEQUENCE:0
-CATEGORIES:City Event
-DESCRIPTION:Monthly art-and-culture evening — CBD galleries and venues o
- pen late (16:00–23:00)\, bringing foot traffic and parking pressure to t
- he city centre.\n\nMore info: https://first-thursdays.co.za/
-LAST-MODIFIED:20260917T213356Z
-TRANSP:TRANSPARENT
-URL:https://first-thursdays.co.za/
-END:VEVENT
-BEGIN:VEVENT
-SUMMARY:First Thursdays
-DTSTART;TZID=Africa/Johannesburg:20261001T160000
-DTEND;TZID=Africa/Johannesburg:20261001T230000
-DTSTAMP:20260917T213356Z
-UID:7ae726b669d70ade@greenpoint-stadium-scraper
-SEQUENCE:0
-CATEGORIES:City Event
-DESCRIPTION:Monthly art-and-culture evening — CBD galleries and venues o
- pen late (16:00–23:00)\, bringing foot traffic and parking pressure to t
- he city centre.\n\nMore info: https://first-thursdays.co.za/
-LAST-MODIFIED:20260917T213356Z
-TRANSP:TRANSPARENT
-URL:https://first-thursdays.co.za/
-END:VEVENT
-BEGIN:VEVENT
-SUMMARY:First Thursdays
-DTSTART;TZID=Africa/Johannesburg:20261105T160000
-DTEND;TZID=Africa/Johannesburg:20261105T230000
-DTSTAMP:20260917T213356Z
-UID:c9ffe84c12d39af0@greenpoint-stadium-scraper
-SEQUENCE:0
-CATEGORIES:City Event
-DESCRIPTION:Monthly art-and-culture evening — CBD galleries and venues o
- pen late (16:00–23:00)\, bringing foot traffic and parking pressure to t
- he city centre.\n\nMore info: https://first-thursdays.co.za/
-LAST-MODIFIED:20260917T213356Z
-TRANSP:TRANSPARENT
-URL:https://first-thursdays.co.za/
-END:VEVENT
-BEGIN:VEVENT
-SUMMARY:First Thursdays
-DTSTART;TZID=Africa/Johannesburg:20261203T160000
-DTEND;TZID=Africa/Johannesburg:20261203T230000
-DTSTAMP:20260917T213356Z
-UID:76d7846bad06c633@greenpoint-stadium-scraper
-SEQUENCE:0
-CATEGORIES:City Event
-DESCRIPTION:Monthly art-and-culture evening — CBD galleries and venues o
- pen late (16:00–23:00)\, bringing foot traffic and parking pressure to t
- he city centre.\n\nMore info: https://first-thursdays.co.za/
-LAST-MODIFIED:20260917T213356Z
-TRANSP:TRANSPARENT
-URL:https://first-thursdays.co.za/
-END:VEVENT
-BEGIN:VEVENT
-SUMMARY:First Thursdays
-DTSTART;TZID=Africa/Johannesburg:20270107T160000
-DTEND;TZID=Africa/Johannesburg:20270107T230000
-DTSTAMP:20260917T213356Z
-UID:bc263faa4ae49d75@greenpoint-stadium-scraper
-SEQUENCE:0
-CATEGORIES:City Event
-DESCRIPTION:Monthly art-and-culture evening — CBD galleries and venues o
- pen late (16:00–23:00)\, bringing foot traffic and parking pressure to t
- he city centre.\n\nMore info: https://first-thursdays.co.za/
-LAST-MODIFIED:20260917T213356Z
-TRANSP:TRANSPARENT
-URL:https://first-thursdays.co.za/
-END:VEVENT
-BEGIN:VEVENT
-SUMMARY:First Thursdays
-DTSTART;TZID=Africa/Johannesburg:20270204T160000
-DTEND;TZID=Africa/Johannesburg:20270204T230000
-DTSTAMP:20260917T213356Z
-UID:0c8ca35aee5ff7ae@greenpoint-stadium-scraper
-SEQUENCE:0
-CATEGORIES:City Event
-DESCRIPTION:Monthly art-and-culture evening — CBD galleries and venues o
- pen late (16:00–23:00)\, bringing foot traffic and parking pressure to t
- he city centre.\n\nMore info: https://first-thursdays.co.za/
-LAST-MODIFIED:20260917T213356Z
-TRANSP:TRANSPARENT
-URL:https://first-thursdays.co.za/
-END:VEVENT
-BEGIN:VEVENT
-SUMMARY:First Thursdays
-DTSTART;TZID=Africa/Johannesburg:20270304T160000
-DTEND;TZID=Africa/Johannesburg:20270304T230000
-DTSTAMP:20260917T213356Z
-UID:67e7f6493c10737b@greenpoint-stadium-scraper
-SEQUENCE:0
-CATEGORIES:City Event
-DESCRIPTION:Monthly art-and-culture evening — CBD galleries and venues o
- pen late (16:00–23:00)\, bringing foot traffic and parking pressure to t
- he city centre.\n\nMore info: https://first-thursdays.co.za/
-LAST-MODIFIED:20260917T213356Z
-TRANSP:TRANSPARENT
-URL:https://first-thursdays.co.za/
-END:VEVENT
-BEGIN:VEVENT
-SUMMARY:First Thursdays
-DTSTART;TZID=Africa/Johannesburg:20270401T160000
-DTEND;TZID=Africa/Johannesburg:20270401T230000
-DTSTAMP:20260917T213356Z
-UID:6da66b9e400f2eac@greenpoint-stadium-scraper
-SEQUENCE:0
-CATEGORIES:City Event
-DESCRIPTION:Monthly art-and-culture evening — CBD galleries and venues o
- pen late (16:00–23:00)\, bringing foot traffic and parking pressure to t
- he city centre.\n\nMore info: https://first-thursdays.co.za/
-LAST-MODIFIED:20260917T213356Z
-TRANSP:TRANSPARENT
-URL:https://first-thursdays.co.za/
-END:VEVENT
-BEGIN:VEVENT
-SUMMARY:First Thursdays
-DTSTART;TZID=Africa/Johannesburg:20270506T160000
-DTEND;TZID=Africa/Johannesburg:20270506T230000
-DTSTAMP:20260917T213356Z
-UID:4ac1fc5aa335e5f8@greenpoint-stadium-scraper
-SEQUENCE:0
-CATEGORIES:City Event
-DESCRIPTION:Monthly art-and-culture evening — CBD galleries and venues o
- pen late (16:00–23:00)\, bringing foot traffic and parking pressure to t
- he city centre.\n\nMore info: https://first-thursdays.co.za/
-LAST-MODIFIED:20260917T213356Z
-TRANSP:TRANSPARENT
-URL:https://first-thursdays.co.za/
-END:VEVENT
-BEGIN:VEVENT
-SUMMARY:First Thursdays
-DTSTART;TZID=Africa/Johannesburg:20270603T160000
-DTEND;TZID=Africa/Johannesburg:20270603T230000
-DTSTAMP:20260917T213356Z
-UID:034e2855720ab6d9@greenpoint-stadium-scraper
-SEQUENCE:0
-CATEGORIES:City Event
-DESCRIPTION:Monthly art-and-culture evening — CBD galleries and venues o
- pen late (16:00–23:00)\, bringing foot traffic and parking pressure to t
- he city centre.\n\nMore info: https://first-thursdays.co.za/
-LAST-MODIFIED:20260917T213356Z
-TRANSP:TRANSPARENT
-URL:https://first-thursdays.co.za/
-END:VEVENT
-BEGIN:VEVENT
-SUMMARY:First Thursdays
-DTSTART;TZID=Africa/Johannesburg:20270701T160000
-DTEND;TZID=Africa/Johannesburg:20270701T230000
-DTSTAMP:20260917T213356Z
-UID:41d02b49fd1e0aac@greenpoint-stadium-scraper
-SEQUENCE:0
-CATEGORIES:City Event
-DESCRIPTION:Monthly art-and-culture evening — CBD galleries and venues o
- pen late (16:00–23:00)\, bringing foot traffic and parking pressure to t
- he city centre.\n\nMore info: https://first-thursdays.co.za/
-LAST-MODIFIED:20260917T213356Z
-TRANSP:TRANSPARENT
-URL:https://first-thursdays.co.za/
-END:VEVENT
-BEGIN:VEVENT
-SUMMARY:First Thursdays
-DTSTART;TZID=Africa/Johannesburg:20270805T160000
-DTEND;TZID=Africa/Johannesburg:20270805T230000
-DTSTAMP:20260917T213356Z
-UID:284ed2ba7c87b5c8@greenpoint-stadium-scraper
-SEQUENCE:0
-CATEGORIES:City Event
-DESCRIPTION:Monthly art-and-culture evening — CBD galleries and venues o
- pen late (16:00–23:00)\, bringing foot traffic and parking pressure to t
- he city centre.\n\nMore info: https://first-thursdays.co.za/
-LAST-MODIFIED:20260917T213356Z
-TRANSP:TRANSPARENT
-URL:https://first-thursdays.co.za/
-END:VEVENT
-BEGIN:VEVENT
-SUMMARY:First Thursdays
-DTSTART;TZID=Africa/Johannesburg:20270902T160000
-DTEND;TZID=Africa/Johannesburg:20270902T230000
-DTSTAMP:20260917T213356Z
-UID:170a43d6993ee0fa@greenpoint-stadium-scraper
-SEQUENCE:0
-CATEGORIES:City Event
-DESCRIPTION:Monthly art-and-culture evening — CBD galleries and venues o
- pen late (16:00–23:00)\, bringing foot traffic and parking pressure to t
- he city centre.\n\nMore info: https://first-thursdays.co.za/
-LAST-MODIFIED:20260917T213356Z
-TRANSP:TRANSPARENT
-URL:https://first-thursdays.co.za/
-END:VEVENT
-BEGIN:VEVENT
-SUMMARY:First Thursdays
-DTSTART;TZID=Africa/Johannesburg:20271007T160000
-DTEND;TZID=Africa/Johannesburg:20271007T230000
-DTSTAMP:20260917T213356Z
-UID:acb7a44ca5cb2bfc@greenpoint-stadium-scraper
-SEQUENCE:0
-CATEGORIES:City Event
-DESCRIPTION:Monthly art-and-culture evening — CBD galleries and venues o
- pen late (16:00–23:00)\, bringing foot traffic and parking pressure to t
- he city centre.\n\nMore info: https://first-thursdays.co.za/
-LAST-MODIFIED:20260917T213356Z
-TRANSP:TRANSPARENT
-URL:https://first-thursdays.co.za/
-END:VEVENT
-BEGIN:VEVENT
-SUMMARY:First Thursdays
-DTSTART;TZID=Africa/Johannesburg:20271104T160000
-DTEND;TZID=Africa/Johannesburg:20271104T230000
-DTSTAMP:20260917T213356Z
-UID:bdffe21a3bc5262e@greenpoint-stadium-scraper
-SEQUENCE:0
-CATEGORIES:City Event
-DESCRIPTION:Monthly art-and-culture evening — CBD galleries and venues o
- pen late (16:00–23:00)\, bringing foot traffic and parking pressure to t
- he city centre.\n\nMore info: https://first-thursdays.co.za/
-LAST-MODIFIED:20260917T213356Z
-TRANSP:TRANSPARENT
-URL:https://first-thursdays.co.za/
-END:VEVENT
-BEGIN:VEVENT
-SUMMARY:First Thursdays
-DTSTART;TZID=Africa/Johannesburg:20271202T160000
-DTEND;TZID=Africa/Johannesburg:20271202T230000
-DTSTAMP:20260917T213356Z
-UID:82bf3dfac4e8eb3c@greenpoint-stadium-scraper
-SEQUENCE:0
-CATEGORIES:City Event
-DESCRIPTION:Monthly art-and-culture evening — CBD galleries and venues o
- pen late (16:00–23:00)\, bringing foot traffic and parking pressure to t
- he city centre.\n\nMore info: https://first-thursdays.co.za/
-LAST-MODIFIED:20260917T213356Z
+STATUS:CONFIRMED
 TRANSP:TRANSPARENT
 URL:https://first-thursdays.co.za/
 END:VEVENT
@@ -507,6 +165,7 @@ DESCRIPTION:The Cape Town Minstrel Carnival\, also known as Kaapse Klopse
  \, is a large minstrel festival held annually on January 2 in Cape Town\, 
  South Africa.
 LAST-MODIFIED:20260917T213356Z
+STATUS:CONFIRMED
 TRANSP:TRANSPARENT
 END:VEVENT
 BEGIN:VEVENT
@@ -519,19 +178,7 @@ SEQUENCE:0
 CATEGORIES:DHL Stadium
 DESCRIPTION:DHL Stormers takes on Vodacom Bulls.
 LAST-MODIFIED:20260917T221524Z
-TRANSP:TRANSPARENT
-END:VEVENT
-BEGIN:VEVENT
-SUMMARY:DHL Stormers vs Vodacom Bulls
-DTSTART;TZID=Africa/Johannesburg:20270103T150000
-DTEND;TZID=Africa/Johannesburg:20270103T235959
-DTSTAMP:20260917T221524Z
-UID:6101241ef1d221a8@greenpoint-stadium-scraper
-SEQUENCE:0
-CATEGORIES:DHL Stadium
-DESCRIPTION:DHL Stormers take on the Vodacom Bulls in the Vodacom United R
- ugby Championship Tournament.
-LAST-MODIFIED:20260917T221524Z
+STATUS:CONFIRMED
 TRANSP:TRANSPARENT
 END:VEVENT
 BEGIN:VEVENT
@@ -544,6 +191,7 @@ SEQUENCE:0
 CATEGORIES:DHL Stadium
 DESCRIPTION:DHL Stormers take on Leicester Tigers.
 LAST-MODIFIED:20260917T221524Z
+STATUS:CONFIRMED
 TRANSP:TRANSPARENT
 END:VEVENT
 BEGIN:VEVENT
@@ -556,19 +204,7 @@ SEQUENCE:0
 CATEGORIES:DHL Stadium
 DESCRIPTION:DHL Stormers take on Hollywoodbets Sharks.
 LAST-MODIFIED:20260917T221524Z
-TRANSP:TRANSPARENT
-END:VEVENT
-BEGIN:VEVENT
-SUMMARY:DHL Stormers vs Hollywoodbets Sharks
-DTSTART;TZID=Africa/Johannesburg:20261010T160000
-DTEND;TZID=Africa/Johannesburg:20261010T235959
-DTSTAMP:20260917T213356Z
-UID:1ba0ab520ed94a08@greenpoint-stadium-scraper
-SEQUENCE:0
-CATEGORIES:DHL Stadium
-DESCRIPTION:DHL Stormers take on Hollywoodbets Sharks in the 2026/7 Vodaco
- m United Rugby Championship season.
-LAST-MODIFIED:20260917T213356Z
+STATUS:CONFIRMED
 TRANSP:TRANSPARENT
 END:VEVENT
 BEGIN:VEVENT
@@ -582,6 +218,7 @@ CATEGORIES:DHL Stadium
 DESCRIPTION:Stellenbosch FC takes on CR Belouizdad in the second round of 
  the CAF Confederation Cup.
 LAST-MODIFIED:20260917T213356Z
+STATUS:CONFIRMED
 TRANSP:TRANSPARENT
 END:VEVENT
 BEGIN:VEVENT
@@ -595,7 +232,24 @@ CATEGORIES:DHL Stadium
 DESCRIPTION:Stellenbosch FC takes on Kaizer Chiefs in the  Nedbank Cup Rou
  nd of 32.
 LAST-MODIFIED:20260917T221524Z
+STATUS:CONFIRMED
 TRANSP:TRANSPARENT
+END:VEVENT
+BEGIN:VEVENT
+SUMMARY:First Thursdays
+DTSTART;TZID=Africa/Johannesburg:20260205T160000
+DTEND;TZID=Africa/Johannesburg:20260205T230000
+DTSTAMP:20260917T213356Z
+UID:d2372f93c76bc23c@greenpoint-stadium-scraper
+SEQUENCE:0
+CATEGORIES:City Event
+DESCRIPTION:Monthly art-and-culture evening — CBD galleries and venues o
+ pen late (16:00–23:00)\, bringing foot traffic and parking pressure to t
+ he city centre.\n\nMore info: https://first-thursdays.co.za/
+LAST-MODIFIED:20260917T213356Z
+STATUS:CONFIRMED
+TRANSP:TRANSPARENT
+URL:https://first-thursdays.co.za/
 END:VEVENT
 BEGIN:VEVENT
 SUMMARY:DTBS Flashes
@@ -608,6 +262,7 @@ CATEGORIES:DHL Stadium
 DESCRIPTION:We're hosting one of the Western Cape’s largest inter-school
   athletics events\,  for a day of elite competition and school spirit.
 LAST-MODIFIED:20260917T221524Z
+STATUS:CONFIRMED
 TRANSP:TRANSPARENT
 END:VEVENT
 BEGIN:VEVENT
@@ -621,6 +276,7 @@ CATEGORIES:DHL Stadium
 DESCRIPTION:Stellenbosch FC takes on Singida Black Stars in the CAF Confed
  eration Cup.
 LAST-MODIFIED:20260917T221524Z
+STATUS:CONFIRMED
 TRANSP:TRANSPARENT
 END:VEVENT
 BEGIN:VEVENT
@@ -634,22 +290,24 @@ CATEGORIES:DHL Stadium
 DESCRIPTION:Get ready for three days of cycling excitement as the Cape Tow
  n Cycle Tour Expo returns from 5–7 March 2026.
 LAST-MODIFIED:20260917T221524Z
+STATUS:CONFIRMED
 TRANSP:TRANSPARENT
 END:VEVENT
 BEGIN:VEVENT
-SUMMARY:Cape Town Cycle Tour
-DTSTART;VALUE=DATE:20270314
-DTEND;VALUE=DATE:20270315
+SUMMARY:First Thursdays
+DTSTART;TZID=Africa/Johannesburg:20260305T160000
+DTEND;TZID=Africa/Johannesburg:20260305T230000
 DTSTAMP:20260917T213356Z
-UID:c6bcfbfd19e61751@greenpoint-stadium-scraper
+UID:d73857d38b872a67@greenpoint-stadium-scraper
 SEQUENCE:0
 CATEGORIES:City Event
-DESCRIPTION:The world's largest timed cycle race (~35 000 riders). Road cl
- osures sweep the CBD\, Sea Point\, Camps Bay and the Peninsula from early 
- morning.\n\nMore info: https://www.capetowncycletour.com/
+DESCRIPTION:Monthly art-and-culture evening — CBD galleries and venues o
+ pen late (16:00–23:00)\, bringing foot traffic and parking pressure to t
+ he city centre.\n\nMore info: https://first-thursdays.co.za/
 LAST-MODIFIED:20260917T213356Z
+STATUS:CONFIRMED
 TRANSP:TRANSPARENT
-URL:https://www.capetowncycletour.com/
+URL:https://first-thursdays.co.za/
 END:VEVENT
 BEGIN:VEVENT
 SUMMARY:SA International Tattoo Convention
@@ -662,6 +320,7 @@ CATEGORIES:DHL Stadium
 DESCRIPTION:Experience three days of world-class artistry as the South Afr
  ican International Tattoo Convention takes place from 13–15 March 2026.
 LAST-MODIFIED:20260917T213356Z
+STATUS:CONFIRMED
 TRANSP:TRANSPARENT
 END:VEVENT
 BEGIN:VEVENT
@@ -674,6 +333,7 @@ SEQUENCE:0
 CATEGORIES:DHL Stadium
 DESCRIPTION:DHL Stormers take on  Dragons RFC.
 LAST-MODIFIED:20260917T213356Z
+STATUS:CONFIRMED
 TRANSP:TRANSPARENT
 END:VEVENT
 BEGIN:VEVENT
@@ -686,6 +346,7 @@ SEQUENCE:0
 CATEGORIES:DHL Stadium
 DESCRIPTION:DHL Stormers take on Edinburgh Rugby.
 LAST-MODIFIED:20260917T213356Z
+STATUS:CONFIRMED
 TRANSP:TRANSPARENT
 END:VEVENT
 BEGIN:VEVENT
@@ -699,7 +360,24 @@ CATEGORIES:DHL Stadium
 DESCRIPTION:South Africa will face Panama in a FIFA International Friendly
   match.
 LAST-MODIFIED:20260917T213356Z
+STATUS:CONFIRMED
 TRANSP:TRANSPARENT
+END:VEVENT
+BEGIN:VEVENT
+SUMMARY:First Thursdays
+DTSTART;TZID=Africa/Johannesburg:20260402T160000
+DTEND;TZID=Africa/Johannesburg:20260402T230000
+DTSTAMP:20260917T213356Z
+UID:d525f44b4faa1872@greenpoint-stadium-scraper
+SEQUENCE:0
+CATEGORIES:City Event
+DESCRIPTION:Monthly art-and-culture evening — CBD galleries and venues o
+ pen late (16:00–23:00)\, bringing foot traffic and parking pressure to t
+ he city centre.\n\nMore info: https://first-thursdays.co.za/
+LAST-MODIFIED:20260917T213356Z
+STATUS:CONFIRMED
+TRANSP:TRANSPARENT
+URL:https://first-thursdays.co.za/
 END:VEVENT
 BEGIN:VEVENT
 SUMMARY:DHL Stormers vs Connacht Rugby
@@ -712,6 +390,7 @@ CATEGORIES:DHL Stadium
 DESCRIPTION:DHL Stormers take on Connacht Rugby. DHL Stormers XXIII will a
  lso take Vodacom Bulls U23 in a friendly match.
 LAST-MODIFIED:20260917T213356Z
+STATUS:CONFIRMED
 TRANSP:TRANSPARENT
 END:VEVENT
 BEGIN:VEVENT
@@ -725,7 +404,24 @@ CATEGORIES:DHL Stadium
 DESCRIPTION:DHL Stormers take on Glasgow Warriors. DHL Stormers XXIII will
   also take on the Sharks in a friendly match.
 LAST-MODIFIED:20260917T213356Z
+STATUS:CONFIRMED
 TRANSP:TRANSPARENT
+END:VEVENT
+BEGIN:VEVENT
+SUMMARY:First Thursdays
+DTSTART;TZID=Africa/Johannesburg:20260507T160000
+DTEND;TZID=Africa/Johannesburg:20260507T230000
+DTSTAMP:20260917T213356Z
+UID:7852f43c017a1570@greenpoint-stadium-scraper
+SEQUENCE:0
+CATEGORIES:City Event
+DESCRIPTION:Monthly art-and-culture evening — CBD galleries and venues o
+ pen late (16:00–23:00)\, bringing foot traffic and parking pressure to t
+ he city centre.\n\nMore info: https://first-thursdays.co.za/
+LAST-MODIFIED:20260917T213356Z
+STATUS:CONFIRMED
+TRANSP:TRANSPARENT
+URL:https://first-thursdays.co.za/
 END:VEVENT
 BEGIN:VEVENT
 SUMMARY:Sanlam Cape Town Marathon
@@ -737,23 +433,40 @@ SEQUENCE:0
 CATEGORIES:DHL Stadium
 DESCRIPTION:Sanlam Cape Town Marathon Expo & Registration
 LAST-MODIFIED:20260917T221524Z
+STATUS:CONFIRMED
 TRANSP:TRANSPARENT
 END:VEVENT
 BEGIN:VEVENT
-SUMMARY:Sanlam Cape Town Marathon
-DTSTART;VALUE=DATE:20270522
-DTEND;VALUE=DATE:20270524
+SUMMARY:First Thursdays
+DTSTART;TZID=Africa/Johannesburg:20260604T160000
+DTEND;TZID=Africa/Johannesburg:20260604T230000
 DTSTAMP:20260917T213356Z
-UID:e96644db6dac49c0@greenpoint-stadium-scraper
+UID:3a4a38c165d8f559@greenpoint-stadium-scraper
 SEQUENCE:0
 CATEGORIES:City Event
-DESCRIPTION:City-centre marathon (IAAF-labelled). Road closures around Gre
- en Point\, Sea Point\, the CBD and southern suburbs.\n\nMore info: https:/
- /www.capetownmarathon.com/
+DESCRIPTION:Monthly art-and-culture evening — CBD galleries and venues o
+ pen late (16:00–23:00)\, bringing foot traffic and parking pressure to t
+ he city centre.\n\nMore info: https://first-thursdays.co.za/
 LAST-MODIFIED:20260917T213356Z
-LOCATION:Green Point / Sea Point / CBD / southern suburbs
+STATUS:CONFIRMED
 TRANSP:TRANSPARENT
-URL:https://www.capetownmarathon.com/
+URL:https://first-thursdays.co.za/
+END:VEVENT
+BEGIN:VEVENT
+SUMMARY:First Thursdays
+DTSTART;TZID=Africa/Johannesburg:20260702T160000
+DTEND;TZID=Africa/Johannesburg:20260702T230000
+DTSTAMP:20260917T213356Z
+UID:b7fd37516ad2b3e5@greenpoint-stadium-scraper
+SEQUENCE:0
+CATEGORIES:City Event
+DESCRIPTION:Monthly art-and-culture evening — CBD galleries and venues o
+ pen late (16:00–23:00)\, bringing foot traffic and parking pressure to t
+ he city centre.\n\nMore info: https://first-thursdays.co.za/
+LAST-MODIFIED:20260917T213356Z
+STATUS:CONFIRMED
+TRANSP:TRANSPARENT
+URL:https://first-thursdays.co.za/
 END:VEVENT
 BEGIN:VEVENT
 SUMMARY:DHL Stormers XXIII vs Sharks
@@ -767,8 +480,25 @@ DESCRIPTION:DHL Stormers XXIII takes on Hollywoodbets Sharks in the Carlin
  g Currie Cup Tournament.\n\nTicket sales: https://stormers.tmtickets.co.za
  /EDP/Event/Index/63
 LAST-MODIFIED:20260917T213356Z
+STATUS:CONFIRMED
 TRANSP:TRANSPARENT
 URL:https://stormers.tmtickets.co.za/EDP/Event/Index/63
+END:VEVENT
+BEGIN:VEVENT
+SUMMARY:First Thursdays
+DTSTART;TZID=Africa/Johannesburg:20260806T160000
+DTEND;TZID=Africa/Johannesburg:20260806T230000
+DTSTAMP:20260917T213356Z
+UID:c9e279b3933f19ba@greenpoint-stadium-scraper
+SEQUENCE:0
+CATEGORIES:City Event
+DESCRIPTION:Monthly art-and-culture evening — CBD galleries and venues o
+ pen late (16:00–23:00)\, bringing foot traffic and parking pressure to t
+ he city centre.\n\nMore info: https://first-thursdays.co.za/
+LAST-MODIFIED:20260917T213356Z
+STATUS:CONFIRMED
+TRANSP:TRANSPARENT
+URL:https://first-thursdays.co.za/
 END:VEVENT
 BEGIN:VEVENT
 SUMMARY:DHL Stormers vs All Blacks
@@ -782,6 +512,7 @@ DESCRIPTION:The DHL Stormers take on the legendary All Blacks on 7 August
  for the friendly match part of the Rugby's Greatest Rivalry Tour.\n\nTicke
  t Sales: https://springboks.tmtickets.co.za/Events
 LAST-MODIFIED:20260917T221524Z
+STATUS:CONFIRMED
 TRANSP:TRANSPARENT
 URL:https://springboks.tmtickets.co.za/Events
 END:VEVENT
@@ -796,7 +527,24 @@ CATEGORIES:DHL Stadium
 DESCRIPTION:Witness the Springboks take on the All Blacks in the Rugby's G
  reatest Rivalry Tour.
 LAST-MODIFIED:20260917T221524Z
+STATUS:CONFIRMED
 TRANSP:TRANSPARENT
+END:VEVENT
+BEGIN:VEVENT
+SUMMARY:First Thursdays
+DTSTART;TZID=Africa/Johannesburg:20260903T160000
+DTEND;TZID=Africa/Johannesburg:20260903T230000
+DTSTAMP:20260917T213356Z
+UID:4b0d224d8b45ab26@greenpoint-stadium-scraper
+SEQUENCE:0
+CATEGORIES:City Event
+DESCRIPTION:Monthly art-and-culture evening — CBD galleries and venues o
+ pen late (16:00–23:00)\, bringing foot traffic and parking pressure to t
+ he city centre.\n\nMore info: https://first-thursdays.co.za/
+LAST-MODIFIED:20260917T213356Z
+STATUS:CONFIRMED
+TRANSP:TRANSPARENT
+URL:https://first-thursdays.co.za/
 END:VEVENT
 BEGIN:VEVENT
 SUMMARY:The Gun Run
@@ -810,23 +558,39 @@ DESCRIPTION:The Outsurance Gun Run will be held on the Forecourt on Septem
  ber 12-13.\n\nMore information: https://www.outsurance.co.za/gunrun/event-
  information/
 LAST-MODIFIED:20260917T221628Z
+STATUS:CONFIRMED
 TRANSP:TRANSPARENT
 URL:https://www.outsurance.co.za/gunrun/event-information/
 END:VEVENT
 BEGIN:VEVENT
-SUMMARY:The Gun Run
-DTSTART;VALUE=DATE:20270912
-DTEND;VALUE=DATE:20270913
+SUMMARY:First Thursdays
+DTSTART;TZID=Africa/Johannesburg:20261001T160000
+DTEND;TZID=Africa/Johannesburg:20261001T230000
 DTSTAMP:20260917T213356Z
-UID:c0e59b6d76fdeee0@greenpoint-stadium-scraper
+UID:7ae726b669d70ade@greenpoint-stadium-scraper
 SEQUENCE:0
 CATEGORIES:City Event
-DESCRIPTION:Half marathon and 10 km along the Atlantic seaboard. Closures 
- on Green Point\, Sea Point and Mouille Point roads.\n\nMore info: https://
- www.outsurance.co.za/gunrun/
+DESCRIPTION:Monthly art-and-culture evening — CBD galleries and venues o
+ pen late (16:00–23:00)\, bringing foot traffic and parking pressure to t
+ he city centre.\n\nMore info: https://first-thursdays.co.za/
 LAST-MODIFIED:20260917T213356Z
+STATUS:CONFIRMED
 TRANSP:TRANSPARENT
-URL:https://www.outsurance.co.za/gunrun/
+URL:https://first-thursdays.co.za/
+END:VEVENT
+BEGIN:VEVENT
+SUMMARY:DHL Stormers vs Hollywoodbets Sharks
+DTSTART;TZID=Africa/Johannesburg:20261010T160000
+DTEND;TZID=Africa/Johannesburg:20261010T235959
+DTSTAMP:20260917T213356Z
+UID:1ba0ab520ed94a08@greenpoint-stadium-scraper
+SEQUENCE:0
+CATEGORIES:DHL Stadium
+DESCRIPTION:DHL Stormers take on Hollywoodbets Sharks in the 2026/7 Vodaco
+ m United Rugby Championship season.
+LAST-MODIFIED:20260917T213356Z
+STATUS:CONFIRMED
+TRANSP:TRANSPARENT
 END:VEVENT
 BEGIN:VEVENT
 SUMMARY:DHL Stormers vs Bristol Bears
@@ -839,6 +603,7 @@ CATEGORIES:DHL Stadium
 DESCRIPTION:DHL Stormers take on the Bristol Bears in their first game of 
  the Investec Champions Cup Tournament.
 LAST-MODIFIED:20260917T221524Z
+STATUS:CONFIRMED
 TRANSP:TRANSPARENT
 END:VEVENT
 BEGIN:VEVENT
@@ -856,6 +621,7 @@ DESCRIPTION:Heritage road race (21.1 km / 10 km / 5 km) starting at the Ci
  o.za/
 LAST-MODIFIED:20260917T213356Z
 LOCATION:Cape Town CBD (City Hall\, District Six\, Bo-Kaap\, DHL Stadium)
+STATUS:CONFIRMED
 TRANSP:TRANSPARENT
 URL:https://www.slaveroute.co.za/
 END:VEVENT
@@ -870,6 +636,7 @@ CATEGORIES:DHL Stadium
 DESCRIPTION:DHL Stormers take on the Welsh rugby team Scarlets in the Voda
  com United Rugby Championship Tournament.
 LAST-MODIFIED:20260917T221524Z
+STATUS:CONFIRMED
 TRANSP:TRANSPARENT
 END:VEVENT
 BEGIN:VEVENT
@@ -885,6 +652,7 @@ DESCRIPTION:Creative-industries conference and exhibition at the CTICC (la
  More info: https://www.fameweekafrica.com/
 LAST-MODIFIED:20260917T213356Z
 LOCATION:CTICC\, Cape Town CBD
+STATUS:CONFIRMED
 TRANSP:TRANSPARENT
 URL:https://www.fameweekafrica.com/
 END:VEVENT
@@ -899,6 +667,53 @@ CATEGORIES:DHL Stadium
 DESCRIPTION:DHL Stormers take on the Irish rugby team Ulster in the Vodaco
  m United Rugby Championship Tournament.
 LAST-MODIFIED:20260917T221524Z
+STATUS:CONFIRMED
+TRANSP:TRANSPARENT
+END:VEVENT
+BEGIN:VEVENT
+SUMMARY:First Thursdays
+DTSTART;TZID=Africa/Johannesburg:20261105T160000
+DTEND;TZID=Africa/Johannesburg:20261105T230000
+DTSTAMP:20260917T213356Z
+UID:c9ffe84c12d39af0@greenpoint-stadium-scraper
+SEQUENCE:0
+CATEGORIES:City Event
+DESCRIPTION:Monthly art-and-culture evening — CBD galleries and venues o
+ pen late (16:00–23:00)\, bringing foot traffic and parking pressure to t
+ he city centre.\n\nMore info: https://first-thursdays.co.za/
+LAST-MODIFIED:20260917T213356Z
+STATUS:CONFIRMED
+TRANSP:TRANSPARENT
+URL:https://first-thursdays.co.za/
+END:VEVENT
+BEGIN:VEVENT
+SUMMARY:First Thursdays
+DTSTART;TZID=Africa/Johannesburg:20261203T160000
+DTEND;TZID=Africa/Johannesburg:20261203T230000
+DTSTAMP:20260917T213356Z
+UID:76d7846bad06c633@greenpoint-stadium-scraper
+SEQUENCE:0
+CATEGORIES:City Event
+DESCRIPTION:Monthly art-and-culture evening — CBD galleries and venues o
+ pen late (16:00–23:00)\, bringing foot traffic and parking pressure to t
+ he city centre.\n\nMore info: https://first-thursdays.co.za/
+LAST-MODIFIED:20260917T213356Z
+STATUS:CONFIRMED
+TRANSP:TRANSPARENT
+URL:https://first-thursdays.co.za/
+END:VEVENT
+BEGIN:VEVENT
+SUMMARY:HSBC SVNS Cape Town
+DTSTART;TZID=Africa/Johannesburg:20261205T100000
+DTEND;TZID=Africa/Johannesburg:20261206T235959
+DTSTAMP:20260917T213356Z
+UID:22b3b3a68c4c17d2@greenpoint-stadium-scraper
+SEQUENCE:1
+CATEGORIES:DHL Stadium
+DESCRIPTION:HSBC SVNS returns to DHL Stadium for a weekend of world-class 
+ rugby\, live music\, food\, and unforgettable vibes.
+LAST-MODIFIED:20260917T213356Z
+STATUS:CONFIRMED
 TRANSP:TRANSPARENT
 END:VEVENT
 BEGIN:VEVENT
@@ -912,6 +727,7 @@ CATEGORIES:DHL Stadium
 DESCRIPTION:DHL Stormers take on the Lions in the Vodacom United Rugby Cha
  mpionship Tournament.
 LAST-MODIFIED:20260917T221524Z
+STATUS:CONFIRMED
 TRANSP:TRANSPARENT
 END:VEVENT
 BEGIN:VEVENT
@@ -927,6 +743,7 @@ DESCRIPTION:New Year's Eve fireworks and crowds at the V&A Waterfront. Con
   Somerset Road.\n\nMore info: https://www.waterfront.co.za/new-years-eve-c
  elebration
 LAST-MODIFIED:20260917T213356Z
+STATUS:CONFIRMED
 TRANSP:TRANSPARENT
 URL:https://www.waterfront.co.za/new-years-eve-celebration
 END:VEVENT
@@ -943,8 +760,39 @@ DESCRIPTION:The Cape Town Minstrel Carnival (Kaapse Klopse)\, a large mins
  \, Bo-Kaap and Green Point\, closing Somerset Road and Green Point Main Ro
  ad for the day.\n\nMore info: https://en.wikipedia.org/wiki/Kaapse_Klopse
 LAST-MODIFIED:20260917T213356Z
+STATUS:CONFIRMED
 TRANSP:TRANSPARENT
 URL:https://en.wikipedia.org/wiki/Kaapse_Klopse
+END:VEVENT
+BEGIN:VEVENT
+SUMMARY:DHL Stormers vs Vodacom Bulls
+DTSTART;TZID=Africa/Johannesburg:20270103T150000
+DTEND;TZID=Africa/Johannesburg:20270103T235959
+DTSTAMP:20260917T221524Z
+UID:6101241ef1d221a8@greenpoint-stadium-scraper
+SEQUENCE:0
+CATEGORIES:DHL Stadium
+DESCRIPTION:DHL Stormers take on the Vodacom Bulls in the Vodacom United R
+ ugby Championship Tournament.
+LAST-MODIFIED:20260917T221524Z
+STATUS:CONFIRMED
+TRANSP:TRANSPARENT
+END:VEVENT
+BEGIN:VEVENT
+SUMMARY:First Thursdays
+DTSTART;TZID=Africa/Johannesburg:20270107T160000
+DTEND;TZID=Africa/Johannesburg:20270107T230000
+DTSTAMP:20260917T213356Z
+UID:bc263faa4ae49d75@greenpoint-stadium-scraper
+SEQUENCE:0
+CATEGORIES:City Event
+DESCRIPTION:Monthly art-and-culture evening — CBD galleries and venues o
+ pen late (16:00–23:00)\, bringing foot traffic and parking pressure to t
+ he city centre.\n\nMore info: https://first-thursdays.co.za/
+LAST-MODIFIED:20260917T213356Z
+STATUS:CONFIRMED
+TRANSP:TRANSPARENT
+URL:https://first-thursdays.co.za/
 END:VEVENT
 BEGIN:VEVENT
 SUMMARY:DHL Stormers vs Racing 92
@@ -957,6 +805,7 @@ CATEGORIES:DHL Stadium
 DESCRIPTION:DHL Stormers take on the French team Racing 92 in the Investec
   Champions Cup.
 LAST-MODIFIED:20260917T221524Z
+STATUS:CONFIRMED
 TRANSP:TRANSPARENT
 END:VEVENT
 BEGIN:VEVENT
@@ -970,7 +819,24 @@ CATEGORIES:DHL Stadium
 DESCRIPTION:DHL Stormers take on Cardiff Rugby in the Vodacom United Rugby
   Championship Tournament.
 LAST-MODIFIED:20260917T221524Z
+STATUS:CONFIRMED
 TRANSP:TRANSPARENT
+END:VEVENT
+BEGIN:VEVENT
+SUMMARY:First Thursdays
+DTSTART;TZID=Africa/Johannesburg:20270204T160000
+DTEND;TZID=Africa/Johannesburg:20270204T230000
+DTSTAMP:20260917T213356Z
+UID:0c8ca35aee5ff7ae@greenpoint-stadium-scraper
+SEQUENCE:0
+CATEGORIES:City Event
+DESCRIPTION:Monthly art-and-culture evening — CBD galleries and venues o
+ pen late (16:00–23:00)\, bringing foot traffic and parking pressure to t
+ he city centre.\n\nMore info: https://first-thursdays.co.za/
+LAST-MODIFIED:20260917T213356Z
+STATUS:CONFIRMED
+TRANSP:TRANSPARENT
+URL:https://first-thursdays.co.za/
 END:VEVENT
 BEGIN:VEVENT
 SUMMARY:Investing in African Mining Indaba
@@ -985,6 +851,7 @@ DESCRIPTION:Africa's largest mining investment conference at the CTICC (7
  around the Foreshore and CBD for the week.\n\nMore info: https://miningind
  aba.com/
 LAST-MODIFIED:20260917T213356Z
+STATUS:CONFIRMED
 TRANSP:TRANSPARENT
 URL:https://miningindaba.com/
 END:VEVENT
@@ -1002,6 +869,7 @@ DESCRIPTION:Evening joint sitting of Parliament at the Cape Town City Hall
  nfo: https://www.parliament.gov.za/state-of-the-nation-address
 LAST-MODIFIED:20260917T213356Z
 LOCATION:Cape Town City Hall\, Darling Street\, Cape Town
+STATUS:CONFIRMED
 TRANSP:TRANSPARENT
 URL:https://www.parliament.gov.za/state-of-the-nation-address
 END:VEVENT
@@ -1016,6 +884,7 @@ CATEGORIES:City Event
 DESCRIPTION:Pride march and festival through Green Point\, Sea Point and D
  e Waterkant.\n\nMore info: https://cptpride.org/
 LAST-MODIFIED:20260917T213356Z
+STATUS:CONFIRMED
 TRANSP:TRANSPARENT
 URL:https://cptpride.org/
 END:VEVENT
@@ -1032,8 +901,41 @@ DESCRIPTION:Energy conference and exhibition at the CTICC (early March). C
  ergyindaba.com/
 LAST-MODIFIED:20260917T213356Z
 LOCATION:CTICC\, Cape Town CBD
+STATUS:CONFIRMED
 TRANSP:TRANSPARENT
 URL:https://www.africaenergyindaba.com/
+END:VEVENT
+BEGIN:VEVENT
+SUMMARY:First Thursdays
+DTSTART;TZID=Africa/Johannesburg:20270304T160000
+DTEND;TZID=Africa/Johannesburg:20270304T230000
+DTSTAMP:20260917T213356Z
+UID:67e7f6493c10737b@greenpoint-stadium-scraper
+SEQUENCE:0
+CATEGORIES:City Event
+DESCRIPTION:Monthly art-and-culture evening — CBD galleries and venues o
+ pen late (16:00–23:00)\, bringing foot traffic and parking pressure to t
+ he city centre.\n\nMore info: https://first-thursdays.co.za/
+LAST-MODIFIED:20260917T213356Z
+STATUS:CONFIRMED
+TRANSP:TRANSPARENT
+URL:https://first-thursdays.co.za/
+END:VEVENT
+BEGIN:VEVENT
+SUMMARY:Cape Town Cycle Tour
+DTSTART;VALUE=DATE:20270314
+DTEND;VALUE=DATE:20270315
+DTSTAMP:20260917T213356Z
+UID:c6bcfbfd19e61751@greenpoint-stadium-scraper
+SEQUENCE:0
+CATEGORIES:City Event
+DESCRIPTION:The world's largest timed cycle race (~35 000 riders). Road cl
+ osures sweep the CBD\, Sea Point\, Camps Bay and the Peninsula from early 
+ morning.\n\nMore info: https://www.capetowncycletour.com/
+LAST-MODIFIED:20260917T213356Z
+STATUS:CONFIRMED
+TRANSP:TRANSPARENT
+URL:https://www.capetowncycletour.com/
 END:VEVENT
 BEGIN:VEVENT
 SUMMARY:Cape Town Carnival
@@ -1047,6 +949,7 @@ DESCRIPTION:Night-time street parade on the Green Point Fan Walk. Somerset
   Road and the surrounding streets close for the evening.\n\nMore info: htt
  ps://capetowncarnival.com/
 LAST-MODIFIED:20260917T213356Z
+STATUS:CONFIRMED
 TRANSP:TRANSPARENT
 URL:https://capetowncarnival.com/
 END:VEVENT
@@ -1063,6 +966,7 @@ DESCRIPTION:Eight-day mountain-bike stage race across the Western Cape\; t
  w.epic-series.com/capeepic
 LAST-MODIFIED:20260917T213356Z
 LOCATION:Western Cape (Cape Town start/finish stages)
+STATUS:CONFIRMED
 TRANSP:TRANSPARENT
 URL:https://www.epic-series.com/capeepic
 END:VEVENT
@@ -1079,6 +983,7 @@ DESCRIPTION:Africa's largest jazz festival (~35 000 attendees) at the CTIC
   Foreshore and CBD.\n\nMore info: https://www.capetownjazzfest.com/
 LAST-MODIFIED:20260917T213356Z
 LOCATION:CTICC\, Cape Town CBD
+STATUS:CONFIRMED
 TRANSP:TRANSPARENT
 URL:https://www.capetownjazzfest.com/
 END:VEVENT
@@ -1094,8 +999,25 @@ DESCRIPTION:Ultra (56 km) on Easter Saturday and Half (21 km) on Easter Su
  nday. Closures through the southern suburbs and the peninsula.\n\nMore inf
  o: https://www.twooceansmarathon.org.za/
 LAST-MODIFIED:20260917T213356Z
+STATUS:CONFIRMED
 TRANSP:TRANSPARENT
 URL:https://www.twooceansmarathon.org.za/
+END:VEVENT
+BEGIN:VEVENT
+SUMMARY:First Thursdays
+DTSTART;TZID=Africa/Johannesburg:20270401T160000
+DTEND;TZID=Africa/Johannesburg:20270401T230000
+DTSTAMP:20260917T213356Z
+UID:6da66b9e400f2eac@greenpoint-stadium-scraper
+SEQUENCE:0
+CATEGORIES:City Event
+DESCRIPTION:Monthly art-and-culture evening — CBD galleries and venues o
+ pen late (16:00–23:00)\, bringing foot traffic and parking pressure to t
+ he city centre.\n\nMore info: https://first-thursdays.co.za/
+LAST-MODIFIED:20260917T213356Z
+STATUS:CONFIRMED
+TRANSP:TRANSPARENT
+URL:https://first-thursdays.co.za/
 END:VEVENT
 BEGIN:VEVENT
 SUMMARY:DHL Stormers vs Benetton Rugby
@@ -1108,6 +1030,7 @@ CATEGORIES:DHL Stadium
 DESCRIPTION:DHL Stormers takes on Benetton Rugby in the Vodacom United Rug
  by Championship Tournament.
 LAST-MODIFIED:20260917T213356Z
+STATUS:CONFIRMED
 TRANSP:TRANSPARENT
 END:VEVENT
 BEGIN:VEVENT
@@ -1121,7 +1044,24 @@ CATEGORIES:DHL Stadium
 DESCRIPTION:DHL Stormers takes on Benetton Rugby in the Vodacom United Rug
  by Championship Tournament.
 LAST-MODIFIED:20260917T221524Z
+STATUS:CONFIRMED
 TRANSP:TRANSPARENT
+END:VEVENT
+BEGIN:VEVENT
+SUMMARY:First Thursdays
+DTSTART;TZID=Africa/Johannesburg:20270506T160000
+DTEND;TZID=Africa/Johannesburg:20270506T230000
+DTSTAMP:20260917T213356Z
+UID:4ac1fc5aa335e5f8@greenpoint-stadium-scraper
+SEQUENCE:0
+CATEGORIES:City Event
+DESCRIPTION:Monthly art-and-culture evening — CBD galleries and venues o
+ pen late (16:00–23:00)\, bringing foot traffic and parking pressure to t
+ he city centre.\n\nMore info: https://first-thursdays.co.za/
+LAST-MODIFIED:20260917T213356Z
+STATUS:CONFIRMED
+TRANSP:TRANSPARENT
+URL:https://first-thursdays.co.za/
 END:VEVENT
 BEGIN:VEVENT
 SUMMARY:Enlit Africa
@@ -1136,7 +1076,153 @@ DESCRIPTION:Africa's largest power\, energy and water conference at the CT
  wearevuka.com/energy/enlit-africa/
 LAST-MODIFIED:20260917T213356Z
 LOCATION:CTICC\, Cape Town CBD
+STATUS:CONFIRMED
 TRANSP:TRANSPARENT
 URL:https://wearevuka.com/energy/enlit-africa/
+END:VEVENT
+BEGIN:VEVENT
+SUMMARY:Sanlam Cape Town Marathon
+DTSTART;VALUE=DATE:20270522
+DTEND;VALUE=DATE:20270524
+DTSTAMP:20260917T213356Z
+UID:e96644db6dac49c0@greenpoint-stadium-scraper
+SEQUENCE:0
+CATEGORIES:City Event
+DESCRIPTION:City-centre marathon (IAAF-labelled). Road closures around Gre
+ en Point\, Sea Point\, the CBD and southern suburbs.\n\nMore info: https:/
+ /www.capetownmarathon.com/
+LAST-MODIFIED:20260917T213356Z
+LOCATION:Green Point / Sea Point / CBD / southern suburbs
+STATUS:CONFIRMED
+TRANSP:TRANSPARENT
+URL:https://www.capetownmarathon.com/
+END:VEVENT
+BEGIN:VEVENT
+SUMMARY:First Thursdays
+DTSTART;TZID=Africa/Johannesburg:20270603T160000
+DTEND;TZID=Africa/Johannesburg:20270603T230000
+DTSTAMP:20260917T213356Z
+UID:034e2855720ab6d9@greenpoint-stadium-scraper
+SEQUENCE:0
+CATEGORIES:City Event
+DESCRIPTION:Monthly art-and-culture evening — CBD galleries and venues o
+ pen late (16:00–23:00)\, bringing foot traffic and parking pressure to t
+ he city centre.\n\nMore info: https://first-thursdays.co.za/
+LAST-MODIFIED:20260917T213356Z
+STATUS:CONFIRMED
+TRANSP:TRANSPARENT
+URL:https://first-thursdays.co.za/
+END:VEVENT
+BEGIN:VEVENT
+SUMMARY:First Thursdays
+DTSTART;TZID=Africa/Johannesburg:20270701T160000
+DTEND;TZID=Africa/Johannesburg:20270701T230000
+DTSTAMP:20260917T213356Z
+UID:41d02b49fd1e0aac@greenpoint-stadium-scraper
+SEQUENCE:0
+CATEGORIES:City Event
+DESCRIPTION:Monthly art-and-culture evening — CBD galleries and venues o
+ pen late (16:00–23:00)\, bringing foot traffic and parking pressure to t
+ he city centre.\n\nMore info: https://first-thursdays.co.za/
+LAST-MODIFIED:20260917T213356Z
+STATUS:CONFIRMED
+TRANSP:TRANSPARENT
+URL:https://first-thursdays.co.za/
+END:VEVENT
+BEGIN:VEVENT
+SUMMARY:First Thursdays
+DTSTART;TZID=Africa/Johannesburg:20270805T160000
+DTEND;TZID=Africa/Johannesburg:20270805T230000
+DTSTAMP:20260917T213356Z
+UID:284ed2ba7c87b5c8@greenpoint-stadium-scraper
+SEQUENCE:0
+CATEGORIES:City Event
+DESCRIPTION:Monthly art-and-culture evening — CBD galleries and venues o
+ pen late (16:00–23:00)\, bringing foot traffic and parking pressure to t
+ he city centre.\n\nMore info: https://first-thursdays.co.za/
+LAST-MODIFIED:20260917T213356Z
+STATUS:CONFIRMED
+TRANSP:TRANSPARENT
+URL:https://first-thursdays.co.za/
+END:VEVENT
+BEGIN:VEVENT
+SUMMARY:First Thursdays
+DTSTART;TZID=Africa/Johannesburg:20270902T160000
+DTEND;TZID=Africa/Johannesburg:20270902T230000
+DTSTAMP:20260917T213356Z
+UID:170a43d6993ee0fa@greenpoint-stadium-scraper
+SEQUENCE:0
+CATEGORIES:City Event
+DESCRIPTION:Monthly art-and-culture evening — CBD galleries and venues o
+ pen late (16:00–23:00)\, bringing foot traffic and parking pressure to t
+ he city centre.\n\nMore info: https://first-thursdays.co.za/
+LAST-MODIFIED:20260917T213356Z
+STATUS:CONFIRMED
+TRANSP:TRANSPARENT
+URL:https://first-thursdays.co.za/
+END:VEVENT
+BEGIN:VEVENT
+SUMMARY:The Gun Run
+DTSTART;VALUE=DATE:20270912
+DTEND;VALUE=DATE:20270913
+DTSTAMP:20260917T213356Z
+UID:c0e59b6d76fdeee0@greenpoint-stadium-scraper
+SEQUENCE:0
+CATEGORIES:City Event
+DESCRIPTION:Half marathon and 10 km along the Atlantic seaboard. Closures 
+ on Green Point\, Sea Point and Mouille Point roads.\n\nMore info: https://
+ www.outsurance.co.za/gunrun/
+LAST-MODIFIED:20260917T213356Z
+STATUS:CONFIRMED
+TRANSP:TRANSPARENT
+URL:https://www.outsurance.co.za/gunrun/
+END:VEVENT
+BEGIN:VEVENT
+SUMMARY:First Thursdays
+DTSTART;TZID=Africa/Johannesburg:20271007T160000
+DTEND;TZID=Africa/Johannesburg:20271007T230000
+DTSTAMP:20260917T213356Z
+UID:acb7a44ca5cb2bfc@greenpoint-stadium-scraper
+SEQUENCE:0
+CATEGORIES:City Event
+DESCRIPTION:Monthly art-and-culture evening — CBD galleries and venues o
+ pen late (16:00–23:00)\, bringing foot traffic and parking pressure to t
+ he city centre.\n\nMore info: https://first-thursdays.co.za/
+LAST-MODIFIED:20260917T213356Z
+STATUS:CONFIRMED
+TRANSP:TRANSPARENT
+URL:https://first-thursdays.co.za/
+END:VEVENT
+BEGIN:VEVENT
+SUMMARY:First Thursdays
+DTSTART;TZID=Africa/Johannesburg:20271104T160000
+DTEND;TZID=Africa/Johannesburg:20271104T230000
+DTSTAMP:20260917T213356Z
+UID:bdffe21a3bc5262e@greenpoint-stadium-scraper
+SEQUENCE:0
+CATEGORIES:City Event
+DESCRIPTION:Monthly art-and-culture evening — CBD galleries and venues o
+ pen late (16:00–23:00)\, bringing foot traffic and parking pressure to t
+ he city centre.\n\nMore info: https://first-thursdays.co.za/
+LAST-MODIFIED:20260917T213356Z
+STATUS:CONFIRMED
+TRANSP:TRANSPARENT
+URL:https://first-thursdays.co.za/
+END:VEVENT
+BEGIN:VEVENT
+SUMMARY:First Thursdays
+DTSTART;TZID=Africa/Johannesburg:20271202T160000
+DTEND;TZID=Africa/Johannesburg:20271202T230000
+DTSTAMP:20260917T213356Z
+UID:82bf3dfac4e8eb3c@greenpoint-stadium-scraper
+SEQUENCE:0
+CATEGORIES:City Event
+DESCRIPTION:Monthly art-and-culture evening — CBD galleries and venues o
+ pen late (16:00–23:00)\, bringing foot traffic and parking pressure to t
+ he city centre.\n\nMore info: https://first-thursdays.co.za/
+LAST-MODIFIED:20260917T213356Z
+STATUS:CONFIRMED
+TRANSP:TRANSPARENT
+URL:https://first-thursdays.co.za/
 END:VEVENT
 END:VCALENDAR
