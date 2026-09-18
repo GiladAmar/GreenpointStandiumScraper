@@ -40,7 +40,9 @@ import json
 import logging
 import re
 from datetime import date, datetime, timedelta, time, timezone
-from typing import Dict, List, Optional, Pattern
+from typing import (
+    Callable, Dict, List, NotRequired, Optional, Pattern, Tuple, TypedDict, Union,
+)
 
 import requests
 from bs4 import BeautifulSoup
@@ -63,6 +65,48 @@ MONTHS_REGEX = (
     r"Aug(?:ust)?|Sep(?:t(?:ember)?)?|Oct(?:ober)?|Nov(?:ember)?|Dec(?:ember)?)"
 )
 SEP_REGEX = r"(?:-|–|—|to|until|through|thru)"  # dash or textual range markers
+
+# Provenance markers recorded on every event, so that a scraper silently
+# degrading from a live date to a computed guess is visible in the health report
+# instead of being masked by the fallback (see CLAUDE.md convention 1).
+SOURCE_JSONLD = "jsonld"      # schema.org Event markup on the official page
+SOURCE_TITLE = "title"        # the page <title>, which carries the date range
+SOURCE_TEXT = "text"          # regex over the page's visible text
+SOURCE_COMPUTED = "computed"  # calendar rule; no live date could be read
+SOURCE_NONE = "none"          # no date at all — event stays off the calendar
+
+# Dates that came off the live site, as opposed to a rule or nothing at all.
+SCRAPED_SOURCES = frozenset({SOURCE_JSONLD, SOURCE_TITLE, SOURCE_TEXT})
+
+
+class DateHit(TypedDict):
+    """The bare date range a scraper pulls off a page, before it becomes a record.
+
+    ``source`` is attached once the caller knows which extractor matched.
+    """
+    start_date: str
+    end_date: str
+    source: NotRequired[str]
+
+
+class EventRecord(TypedDict):
+    """One scraped/computed event, the shape ``fetch_all_events()`` yields.
+
+    Only ``name``/``url``/``source`` are always present. ``start_date``/``end_date``
+    are absent on a name-only record (no dependable date — deliberately left off the
+    calendar). ``fetcher`` and ``description`` are stamped on by ``fetch_all_events``;
+    ``error`` appears only when an extractor raised.
+    """
+    name: str
+    url: str
+    source: str
+    start_date: NotRequired[str]
+    end_date: NotRequired[str]
+    location: NotRequired[str]
+    fetcher: NotRequired[str]
+    description: NotRequired[str]
+    error: NotRequired[str]
+
 
 # Short, hard-coded context blurbs keyed by canonical event name. Attached to
 # each event so the calendar entry explains what it is and why it affects
@@ -264,9 +308,20 @@ def fame_week_dates(year: int) -> tuple[date, date]:
 # Utilities
 # ------------------------------------------------------------
 
+def today_sast() -> date:
+    """Today's date in South African time (CLAUDE.md convention 2).
+
+    Every 'has this happened yet?' decision in edition selection goes through this,
+    so a UTC CI runner and a SAST machine agree on the calendar day — and therefore
+    on the start-date-derived UIDs — instead of disagreeing for the two hours around
+    midnight (and around New Year, where the year drives is_recent_date).
+    """
+    return datetime.now(SAST).date()
+
+
 def is_recent_date(year: int) -> bool:
     """Return True if the year is this year or next."""
-    now = datetime.now().year
+    now = today_sast().year
     return now <= year <= now + 1
 
 def safe_get(url: str) -> Optional[str]:
@@ -293,7 +348,7 @@ def parse_iso_date(day: str, month: str, year: str) -> str:
     dt = date_parser.parse(f"{day} {month} {year}", fuzzy=True).date()
     return str(dt)
 
-def try_patterns(text: str, patterns: List[Pattern]) -> Optional[Dict[str, str]]:
+def try_patterns(text: str, patterns: List[Pattern]) -> Optional[DateHit]:
     """Try regex patterns with named groups and return ISO start/end dates."""
     for pat in patterns:
         m = pat.search(text)
@@ -313,12 +368,21 @@ def try_patterns(text: str, patterns: List[Pattern]) -> Optional[Dict[str, str]]
         if gd.get("d1") and gd.get("mon1") and gd.get("d2") and gd.get("mon2"):
             start = parse_iso_date(gd["d1"], gd["mon1"], year)
             end = parse_iso_date(gd["d2"], gd["mon2"], year)
+            if end < start:
+                # A range that crosses New Year carries a single year, e.g.
+                # '31 December - 1 January 2027'; the second date is the year after.
+                end = parse_iso_date(gd["d2"], gd["mon2"], str(year_int + 1))
             return {"start_date": start, "end_date": end}
 
         # Single-month range e.g. '18 - 19 October 2025'
         if gd.get("d1") and gd.get("d2") and gd.get("mon"):
             start = parse_iso_date(gd["d1"], gd["mon"], year)
             end = parse_iso_date(gd["d2"], gd["mon"], year)
+            if end < start:
+                # A reversed same-month range like '19 - 18 October'; within one
+                # month it cannot be a New-Year crossing (unlike the branch above),
+                # so read it as the intended 18-19 rather than publishing one day.
+                start, end = end, start
             return {"start_date": start, "end_date": end}
 
         # Single date e.g. '15th of March 2025'
@@ -327,7 +391,7 @@ def try_patterns(text: str, patterns: List[Pattern]) -> Optional[Dict[str, str]]
             return {"start_date": day, "end_date": day}
     return None
 
-def jsonld_event_dates(html: str) -> Optional[Dict[str, str]]:
+def jsonld_event_dates(html: str) -> Optional[DateHit]:
     """Extract ISO start/end dates from a schema.org Event JSON-LD block.
 
     Prefers structured markup over scraped body text: sites that publish
@@ -351,7 +415,7 @@ def jsonld_event_dates(html: str) -> Optional[Dict[str, str]]:
             return {"start_date": str(start)[:10], "end_date": str(end)[:10]}
     return None
 
-def generic_date_hunt(text: str) -> Optional[Dict[str, str]]:
+def generic_date_hunt(text: str) -> Optional[DateHit]:
     """Generic fallback for unknown formats, supporting '15th of March 2025'."""
     patterns: List[Pattern] = [
         # Cross-month range: '30 Sep – 1 Oct 2025'
@@ -387,50 +451,157 @@ def generic_date_hunt(text: str) -> Optional[Dict[str, str]]:
 # Site-specific extractors
 # ------------------------------------------------------------
 
-def scrape_event_date(*urls: str) -> Optional[Dict[str, str]]:
+def _event(
+    name: str,
+    url: str,
+    source: str,
+    *,
+    start: Optional[date] = None,
+    end: Optional[date] = None,
+    location: Optional[str] = None,
+) -> EventRecord:
+    """Build one event record in the shape ``fetch_all_events()`` returns.
+
+    ``source`` records where the date came from (see the ``SOURCE_*`` constants).
+    It is what lets the health report notice a scraper that has quietly degraded
+    to its computed fallback. Omitting ``start`` produces a name-only record,
+    which the calendar builder deliberately leaves off the calendar.
+    """
+    record: EventRecord = {"name": name, "url": url, "source": source}
+    if location:
+        record["location"] = location
+    if start is not None:
+        record["start_date"] = str(start)
+        record["end_date"] = str(end if end is not None else start)
+    return record
+
+
+def _is_upcoming(hit: DateHit) -> bool:
+    """True when a scraped range is a recent edition that has not finished yet.
+
+    Guards against two different mistakes: a stale block advertising a previous
+    edition (caught by the recent-year check) and an edition of the current year
+    that has already been and gone (caught by the end-date check).
+
+    Recency is satisfied by either the start or the end year: a range that crosses
+    New Year (e.g. 31 Dec – 1 Jan) is checked on 1 January when its start year has
+    just become "last year", and would otherwise be rejected while it is still in
+    progress. The ``end_date >= today`` guard still rejects a genuinely stale range.
+    """
+    try:
+        start_year = int(hit["start_date"][:4])
+        end_year = int(hit["end_date"][:4])
+        return (
+            (is_recent_date(start_year) or is_recent_date(end_year))
+            and date.fromisoformat(hit["end_date"]) >= today_sast()
+        )
+    except (KeyError, TypeError, ValueError):
+        return False
+
+
+# A rule maps a year to that year's date, or to a (start, end) pair.
+DateRule = Callable[[int], Union[date, Tuple[date, date]]]
+
+
+def next_computed(
+    name: str,
+    url: str,
+    rule: DateRule,
+    *,
+    location: Optional[str] = None,
+    horizon_years: int = 2,
+) -> EventRecord:
+    """Return the next edition of an event whose date comes from a calendar rule.
+
+    The first edition that has not *finished* wins, so a multi-day event stays on
+    the calendar while it is running and only rolls over to next year's dates once
+    it is over. (Rolling over on the start date instead would delete a conference
+    from the calendar halfway through it, since the merge step only preserves
+    events that are already past.) Falls back to a name-only record if no edition
+    lands inside the horizon.
+    """
+    today = today_sast()
+    for year in range(today.year, today.year + horizon_years):
+        computed = rule(year)
+        start, end = computed if isinstance(computed, tuple) else (computed, computed)
+        if end >= today:
+            return _event(
+                name, url, SOURCE_COMPUTED, start=start, end=end, location=location
+            )
+    return _event(name, url, SOURCE_NONE, location=location)
+
+
+def scrape_event_date(*urls: str) -> Optional[DateHit]:
     """Scrape official page(s) for a single upcoming event date.
 
     Tries each URL in turn, preferring machine-readable schema.org Event JSON-LD
     and falling back to a generic text date hunt. Only accepts a date that is in a
     recent year (this year or next) and has not already passed — this guards against
     picking up a stale prior edition or an unrelated date elsewhere on the page.
-    Returns ``{'start_date', 'end_date'}`` or ``None`` when nothing valid is found.
+    Returns ``{'start_date', 'end_date', 'source'}`` or ``None`` when nothing valid
+    is found.
     """
-    today = date.today()
     for url in urls:
         html = safe_get(url)
         if not html:
             continue
-        for hit in (jsonld_event_dates(html), generic_date_hunt(html_to_text(html))):
-            if not hit:
-                continue
-            year = int(hit["start_date"][:4])
-            if is_recent_date(year) and date.fromisoformat(hit["end_date"]) >= today:
-                return hit
+        for source, hit in (
+            (SOURCE_JSONLD, jsonld_event_dates(html)),
+            (SOURCE_TEXT, generic_date_hunt(html_to_text(html))),
+        ):
+            if hit and _is_upcoming(hit):
+                return {**hit, "source": source}
     return None
 
-def fetch_site(name: str, url: str, site_patterns: Optional[List[Pattern]] = None) -> Optional[Dict[str, str]]:
-    """Fetch a site, extract visible text, and find the event date."""
+
+def fetch_site(
+    name: str, url: str, site_patterns: Optional[List[Pattern]] = None
+) -> EventRecord:
+    """Fetch a site, extract visible text, and find the event date.
+
+    Site-specific patterns are tried first (they are narrower and less likely to
+    match an unrelated date), then the generic hunt. Anything already finished is
+    rejected so a caller's calendar-rule fallback takes over instead.
+    """
     html = safe_get(url)
     if not html:
-        return {"name": name, "url": url}
+        return _event(name, url, SOURCE_NONE)
     text = html_to_text(html)
 
-    # Try site-specific patterns first
+    candidates = []
     if site_patterns:
-        hit = try_patterns(text, site_patterns)
-        if hit:
-            return {"name": name, "url": url, **hit}
-
-    # Fallback to generic
-    hit = generic_date_hunt(text)
-    if hit:
-        return {"name": name, "url": url, **hit}
+        candidates.append(try_patterns(text, site_patterns))
+    candidates.append(generic_date_hunt(text))
+    for hit in candidates:
+        if hit and _is_upcoming(hit):
+            return {**_event(name, url, SOURCE_TEXT), **hit}
 
     logging.warning(f"No valid dates found for {name}")
-    return {"name": name, "url": url}
+    return _event(name, url, SOURCE_NONE)
 
-def fetch_cycle_tour() -> Optional[Dict[str, str]]:
+
+def _scrape_then_rule(
+    name: str,
+    url: str,
+    rule: Optional[DateRule] = None,
+    *,
+    location: Optional[str] = None,
+) -> EventRecord:
+    """Scrape the official page, else fall back to ``rule`` (or to no date).
+
+    Passing ``rule=None`` marks a scrape-only event: one with no dependable
+    recurrence, which is left off the calendar rather than given an invented date.
+    """
+    hit = scrape_event_date(url)
+    if hit:
+        return {**_event(name, url, hit["source"], location=location), **hit}
+    if rule is None:
+        return _event(name, url, SOURCE_NONE, location=location)
+    return next_computed(name, url, rule, location=location)
+
+
+def fetch_cycle_tour() -> EventRecord:
+    """Cape Town Cycle Tour — 2nd Sunday of March; closures across the peninsula."""
     name = "Cape Town Cycle Tour"
     url = "https://www.capetowncycletour.com/"
     patterns = [
@@ -438,32 +609,24 @@ def fetch_cycle_tour() -> Optional[Dict[str, str]]:
         re.compile(r"(?P<d1>\d{1,2})(?:st|nd|rd|th)?\s*(?:of\s+)?(?P<mon>Mar(?:ch)?)\s*,?\s*(?P<year>20\d{2})", re.IGNORECASE),
     ]
     result = fetch_site(name, url, patterns)
-    if result and result.get("start_date"):
+    if result.get("start_date"):
         return result
-    # Fallback: 2nd Sunday of March
-    today = date.today()
-    for year in range(today.year, today.year + 2):
-        d = cycle_tour_date(year)
-        if d >= today:
-            return {"name": name, "url": url, "start_date": str(d), "end_date": str(d)}
-    return {"name": name, "url": url}
+    return next_computed(name, url, cycle_tour_date)
 
-def fetch_two_oceans() -> Optional[Dict[str, str]]:
-    """
-    Two Oceans Marathon: Easter Saturday (Ultra) → Easter Sunday (Half).
+
+def fetch_two_oceans() -> EventRecord:
+    """Two Oceans Marathon: Easter Saturday (Ultra) → Easter Sunday (Half).
+
     The website is not reliably scrapable, so we calculate from Easter.
     """
-    name = "Two Oceans Marathon"
-    url = "https://www.twooceansmarathon.org.za/"
-    today = date.today()
-    for year in range(today.year, today.year + 2):
-        start = two_oceans_start_date(year)
-        end = two_oceans_end_date(year)
-        if start >= today:
-            return {"name": name, "url": url, "start_date": str(start), "end_date": str(end)}
-    return {"name": name, "url": url}
+    return next_computed(
+        "Two Oceans Marathon",
+        "https://www.twooceansmarathon.org.za/",
+        lambda year: (two_oceans_start_date(year), two_oceans_end_date(year)),
+    )
 
-def fetch_ct_marathon() -> Optional[Dict[str, str]]:
+
+def fetch_ct_marathon() -> EventRecord:
     """Sanlam Cape Town Marathon — links Green Point, the CBD, Sea Point and the
     southern suburbs.
 
@@ -473,91 +636,68 @@ def fetch_ct_marathon() -> Optional[Dict[str, str]]:
     rule to fall back on, so if the scrape fails the event is left off until it can
     be read again.
     """
-    name = "Sanlam Cape Town Marathon"
-    url = "https://www.capetownmarathon.com/"
-    location = "Green Point / Sea Point / CBD / southern suburbs"
-    hit = scrape_event_date(url)
-    if hit:
-        return {"name": name, "url": url, "location": location, **hit}
-    return {"name": name, "url": url, "location": location}
+    return _scrape_then_rule(
+        "Sanlam Cape Town Marathon",
+        "https://www.capetownmarathon.com/",
+        location="Green Point / Sea Point / CBD / southern suburbs",
+    )
 
-def fetch_cape_epic() -> Optional[Dict[str, str]]:
+
+def fetch_cape_epic() -> EventRecord:
     """Absa Cape Epic — eight-day MTB stage race; Cape Town start/finish traffic.
 
     The old cape-epic.com domain now redirects to epic-series.com; we point straight
     at the canonical page and scrape robustly (recent + future guard). There is no
     dependable calendar rule, so it stays off the calendar if the scrape fails.
     """
-    name = "Absa Cape Epic"
-    url = "https://www.epic-series.com/capeepic"
-    location = "Western Cape (Cape Town start/finish stages)"
-    hit = scrape_event_date(url)
-    if hit:
-        return {"name": name, "url": url, "location": location, **hit}
-    return {"name": name, "url": url, "location": location}
+    return _scrape_then_rule(
+        "Absa Cape Epic",
+        "https://www.epic-series.com/capeepic",
+        location="Western Cape (Cape Town start/finish stages)",
+    )
 
-def fetch_gun_run() -> Optional[Dict[str, str]]:
-    # 2nd Sunday of September
-    # Source: https://www.outsurance.co.za/gunrun/ (thegunrun.co.za is dead; now the
-    # OUTsurance Gun Run)
-    name = "The Gun Run"
-    url = "https://www.outsurance.co.za/gunrun/"
-    today = date.today()
-    for year in range(today.year, today.year + 2):
-        d = gun_run_date(year)
-        if d >= today:
-            return {"name": name, "url": url, "start_date": str(d), "end_date": str(d)}
-    return {"name": name, "url": url}
 
-def fetch_cape_town_carnival() -> Optional[Dict[str, str]]:
-    # Saturday after the Cycle Tour (Cycle Tour Sunday + 6 days)
-    # Source: https://capetowncarnival.com/
-    name = "Cape Town Carnival"
-    url = "https://capetowncarnival.com/"
-    today = date.today()
-    for year in range(today.year, today.year + 2):
-        d = carnival_date(year)
-        if d >= today:
-            return {"name": name, "url": url, "start_date": str(d), "end_date": str(d)}
-    return {"name": name, "url": url}
+def fetch_gun_run() -> EventRecord:
+    """The Gun Run — half marathon and 10 km, 2nd Sunday of September.
 
-def fetch_cape_town_pride() -> Optional[Dict[str, str]]:
-    # Last Saturday of February each year
-    # Source: https://cptpride.org/
-    name = "Cape Town Pride Parade"
-    url = "https://cptpride.org/"
-    today = date.today()
-    for year in range(today.year, today.year + 2):
-        d = pride_date(year)
-        if d >= today:
-            return {"name": name, "url": url, "start_date": str(d), "end_date": str(d)}
-    return {"name": name, "url": url}
+    thegunrun.co.za is dead; the race is now the OUTsurance Gun Run.
+    """
+    return next_computed(
+        "The Gun Run", "https://www.outsurance.co.za/gunrun/", gun_run_date
+    )
 
-def fetch_minstrel_carnival() -> Optional[Dict[str, str]]:
-    # 2 January each year (Kaapse Klopse) — parade through the CBD and Green Point
-    # Source: https://en.wikipedia.org/wiki/Kaapse_Klopse
-    name = "Minstrel Carnival (Kaapse Klopse)"
-    url = "https://en.wikipedia.org/wiki/Kaapse_Klopse"
-    today = date.today()
-    for year in range(today.year, today.year + 2):
-        d = minstrel_carnival_date(year)
-        if d >= today:
-            return {"name": name, "url": url, "start_date": str(d), "end_date": str(d)}
-    return {"name": name, "url": url}
 
-def fetch_new_year_v_and_a() -> Optional[Dict[str, str]]:
-    # 31 December each year — V&A Waterfront NYE celebration and fireworks
-    # Source: https://www.waterfront.co.za/new-years-eve-celebration
-    name = "V&A Waterfront New Year's Eve"
-    url = "https://www.waterfront.co.za/new-years-eve-celebration"
-    today = date.today()
-    for year in range(today.year, today.year + 2):
-        d = new_year_v_and_a_date(year)
-        if d >= today:
-            return {"name": name, "url": url, "start_date": str(d), "end_date": str(d)}
-    return {"name": name, "url": url}
+def fetch_cape_town_carnival() -> EventRecord:
+    """Cape Town Carnival — Saturday after the Cycle Tour, on the Fan Walk."""
+    return next_computed(
+        "Cape Town Carnival", "https://capetowncarnival.com/", carnival_date
+    )
 
-def fetch_mining_indaba() -> Optional[Dict[str, str]]:
+
+def fetch_cape_town_pride() -> EventRecord:
+    """Cape Town Pride Parade — last Saturday of February."""
+    return next_computed("Cape Town Pride Parade", "https://cptpride.org/", pride_date)
+
+
+def fetch_minstrel_carnival() -> EventRecord:
+    """Minstrel Carnival (Kaapse Klopse) — 2 January, CBD / Bo-Kaap / Green Point."""
+    return next_computed(
+        "Minstrel Carnival (Kaapse Klopse)",
+        "https://en.wikipedia.org/wiki/Kaapse_Klopse",
+        minstrel_carnival_date,
+    )
+
+
+def fetch_new_year_v_and_a() -> EventRecord:
+    """V&A Waterfront New Year's Eve — 31 December fireworks and crowds."""
+    return next_computed(
+        "V&A Waterfront New Year's Eve",
+        "https://www.waterfront.co.za/new-years-eve-celebration",
+        new_year_v_and_a_date,
+    )
+
+
+def fetch_mining_indaba() -> EventRecord:
     """Investing in African Mining Indaba — early Feb at the CTICC.
 
     Draws 7 000+ delegates and congests the Foreshore/CBD for the week.
@@ -572,24 +712,20 @@ def fetch_mining_indaba() -> Optional[Dict[str, str]]:
     if html:
         hit = jsonld_event_dates(html)
         # Guard against a stale block for a previous edition.
-        if hit and is_recent_date(int(hit["start_date"][:4])):
-            return {"name": name, "url": url, **hit}
+        if hit and _is_upcoming(hit):
+            return {**_event(name, url, SOURCE_JSONLD), **hit}
         # Fallback: parse the <title> range (kept accurate for SEO).
         m = re.search(r"<title>[^<]*</title>", html, re.IGNORECASE)
         if m:
             hit = generic_date_hunt(m.group(0))
-            if hit:
-                return {"name": name, "url": url, **hit}
+            if hit and _is_upcoming(hit):
+                return {**_event(name, url, SOURCE_TITLE), **hit}
     # Final fallback: computed recurrence when the site is unreachable.
     logging.warning("Mining Indaba: falling back to computed dates")
-    today = date.today()
-    for year in range(today.year, today.year + 2):
-        start, end = mining_indaba_dates(year)
-        if end >= today:
-            return {"name": name, "url": url, "start_date": str(start), "end_date": str(end)}
-    return {"name": name, "url": url}
+    return next_computed(name, url, mining_indaba_dates)
 
-def fetch_sona() -> Optional[Dict[str, str]]:
+
+def fetch_sona() -> EventRecord:
     """State of the Nation Address — evening joint sitting at Cape Town City Hall.
 
     Central-CBD lockdown (Grand Parade / Parliament precinct). The date is announced
@@ -602,7 +738,7 @@ def fetch_sona() -> Optional[Dict[str, str]]:
     name = "State of the Nation Address (SONA)"
     url = "https://www.parliament.gov.za/state-of-the-nation-address"
     location = "Cape Town City Hall, Darling Street, Cape Town"
-    today = date.today()
+    today = today_sast()
 
     # 1 & 2: scrape official pages; accept only a *future* date in a recent year.
     candidates = [url] + [f"https://www.gov.za/SONA{y}" for y in (today.year, today.year + 1)]
@@ -611,72 +747,58 @@ def fetch_sona() -> Optional[Dict[str, str]]:
         if not html:
             continue
         hit = generic_date_hunt(html_to_text(html))
-        if hit and is_recent_date(int(hit["start_date"][:4])) \
-                and date.fromisoformat(hit["start_date"]) >= today:
-            return {"name": name, "url": url, "location": location,
-                    "start_date": hit["start_date"], "end_date": hit["start_date"]}
+        if hit and _is_upcoming(hit):
+            # SONA is a single evening: ignore any end date the page may carry.
+            return {
+                **_event(name, url, SOURCE_TEXT, location=location),
+                "start_date": hit["start_date"],
+                "end_date": hit["start_date"],
+            }
 
     # 3: computed fallback — next upcoming 2nd Thursday of February.
-    for year in range(today.year, today.year + 2):
-        d = sona_date(year)
-        if d >= today:
-            return {"name": name, "url": url, "location": location,
-                    "start_date": str(d), "end_date": str(d)}
-    return {"name": name, "url": url, "location": location}
+    return next_computed(name, url, sona_date, location=location)
 
-def fetch_slave_route() -> Optional[Dict[str, str]]:
+
+def fetch_slave_route() -> EventRecord:
     """Slave Route Challenge — heritage road race from the City Hall through the CBD.
 
     Scrape the official date (JSON-LD / text), else the 3rd-Sunday-of-October anchor.
     """
-    name = "Slave Route Challenge"
-    url = "https://www.slaveroute.co.za/"
-    location = "Cape Town CBD (City Hall, District Six, Bo-Kaap, DHL Stadium)"
-    hit = scrape_event_date(url)
-    if hit:
-        return {"name": name, "url": url, "location": location, **hit}
-    today = date.today()
-    for year in range(today.year, today.year + 2):
-        d = slave_route_date(year)
-        if d >= today:
-            return {"name": name, "url": url, "location": location,
-                    "start_date": str(d), "end_date": str(d)}
-    return {"name": name, "url": url, "location": location}
+    return _scrape_then_rule(
+        "Slave Route Challenge",
+        "https://www.slaveroute.co.za/",
+        slave_route_date,
+        location="Cape Town CBD (City Hall, District Six, Bo-Kaap, DHL Stadium)",
+    )
 
-def fetch_big_walk() -> Optional[Dict[str, str]]:
+
+def fetch_big_walk() -> EventRecord:
     """Cape Town Big Walk — mass charity walk along the Sea Point Promenade.
 
     Recent editions have shifted and been postponed, so there is no dependable rule:
     scrape-only, left off the calendar until an official date can be read.
     """
-    name = "Cape Town Big Walk"
-    url = "https://capetownbigwalk.com/"
-    location = "Green Point / Sea Point Promenade (Atlantic Seaboard)"
-    hit = scrape_event_date(url)
-    if hit:
-        return {"name": name, "url": url, "location": location, **hit}
-    return {"name": name, "url": url, "location": location}
+    return _scrape_then_rule(
+        "Cape Town Big Walk",
+        "https://capetownbigwalk.com/",
+        location="Green Point / Sea Point Promenade (Atlantic Seaboard)",
+    )
 
-def fetch_jazz_festival() -> Optional[Dict[str, str]]:
+
+def fetch_jazz_festival() -> EventRecord:
     """Cape Town International Jazz Festival — CTICC, last weekend of March.
 
     Scrape the official date (JSON-LD / text), else the last-Friday-of-March anchor.
     """
-    name = "Cape Town International Jazz Festival"
-    url = "https://www.capetownjazzfest.com/"
-    location = "CTICC, Cape Town CBD"
-    hit = scrape_event_date(url)
-    if hit:
-        return {"name": name, "url": url, "location": location, **hit}
-    today = date.today()
-    for year in range(today.year, today.year + 2):
-        start, end = jazz_festival_dates(year)
-        if start >= today:
-            return {"name": name, "url": url, "location": location,
-                    "start_date": str(start), "end_date": str(end)}
-    return {"name": name, "url": url, "location": location}
+    return _scrape_then_rule(
+        "Cape Town International Jazz Festival",
+        "https://www.capetownjazzfest.com/",
+        jazz_festival_dates,
+        location="CTICC, Cape Town CBD",
+    )
 
-def fetch_africa_oil_week() -> Optional[Dict[str, str]]:
+
+def fetch_africa_oil_week() -> EventRecord:
     """Africa Oil Week — major oil-and-gas conference at the CTICC.
 
     The month jumps between September and October year to year, so there is no reliable
@@ -687,91 +809,81 @@ def fetch_africa_oil_week() -> Optional[Dict[str, str]]:
     Revisit the URL if the event resurfaces (see also African Energy Week, aecweek.com,
     a separate CTICC energy event).
     """
-    name = "Africa Oil Week"
-    url = "https://africaoilweek.com/"
-    location = "CTICC / Cape Town CBD"
-    hit = scrape_event_date(url)
-    if hit:
-        return {"name": name, "url": url, "location": location, **hit}
-    return {"name": name, "url": url, "location": location}
+    return _scrape_then_rule(
+        "Africa Oil Week",
+        "https://africaoilweek.com/",
+        location="CTICC / Cape Town CBD",
+    )
 
-def fetch_africa_energy_indaba() -> Optional[Dict[str, str]]:
+
+def fetch_africa_energy_indaba() -> EventRecord:
     """Africa Energy Indaba — CTICC energy conference, first week of March.
 
     Scrape the official date (JSON-LD / text), else the first-Tuesday-of-March anchor.
     """
-    name = "Africa Energy Indaba"
-    url = "https://www.africaenergyindaba.com/"
-    location = "CTICC, Cape Town CBD"
-    hit = scrape_event_date(url)
-    if hit:
-        return {"name": name, "url": url, "location": location, **hit}
-    today = date.today()
-    for year in range(today.year, today.year + 2):
-        start, end = africa_energy_indaba_dates(year)
-        if start >= today:
-            return {"name": name, "url": url, "location": location,
-                    "start_date": str(start), "end_date": str(end)}
-    return {"name": name, "url": url, "location": location}
+    return _scrape_then_rule(
+        "Africa Energy Indaba",
+        "https://www.africaenergyindaba.com/",
+        africa_energy_indaba_dates,
+        location="CTICC, Cape Town CBD",
+    )
 
-def fetch_enlit_africa() -> Optional[Dict[str, str]]:
+
+def fetch_enlit_africa() -> EventRecord:
     """Enlit Africa — CTICC power/energy conference, third week of May.
 
     Scrape the official date (JSON-LD / text), else the 3rd-Tuesday-of-May anchor.
     """
-    name = "Enlit Africa"
-    url = "https://wearevuka.com/energy/enlit-africa/"  # enlit-africa.com redirects here
-    location = "CTICC, Cape Town CBD"
-    hit = scrape_event_date(url)
-    if hit:
-        return {"name": name, "url": url, "location": location, **hit}
-    today = date.today()
-    for year in range(today.year, today.year + 2):
-        start, end = enlit_africa_dates(year)
-        if start >= today:
-            return {"name": name, "url": url, "location": location,
-                    "start_date": str(start), "end_date": str(end)}
-    return {"name": name, "url": url, "location": location}
+    return _scrape_then_rule(
+        "Enlit Africa",
+        "https://wearevuka.com/energy/enlit-africa/",  # enlit-africa.com redirects here
+        enlit_africa_dates,
+        location="CTICC, Cape Town CBD",
+    )
 
-def fetch_comic_con() -> Optional[Dict[str, str]]:
+
+def fetch_comic_con() -> EventRecord:
     """Comic Con Cape Town — large pop-culture convention at the CTICC.
 
     Held around the late-April long weekend but not every year (the next edition is
     2027), so there is no dependable rule: scrape-only, left off until an official date
     can be read.
-    """
-    # Official site is comicconafrica.co.za; use the Cape Town page specifically —
-    # the site root defaults to the Johannesburg edition (a different, Sept date).
-    name = "Comic Con Cape Town"
-    url = "https://comicconafrica.co.za/ccct-home-page/"
-    location = "CTICC, Cape Town CBD"
-    hit = scrape_event_date(url)
-    if hit:
-        return {"name": name, "url": url, "location": location, **hit}
-    return {"name": name, "url": url, "location": location}
 
-def fetch_fame_week() -> Optional[Dict[str, str]]:
+    The official site is comicconafrica.co.za; use the Cape Town page specifically —
+    the site root defaults to the Johannesburg edition (a different, Sept date).
+    """
+    return _scrape_then_rule(
+        "Comic Con Cape Town",
+        "https://comicconafrica.co.za/ccct-home-page/",
+        location="CTICC, Cape Town CBD",
+    )
+
+
+def fetch_fame_week() -> EventRecord:
     """FAME Week Africa — CTICC creative-industries conference, late Oct / early Nov.
 
     Scrape the official date (JSON-LD / text), else the last-Wednesday-of-October anchor.
     """
-    name = "FAME Week Africa"
-    url = "https://www.fameweekafrica.com/"  # bare domain has an expired cert; www works
-    location = "CTICC, Cape Town CBD"
-    hit = scrape_event_date(url)
-    if hit:
-        return {"name": name, "url": url, "location": location, **hit}
-    today = date.today()
-    for year in range(today.year, today.year + 2):
-        start, end = fame_week_dates(year)
-        if start >= today:
-            return {"name": name, "url": url, "location": location,
-                    "start_date": str(start), "end_date": str(end)}
-    return {"name": name, "url": url, "location": location}
+    return _scrape_then_rule(
+        "FAME Week Africa",
+        "https://www.fameweekafrica.com/",  # bare domain has an expired cert; www works
+        fame_week_dates,
+        location="CTICC, Cape Town CBD",
+    )
 
-def get_first_thursdays(year: int) -> List[Dict[str, str]]:
-    """Return a list of 'First Thursdays' events for each month in the given year."""
-    events = []
+
+# Named so callers can tell these apart from the scraped events: they come from an
+# unconditional rule and are always present, however the real scrapers fare.
+FIRST_THURSDAYS_FETCHER = "get_first_thursdays"
+
+
+def get_first_thursdays(year: int) -> List[EventRecord]:
+    """Return a 'First Thursdays' event (16:00–23:00 SAST) for each month of a year.
+
+    These are timed rather than all-day events, so the dates are ISO *datetime*
+    strings; the calendar builder keys off the 'T' to tell the two apart.
+    """
+    events: List[EventRecord] = []
     for month in range(1, 13):
         # Find the first day of the month
         dt = datetime(year, month, 1)
@@ -784,7 +896,8 @@ def get_first_thursdays(year: int) -> List[Dict[str, str]]:
             "name": "First Thursdays",
             "start_date": start_dt.isoformat(),
             "end_date": end_dt.isoformat(),
-            "url": "https://first-thursdays.co.za/"
+            "url": "https://first-thursdays.co.za/",
+            "source": SOURCE_COMPUTED,
         })
     return events
 
@@ -792,52 +905,90 @@ def get_first_thursdays(year: int) -> List[Dict[str, str]]:
 # Runner
 # ------------------------------------------------------------
 
-def fetch_all_events() -> List[Dict[str, str]]:
-    extractors = [
-        fetch_cycle_tour,
-        fetch_two_oceans,
-        fetch_ct_marathon,
-        fetch_cape_epic,
-        fetch_gun_run,
-        fetch_cape_town_carnival,
-        fetch_cape_town_pride,
-        fetch_minstrel_carnival,
-        fetch_new_year_v_and_a,
-        fetch_mining_indaba,
-        fetch_sona,
-        fetch_slave_route,
-        fetch_big_walk,
-        fetch_jazz_festival,
-        fetch_africa_oil_week,
-        fetch_africa_energy_indaba,
-        fetch_enlit_africa,
-        fetch_comic_con,
-        fetch_fame_week,
-    ]
-    results: List[Dict[str, str]] = []
-    for fn in extractors:
+EXTRACTORS: List[Callable[[], EventRecord]] = [
+    fetch_cycle_tour,
+    fetch_two_oceans,
+    fetch_ct_marathon,
+    fetch_cape_epic,
+    fetch_gun_run,
+    fetch_cape_town_carnival,
+    fetch_cape_town_pride,
+    fetch_minstrel_carnival,
+    fetch_new_year_v_and_a,
+    fetch_mining_indaba,
+    fetch_sona,
+    fetch_slave_route,
+    fetch_big_walk,
+    fetch_jazz_festival,
+    fetch_africa_oil_week,
+    fetch_africa_energy_indaba,
+    fetch_enlit_africa,
+    fetch_comic_con,
+    fetch_fame_week,
+]
+
+
+def fetch_all_events() -> List[EventRecord]:
+    """Run every extractor and return one record per event.
+
+    Each record carries ``name``, ``url``, ``source`` (provenance) and ``fetcher``
+    (the function that produced it, used as a stable key in the health report),
+    plus ``start_date``/``end_date`` when a date could be established and
+    ``location``/``description`` where known. A record without ``start_date`` is
+    deliberate — the calendar builder leaves it off rather than invent a date.
+
+    An extractor that raises still yields a record, so a crashing scraper shows up
+    in the health report as a degraded source instead of silently vanishing.
+    """
+    results: List[EventRecord] = []
+    for fn in EXTRACTORS:
         try:
             data = fn()
-            if data:
-                logging.info(f"{data['name']}: {data.get('start_date')} – {data.get('end_date')}")
-                results.append(data)
         except Exception as e:
             logging.error(f"Extractor error in {fn.__name__}: {e}")
-    # Add First Thursdays events for this year and next year
-    now = datetime.now().year
-    results.extend(get_first_thursdays(now))
-    results.extend(get_first_thursdays(now + 1))
+            data = {"name": fn.__name__, "url": "", "source": SOURCE_NONE, "error": str(e)}
+        if not data:
+            continue
+        logging.info(
+            f"{data['name']} [{data.get('source')}]: "
+            f"{data.get('start_date')} – {data.get('end_date')}"
+        )
+        data["fetcher"] = fn.__name__
+        results.append(data)
+
+    # Add First Thursdays events for this year and next year.
+    now = today_sast().year
+    for year in (now, now + 1):
+        for item in get_first_thursdays(year):
+            item["fetcher"] = FIRST_THURSDAYS_FETCHER
+            results.append(item)
+
     # Attach a context blurb to every event (empty string if we have none).
     for item in results:
         item.setdefault("description", EVENT_DESCRIPTIONS.get(item.get("name", ""), ""))
     return results
 
-def main() -> None:
-    events = fetch_all_events()
+
+EVENTS_PATH = "events.json"
+
+
+def dump_events(events: List[EventRecord], path: str = EVENTS_PATH) -> None:
+    """Write the scraped records to JSON.
+
+    This is debug output for running ``city_events.py`` directly, not part of the
+    published pipeline: ``generate_dhl_ics.py`` deliberately does not write it, and
+    events.json is not committed. Its ``updated`` timestamp changes every run, which
+    is why the calendar build leaves it out.
+    """
     out = {"updated": datetime.now(timezone.utc).isoformat(), "events": events}
-    with open("events.json", "w", encoding="utf-8") as f:
+    with open(path, "w", encoding="utf-8") as f:
         json.dump(out, f, indent=2, ensure_ascii=False)
-    logging.info(f"Saved {len(events)} events to events.json")
+        f.write("\n")
+    logging.info(f"Saved {len(events)} events to {path}")
+
+
+def main() -> None:
+    dump_events(fetch_all_events())
 
 if __name__ == "__main__":
     main()

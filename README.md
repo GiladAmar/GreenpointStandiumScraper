@@ -25,7 +25,9 @@ You can add this .ics link to your preferred calendar app:
   
   [Subscribe on iPhone/iPad](https://support.apple.com/en-za/guide/iphone/iph3d1110d4/ios)
 
-✅ The calendar auto-updates monthly — no manual refresh needed.
+✅ The calendar auto-updates twice a month — no manual refresh needed. It
+subscribes as **Cape Town Traffic Events**, and entries are marked "free" so
+adding it does not make you look busy.
 
 📚 Past events stay on the calendar as a historical record. Each update keeps
 previously-published events that have already happened (even once the stadium
@@ -83,3 +85,34 @@ Predictable annual events computed directly (no scrape needed).
 | The Gun Run | 2nd Sunday of September | Green Point, Sea Point, Mouille Point |
 | V&A Waterfront New Year's Eve | 31 December | Green Point Main Rd, Beach Rd, V&A |
 | First Thursdays | First Thursday of every month, 16:00–23:00 | CBD |
+
+## 🔍 How it stays honest
+
+A calendar people subscribe to is worse than useless when it is quietly wrong,
+so the build is designed to fail loudly rather than publish something broken.
+
+- **It fails closed.** If the stadium API cannot be read, or either source comes
+  back empty, or the number of upcoming events falls below half what was last
+  published, the build aborts and writes nothing. The previously published
+  calendar stays up until the next run rather than being replaced by a gutted
+  one. (Run `python generate_dhl_ics.py --allow-shrink` to publish anyway once
+  you have confirmed the drop is real.)
+
+- **It reports its own sources.** `health.json` records, for every scraper,
+  whether the date published came off the live site (`jsonld` / `title` / `text`)
+  or from a calendar rule used as a fallback (`computed`), or whether there was
+  no date at all (`none`). `python generate_dhl_ics.py --check-health` exits
+  non-zero when a scraper that used to read a live date has stopped, and keeps
+  failing every run until it recovers — the failure a fallback would otherwise
+  hide indefinitely.
+
+- **It watches for a frozen feed.** The stadium endpoint has silently stalled
+  before while still answering normally. A feed whose newest event is less than
+  30 days out is flagged, because a healthy one reaches months ahead.
+
+- **Rebuilds are stable.** An event's `DTSTAMP` and `SEQUENCE` only change when
+  its content does, so a rebuild that changes nothing produces an identical file
+  and your calendar app does not re-notify you about events that have not moved.
+
+Run the test suite with `python3 -m pytest test_events.py -q`; CI runs it before
+every build.
