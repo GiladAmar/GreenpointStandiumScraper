@@ -592,6 +592,19 @@ def test_fetch_site_rejects_an_edition_that_has_already_happened():
     assert date.fromisoformat(result["end_date"]) >= september
 
 
+def test_is_upcoming_accepts_a_new_year_range_still_in_progress():
+    """On 1 January a 31 Dec – 1 Jan range's start year is now "last year", but the
+    event is still running; recency must be satisfied by the end year too."""
+    with frozen_today(date(2027, 1, 1)):
+        assert events._is_upcoming(
+            {"start_date": "2026-12-31", "end_date": "2027-01-01"}
+        )
+        # The end-date guard still rejects a genuinely finished range.
+        assert not events._is_upcoming(
+            {"start_date": "2026-12-30", "end_date": "2026-12-31"}
+        )
+
+
 # ── DHL Stadium API pagination (mock network) ─────────────────────────────────
 # The stadium API paginates (default 25/page); fetching only page 1 silently drops
 # later events (e.g. a full season, or a multi-day booking on page 2).

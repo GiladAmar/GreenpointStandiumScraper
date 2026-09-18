@@ -466,10 +466,17 @@ def _is_upcoming(hit: DateHit) -> bool:
     Guards against two different mistakes: a stale block advertising a previous
     edition (caught by the recent-year check) and an edition of the current year
     that has already been and gone (caught by the end-date check).
+
+    Recency is satisfied by either the start or the end year: a range that crosses
+    New Year (e.g. 31 Dec – 1 Jan) is checked on 1 January when its start year has
+    just become "last year", and would otherwise be rejected while it is still in
+    progress. The ``end_date >= today`` guard still rejects a genuinely stale range.
     """
     try:
+        start_year = int(hit["start_date"][:4])
+        end_year = int(hit["end_date"][:4])
         return (
-            is_recent_date(int(hit["start_date"][:4]))
+            (is_recent_date(start_year) or is_recent_date(end_year))
             and date.fromisoformat(hit["end_date"]) >= date.today()
         )
     except (KeyError, TypeError, ValueError):
