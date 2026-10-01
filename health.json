@@ -1,5 +1,5 @@
 {
-  "generated_at": "2026-09-18T10:16:11.028888+00:00",
+  "generated_at": "2026-10-01T06:48:47.814059+00:00",
   "calendar": {
     "total": 79,
     "upcoming": 42,
@@ -13,7 +13,7 @@
     "fetch_cycle_tour": {
       "name": "Cape Town Cycle Tour",
       "source": "text",
-      "last_live": "2026-09-18",
+      "last_live": "2026-10-01",
       "start_date": "2027-03-14",
       "end_date": "2027-03-14",
       "url": "https://www.capetowncycletour.com/"
@@ -29,7 +29,7 @@
     "fetch_ct_marathon": {
       "name": "Sanlam Cape Town Marathon",
       "source": "text",
-      "last_live": "2026-09-18",
+      "last_live": "2026-10-01",
       "start_date": "2027-05-22",
       "end_date": "2027-05-23",
       "url": "https://www.capetownmarathon.com/"
@@ -37,7 +37,7 @@
     "fetch_cape_epic": {
       "name": "Absa Cape Epic",
       "source": "text",
-      "last_live": "2026-09-18",
+      "last_live": "2026-10-01",
       "start_date": "2027-03-21",
       "end_date": "2027-03-28",
       "url": "https://www.epic-series.com/capeepic"
@@ -85,7 +85,7 @@
     "fetch_mining_indaba": {
       "name": "Investing in African Mining Indaba",
       "source": "jsonld",
-      "last_live": "2026-09-18",
+      "last_live": "2026-10-01",
       "start_date": "2027-02-08",
       "end_date": "2027-02-11",
       "url": "https://miningindaba.com/"
@@ -141,7 +141,7 @@
     "fetch_enlit_africa": {
       "name": "Enlit Africa",
       "source": "text",
-      "last_live": "2026-09-18",
+      "last_live": "2026-10-01",
       "start_date": "2027-05-11",
       "end_date": "2027-05-13",
       "url": "https://wearevuka.com/energy/enlit-africa/"
@@ -157,7 +157,7 @@
     "fetch_fame_week": {
       "name": "FAME Week Africa",
       "source": "text",
-      "last_live": "2026-09-18",
+      "last_live": "2026-10-01",
       "start_date": "2026-10-28",
       "end_date": "2026-11-01",
       "url": "https://www.fameweekafrica.com/"
