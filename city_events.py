@@ -20,6 +20,10 @@ Includes:
 - State of the Nation Address (SONA)
 - Slave Route Challenge
 - Nelson Mandela Marathon (incl. the Slave Route Challenge 21/10/5 km)
+- Absa Run Your City Cape Town 10K
+- Totalsports Women's Race Cape Town
+- SPAR Women's Challenge Cape Town
+- HOKA Half Cape Town
 - Cape Town Big Walk
 - Cape Town International Jazz Festival (CTICC)
 - Africa Oil Week (CTICC)
@@ -117,8 +121,10 @@ EVENT_DESCRIPTIONS: Dict[str, str] = {
         "The world's largest timed cycle race (~35 000 riders). Road closures "
         "sweep the CBD, Sea Point, Camps Bay and the Peninsula from early morning.",
     "Two Oceans Marathon":
-        "Ultra (56 km) on Easter Saturday and Half (21 km) on Easter Sunday. "
-        "Closures through the southern suburbs and the peninsula.",
+        "Event week: the Night Run (8 km, Wednesday evening) and the International "
+        "Friendship Run (Thursday) start and finish in Green Point; the Half (21 km, "
+        "Saturday) and Ultra (56 km, Sunday) run from Newlands to UCT, closing roads "
+        "through the southern suburbs and the peninsula. Expo at the CTICC.",
     "Sanlam Cape Town Marathon":
         "City-centre marathon (IAAF-labelled). Road closures around Green Point, "
         "Sea Point, the CBD and southern suburbs.",
@@ -154,6 +160,23 @@ EVENT_DESCRIPTIONS: Dict[str, str] = {
         "starting on Strand Street and passing the Castle of Good Hope, Grand Parade, "
         "the Company's Garden, Bo-Kaap and District Six. CBD road closures through the "
         "morning; number collection on the Grand Parade in the days before.",
+    "Absa Run Your City Cape Town 10K":
+        "Mass 10 km road race (~15 000 runners) from Woodbridge Island, Milnerton, "
+        "inbound on the N1 into the Foreshore, then Heerengracht, Adderley and Long "
+        "Streets to a Grand Parade finish. N1 inbound and CBD closures through the morning.",
+    "Totalsports Women's Race Cape Town":
+        "Women's Day 10 km / 5 km road race starting on Darling and Castle Streets, "
+        "through the CBD, District Six and Gardens to a Grand Parade finish. Darling, "
+        "Corporation and Castle Streets close from early morning; Long, Bree, Wale, "
+        "Buitenkant and Sir Lowry roads through mid-morning.",
+    "SPAR Women's Challenge Cape Town":
+        "Women's 10 km / 5 km road race (~15 000 entrants) from Green Point Common "
+        "along Vlei Road, Granger Bay Boulevard and Beach Road, Sea Point. Green Point, "
+        "Mouille Point and Sea Point closures through the morning.",
+    "HOKA Half Cape Town":
+        "Half marathon, 10 km and 5 km road race. The 2026 edition started on Fritz "
+        "Sonnenberg Road beside the DHL Stadium and finished at the Green Point Cricket "
+        "Club; check the official page for the current route and closures.",
     "Cape Town Big Walk":
         "Mass-participation charity walk (5–10 km) starting in Green Point and "
         "following the Sea Point Promenade. Atlantic-seaboard road and parking "
@@ -241,12 +264,29 @@ def new_year_v_and_a_date(year: int) -> date:
     return date(year, 12, 31)
 
 def two_oceans_start_date(year: int) -> date:
-    """Two Oceans Ultra: Easter Saturday."""
-    return _easter_sunday(year) - timedelta(days=1)
+    """Two Oceans event week opens: the Wednesday after Easter.
+
+    Until 2025 the race was Easter weekend. Since 2026 it is the week *after*
+    Easter (2026: Night Run Fri 10 Apr; 2027: Night Run Wed 31 Mar), so this is
+    only an anchor — fetch_two_oceans() reads the published dates.
+    """
+    return _easter_sunday(year) + timedelta(days=3)
 
 def two_oceans_end_date(year: int) -> date:
-    """Two Oceans Half: Easter Sunday."""
-    return _easter_sunday(year)
+    """Two Oceans event week closes: the Sunday after Easter (12 Apr 2026, 4 Apr 2027)."""
+    return _easter_sunday(year) + timedelta(days=7)
+
+def run_your_city_ct_date(year: int) -> date:
+    """Absa Run Your City Cape Town 10K: 2nd Sunday of May (11 May 2025, 10 May 2026)."""
+    return nth_weekday_of_month(year, 5, 2, 6)
+
+def totalsports_womens_race_date(year: int) -> date:
+    """Totalsports Women's Race Cape Town: Women's Day, 9 August.
+
+    Held on the day itself whatever the weekday (Sat 2025, Sun 2026). 2027 falls on
+    a Monday, so the race may shift; the scraped date overrides this anchor.
+    """
+    return date(year, 8, 9)
 
 def mining_indaba_dates(year: int) -> tuple[date, date]:
     """Investing in African Mining Indaba: Monday–Thursday of early February.
@@ -586,6 +626,45 @@ def fetch_site(
     return _event(name, url, SOURCE_NONE)
 
 
+def scrape_patterns(url: str, patterns: List[Pattern]) -> Optional[DateHit]:
+    """Read an upcoming date off ``url`` using only site-specific ``patterns``.
+
+    For pages where the generic hunt is a liability: they carry other dates (entry
+    deadlines, other cities' races, a stale header) that it would happily return.
+    """
+    html = safe_get(url)
+    if not html:
+        return None
+    hit = try_patterns(html_to_text(html), patterns)
+    return hit if hit and _is_upcoming(hit) else None
+
+
+def _patterns_then_rule(
+    name: str,
+    url: str,
+    patterns: List[Pattern],
+    rule: Optional[DateRule] = None,
+    *,
+    location: Optional[str] = None,
+) -> EventRecord:
+    """Like ``_scrape_then_rule`` but reading only ``patterns`` (no generic hunt)."""
+    hit = scrape_patterns(url, patterns)
+    if hit:
+        return {**_event(name, url, SOURCE_TEXT, location=location), **hit}
+    if rule is None:
+        return _event(name, url, SOURCE_NONE, location=location)
+    return next_computed(name, url, rule, location=location)
+
+
+def _date_after(label: str) -> Pattern:
+    """'<label> [Weekday,] 4 April 2027' — a labelled single date."""
+    return re.compile(
+        rf"{label}\s*:?\s*(?:[A-Za-z]+day,?\s*)?(?<!\d)(?P<d1>\d{{1,2}})(?:st|nd|rd|th)?\s+"
+        rf"(?P<mon>{MONTHS_REGEX})\s+(?P<year>20\d{{2}})",
+        re.IGNORECASE,
+    )
+
+
 def _scrape_then_rule(
     name: str,
     url: str,
@@ -620,14 +699,35 @@ def fetch_cycle_tour() -> EventRecord:
     return next_computed(name, url, cycle_tour_date)
 
 
-def fetch_two_oceans() -> EventRecord:
-    """Two Oceans Marathon: Easter Saturday (Ultra) → Easter Sunday (Half).
+TWO_OCEANS_URL = "https://www.twooceansmarathon.org.za/"
+# The race pages open with a header that can still show the last edition
+# ("Saturday, 11 April 2026") above the current one's "Date Sunday, 4 April 2027"
+# info block, so read the labelled date only. The homepage carries none.
+TWO_OCEANS_DATE = [_date_after(r"(?<![a-z])date")]
 
-    The website is not reliably scrapable, so we calculate from Easter.
+
+def fetch_two_oceans() -> EventRecord:
+    """Two Oceans Marathon event week: Night Run (Green Point) → Ultra.
+
+    The week opens with the Night Run and the International Friendship Run, both
+    starting and finishing in Green Point, and closes with the Half and the Ultra.
+    Read the opening date off the Night Run page and the closing one off the Ultra
+    page; if either cannot be read, fall back to the week-after-Easter anchor.
     """
+    name = "Two Oceans Marathon"
+    start = scrape_patterns(TWO_OCEANS_URL + "night-run/", TWO_OCEANS_DATE)
+    end = scrape_patterns(TWO_OCEANS_URL + "ultra-marathon/", TWO_OCEANS_DATE)
+    if start and end:
+        first, last = start["start_date"], end["end_date"]
+        span = date.fromisoformat(last) - date.fromisoformat(first)
+        if timedelta(0) <= span <= timedelta(days=7):
+            return {
+                **_event(name, TWO_OCEANS_URL, SOURCE_TEXT),
+                "start_date": first, "end_date": last,
+            }
     return next_computed(
-        "Two Oceans Marathon",
-        "https://www.twooceansmarathon.org.za/",
+        name,
+        TWO_OCEANS_URL,
         lambda year: (two_oceans_start_date(year), two_oceans_end_date(year)),
     )
 
@@ -824,6 +924,74 @@ def fetch_mandela_marathon() -> EventRecord:
     return _event(name, url, SOURCE_NONE, location=location)
 
 
+def fetch_run_your_city_ct() -> EventRecord:
+    """Absa Run Your City Cape Town 10K — Milnerton → N1 → Foreshore → Grand Parade.
+
+    The page keeps the last edition's "SUNDAY 10 MAY 2026" header until the next one
+    is announced; once past, it is rejected and the 2nd-Sunday-of-May rule stands in.
+    """
+    return _patterns_then_rule(
+        "Absa Run Your City Cape Town 10K",
+        "https://runyourcityseries.com/cape-town-10k/",
+        # The race-day header is the first weekday-prefixed date on the page.
+        [_date_after(r"(?<![a-z])(?=(?:Satur|Sun)day)")],
+        run_your_city_ct_date,
+        location="Woodbridge Island → N1 → Foreshore → Grand Parade, Cape Town CBD",
+    )
+
+
+def fetch_totalsports_womens_race() -> EventRecord:
+    """Totalsports Women's Race Cape Town — CBD 10/5 km on Women's Day.
+
+    The homepage lists every city ("Durban Event Date: …", "Cape Town Event Date: …"),
+    so read the Cape Town block only; else the 9-August anchor.
+    """
+    return _patterns_then_rule(
+        "Totalsports Women's Race Cape Town",
+        "https://totalsportswomensrace.co.za/",
+        [_date_after(r"Cape Town\s*Event Date")],
+        totalsports_womens_race_date,
+        location="Cape Town CBD (Darling St start, Grand Parade finish)",
+    )
+
+
+def fetch_spar_womens_challenge() -> EventRecord:
+    """SPAR Women's Challenge Cape Town — Green Point / Mouille Point / Sea Point.
+
+    The homepage lists each city's date beside its venue ("Sunday24 March 2024 Green
+    Point Common Sports Ground"); the /cape-town/ page has been stuck on 2023. The
+    date wanders through late March (24 Mar 2024, 30 Mar 2025, 29 Mar 2026) around
+    Easter and Two Oceans, so there is no rule: scrape-only.
+
+    NOTE: as of the last audit the site still shows 2024, so this returns name-only
+    and the event stays off the calendar until the site is updated.
+    """
+    return _patterns_then_rule(
+        "SPAR Women's Challenge Cape Town",
+        "https://www.sparwomensrace.co.za/",
+        [re.compile(
+            rf"(?P<d1>\d{{1,2}})\s*(?P<mon>{MONTHS_REGEX})\s*(?P<year>20\d{{2}})\s*Green Point",
+            re.IGNORECASE,
+        )],
+        location="Green Point Common → Mouille Point → Sea Point",
+    )
+
+
+def fetch_hoka_half_ct() -> EventRecord:
+    """HOKA Half Cape Town — half marathon / 10 / 5 km (2026: Green Point).
+
+    Multi-city page ("Cape Town, 13 February 2027 … WHEN: …"), also carrying a
+    voucher validity range the generic hunt would grab. Too new for a rule:
+    scrape-only.
+    """
+    return _patterns_then_rule(
+        "HOKA Half Cape Town",
+        "https://hokahalf.co.za/",
+        [_date_after(r"Cape Town,")],
+        location="Green Point, Cape Town (2027 venue TBC)",
+    )
+
+
 def fetch_big_walk() -> EventRecord:
     """Cape Town Big Walk — mass charity walk along the Sea Point Promenade.
 
@@ -971,6 +1139,10 @@ EXTRACTORS: List[Callable[[], EventRecord]] = [
     fetch_sona,
     fetch_slave_route,
     fetch_mandela_marathon,
+    fetch_run_your_city_ct,
+    fetch_totalsports_womens_race,
+    fetch_spar_womens_challenge,
+    fetch_hoka_half_ct,
     fetch_big_walk,
     fetch_jazz_festival,
     fetch_africa_oil_week,

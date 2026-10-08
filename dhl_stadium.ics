@@ -11,7 +11,7 @@ X-WR-CALDESC:DHL Stadium fixtures plus the races, parades and CTICC confer
  d and the CBD.
 NAME:Cape Town Traffic Events
 X-WR-CALNAME:Cape Town Traffic Events
-LAST-MODIFIED:20261008T123752Z
+LAST-MODIFIED:20261008T124823Z
 REFRESH-INTERVAL;VALUE=DURATION:PT12H
 SOURCE;VALUE=URI:https://raw.githubusercontent.com/GiladAmar/GreenpointSta
  ndiumScraper/refs/heads/master/dhl_stadium.ics
@@ -878,6 +878,24 @@ TRANSP:TRANSPARENT
 URL:https://www.parliament.gov.za/state-of-the-nation-address
 END:VEVENT
 BEGIN:VEVENT
+SUMMARY:HOKA Half Cape Town
+DTSTART;VALUE=DATE:20270213
+DTEND;VALUE=DATE:20270214
+DTSTAMP:20261008T124823Z
+UID:05b63d618a9f823c@greenpoint-stadium-scraper
+SEQUENCE:0
+CATEGORIES:City Event
+DESCRIPTION:Half marathon\, 10 km and 5 km road race. The 2026 edition sta
+ rted on Fritz Sonnenberg Road beside the DHL Stadium and finished at the G
+ reen Point Cricket Club\; check the official page for the current route an
+ d closures.\n\nMore info: https://hokahalf.co.za/
+LAST-MODIFIED:20261008T124823Z
+LOCATION:Green Point\, Cape Town (2027 venue TBC)
+STATUS:CONFIRMED
+TRANSP:TRANSPARENT
+URL:https://hokahalf.co.za/
+END:VEVENT
+BEGIN:VEVENT
 SUMMARY:Cape Town Pride Parade
 DTSTART;VALUE=DATE:20270227
 DTEND;VALUE=DATE:20270228
@@ -993,16 +1011,18 @@ URL:https://www.capetownjazzfest.com/
 END:VEVENT
 BEGIN:VEVENT
 SUMMARY:Two Oceans Marathon
-DTSTART;VALUE=DATE:20270327
-DTEND;VALUE=DATE:20270329
-DTSTAMP:20260917T213356Z
-UID:8ba75280d4d2ac23@greenpoint-stadium-scraper
+DTSTART;VALUE=DATE:20270331
+DTEND;VALUE=DATE:20270405
+DTSTAMP:20261008T124823Z
+UID:c7babf99bc52f4a2@greenpoint-stadium-scraper
 SEQUENCE:0
 CATEGORIES:City Event
-DESCRIPTION:Ultra (56 km) on Easter Saturday and Half (21 km) on Easter Su
- nday. Closures through the southern suburbs and the peninsula.\n\nMore inf
- o: https://www.twooceansmarathon.org.za/
-LAST-MODIFIED:20260917T213356Z
+DESCRIPTION:Event week: the Night Run (8 km\, Wednesday evening) and the I
+ nternational Friendship Run (Thursday) start and finish in Green Point\; t
+ he Half (21 km\, Saturday) and Ultra (56 km\, Sunday) run from Newlands to
+  UCT\, closing roads through the southern suburbs and the peninsula. Expo 
+ at the CTICC.\n\nMore info: https://www.twooceansmarathon.org.za/
+LAST-MODIFIED:20261008T124823Z
 STATUS:CONFIRMED
 TRANSP:TRANSPARENT
 URL:https://www.twooceansmarathon.org.za/
@@ -1066,6 +1086,26 @@ LAST-MODIFIED:20260917T213356Z
 STATUS:CONFIRMED
 TRANSP:TRANSPARENT
 URL:https://first-thursdays.co.za/
+END:VEVENT
+BEGIN:VEVENT
+SUMMARY:Absa Run Your City Cape Town 10K
+DTSTART;VALUE=DATE:20270509
+DTEND;VALUE=DATE:20270510
+DTSTAMP:20261008T124823Z
+UID:cd86cc6a686a69a8@greenpoint-stadium-scraper
+SEQUENCE:0
+CATEGORIES:City Event
+DESCRIPTION:Mass 10 km road race (~15 000 runners) from Woodbridge Island
+ \, Milnerton\, inbound on the N1 into the Foreshore\, then Heerengracht\, 
+ Adderley and Long Streets to a Grand Parade finish. N1 inbound and CBD clo
+ sures through the morning.\n\nMore info: https://runyourcityseries.com/cap
+ e-town-10k/
+LAST-MODIFIED:20261008T124823Z
+LOCATION:Woodbridge Island → N1 → Foreshore → Grand Parade\, Cape To
+ wn CBD
+STATUS:CONFIRMED
+TRANSP:TRANSPARENT
+URL:https://runyourcityseries.com/cape-town-10k/
 END:VEVENT
 BEGIN:VEVENT
 SUMMARY:Enlit Africa
@@ -1148,6 +1188,25 @@ LAST-MODIFIED:20260917T213356Z
 STATUS:CONFIRMED
 TRANSP:TRANSPARENT
 URL:https://first-thursdays.co.za/
+END:VEVENT
+BEGIN:VEVENT
+SUMMARY:Totalsports Women's Race Cape Town
+DTSTART;VALUE=DATE:20270809
+DTEND;VALUE=DATE:20270810
+DTSTAMP:20261008T124823Z
+UID:545712dac446aac6@greenpoint-stadium-scraper
+SEQUENCE:0
+CATEGORIES:City Event
+DESCRIPTION:Women's Day 10 km / 5 km road race starting on Darling and Cas
+ tle Streets\, through the CBD\, District Six and Gardens to a Grand Parade
+  finish. Darling\, Corporation and Castle Streets close from early morning
+ \; Long\, Bree\, Wale\, Buitenkant and Sir Lowry roads through mid-morning
+ .\n\nMore info: https://totalsportswomensrace.co.za/
+LAST-MODIFIED:20261008T124823Z
+LOCATION:Cape Town CBD (Darling St start\, Grand Parade finish)
+STATUS:CONFIRMED
+TRANSP:TRANSPARENT
+URL:https://totalsportswomensrace.co.za/
 END:VEVENT
 BEGIN:VEVENT
 SUMMARY:First Thursdays

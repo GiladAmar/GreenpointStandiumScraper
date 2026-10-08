@@ -1,8 +1,8 @@
 {
-  "generated_at": "2026-10-08T12:37:52.726812+00:00",
+  "generated_at": "2026-10-08T12:48:23.449671+00:00",
   "calendar": {
-    "total": 79,
-    "upcoming": 41,
+    "total": 82,
+    "upcoming": 44,
     "past": 38
   },
   "stadium": {
@@ -20,10 +20,10 @@
     },
     "fetch_two_oceans": {
       "name": "Two Oceans Marathon",
-      "source": "computed",
-      "last_live": null,
-      "start_date": "2027-03-27",
-      "end_date": "2027-03-28",
+      "source": "text",
+      "last_live": "2026-10-08",
+      "start_date": "2027-03-31",
+      "end_date": "2027-04-04",
       "url": "https://www.twooceansmarathon.org.za/"
     },
     "fetch_ct_marathon": {
@@ -113,6 +113,38 @@
       "start_date": "2026-10-18",
       "end_date": "2026-10-18",
       "url": "https://nelsonmandelamarathon.com/race-week/"
+    },
+    "fetch_run_your_city_ct": {
+      "name": "Absa Run Your City Cape Town 10K",
+      "source": "computed",
+      "last_live": null,
+      "start_date": "2027-05-09",
+      "end_date": "2027-05-09",
+      "url": "https://runyourcityseries.com/cape-town-10k/"
+    },
+    "fetch_totalsports_womens_race": {
+      "name": "Totalsports Women's Race Cape Town",
+      "source": "computed",
+      "last_live": null,
+      "start_date": "2027-08-09",
+      "end_date": "2027-08-09",
+      "url": "https://totalsportswomensrace.co.za/"
+    },
+    "fetch_spar_womens_challenge": {
+      "name": "SPAR Women's Challenge Cape Town",
+      "source": "none",
+      "last_live": null,
+      "start_date": null,
+      "end_date": null,
+      "url": "https://www.sparwomensrace.co.za/"
+    },
+    "fetch_hoka_half_ct": {
+      "name": "HOKA Half Cape Town",
+      "source": "text",
+      "last_live": "2026-10-08",
+      "start_date": "2027-02-13",
+      "end_date": "2027-02-13",
+      "url": "https://hokahalf.co.za/"
     },
     "fetch_big_walk": {
       "name": "Cape Town Big Walk",

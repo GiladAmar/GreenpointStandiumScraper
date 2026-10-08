@@ -209,28 +209,33 @@ class TestNewYearVADate:
 
 
 class TestTwoOceansDates:
-    def test_2025_start_is_easter_saturday(self):
-        # Easter Sunday 2025 = April 20
-        assert events.two_oceans_start_date(2025) == date(2025, 4, 19)
+    """Since 2026 the event week is the week after Easter, Wednesday to Sunday."""
 
-    def test_2025_end_is_easter_sunday(self):
-        assert events.two_oceans_end_date(2025) == date(2025, 4, 20)
+    def test_2026_week_ends_on_the_sunday_after_easter(self):
+        # Easter Sunday 2026 = April 5; the Ultra/Half weekend was 11-12 April.
+        assert events.two_oceans_end_date(2026) == date(2026, 4, 12)
 
-    def test_2026_start_is_easter_saturday(self):
-        # Easter Sunday 2026 = April 5
-        assert events.two_oceans_start_date(2026) == date(2026, 4, 4)
+    def test_2027_matches_the_announced_event_week(self):
+        # Announced: Night Run Wed 31 Mar → Ultra Sun 4 Apr 2027 (Easter = 28 Mar).
+        assert events.two_oceans_start_date(2027) == date(2027, 3, 31)
+        assert events.two_oceans_end_date(2027) == date(2027, 4, 4)
 
-    def test_start_is_always_saturday(self):
+    def test_wednesday_to_sunday(self):
+        for year in range(2026, 2033):
+            start, end = events.two_oceans_start_date(year), events.two_oceans_end_date(year)
+            assert start.weekday() == 2 and end.weekday() == 6
+            assert end - start == timedelta(days=4)
+
+
+class TestRoadRaceRules:
+    def test_run_your_city_is_second_sunday_of_may(self):
+        assert events.run_your_city_ct_date(2025) == date(2025, 5, 11)
+        assert events.run_your_city_ct_date(2026) == date(2026, 5, 10)
+        assert events.run_your_city_ct_date(2027) == date(2027, 5, 9)
+
+    def test_totalsports_womens_race_is_womens_day(self):
         for year in range(2025, 2032):
-            assert events.two_oceans_start_date(year).weekday() == 5
-
-    def test_end_is_always_sunday(self):
-        for year in range(2025, 2032):
-            assert events.two_oceans_end_date(year).weekday() == 6
-
-    def test_end_is_day_after_start(self):
-        for year in range(2025, 2032):
-            assert events.two_oceans_end_date(year) == events.two_oceans_start_date(year) + timedelta(days=1)
+            assert events.totalsports_womens_race_date(year) == date(year, 8, 9)
 
 
 class TestSlaveRouteDate:
@@ -331,6 +336,8 @@ CALCULATED_FETCHERS = [
     ("fetch_new_year_v_and_a", "V&A Waterfront New Year's Eve"),
     ("fetch_sona",             "State of the Nation Address (SONA)"),
     ("fetch_slave_route",      "Slave Route Challenge"),
+    ("fetch_run_your_city_ct", "Absa Run Your City Cape Town 10K"),
+    ("fetch_totalsports_womens_race", "Totalsports Women's Race Cape Town"),
     ("fetch_jazz_festival",    "Cape Town International Jazz Festival"),
     ("fetch_africa_energy_indaba", "Africa Energy Indaba"),
     ("fetch_enlit_africa",     "Enlit Africa"),
@@ -346,6 +353,8 @@ SCRAPE_ONLY_FETCHERS = [
     ("fetch_africa_oil_week",  "Africa Oil Week"),
     ("fetch_comic_con",        "Comic Con Cape Town"),
     ("fetch_mandela_marathon", "Nelson Mandela Marathon"),
+    ("fetch_spar_womens_challenge", "SPAR Women's Challenge Cape Town"),
+    ("fetch_hoka_half_ct",     "HOKA Half Cape Town"),
 ]
 
 ALL_FETCHERS = CALCULATED_FETCHERS + SCRAPE_ONLY_FETCHERS
@@ -444,6 +453,22 @@ SCRAPE_SAMPLES = [
      f"10h30 – 19h00 Friday, 16 October {NEXT_YEAR} 09h00 – 19h00</p>"
      f"<h3>October 18</h3><p>Race Day. Rise. Remember. Run.</p>",
      f"{NEXT_YEAR}-10-18", f"{NEXT_YEAR}-10-18"),
+    # Shapes of the real pages, each with a decoy date the generic hunt would take.
+    ("fetch_run_your_city_ct",
+     f"<p>Entries open 1 February {NEXT_YEAR}</p><h2>SUNDAY 9 MAY {NEXT_YEAR}</h2>"
+     f"<p>Absa RUN YOUR CITY CAPE TOWN 10K</p>", f"{NEXT_YEAR}-05-09", f"{NEXT_YEAR}-05-09"),
+    ("fetch_totalsports_womens_race",
+     f"<h3>Durban</h3><p>Event Date: 01 August {NEXT_YEAR}</p><h3>Cape Town</h3>"
+     f"<p>Event Date: 08 August {NEXT_YEAR}Event Type: Road Running</p>",
+     f"{NEXT_YEAR}-08-08", f"{NEXT_YEAR}-08-08"),
+    ("fetch_spar_womens_challenge",
+     f"<p>Sunday</p><p>21 March {NEXT_YEAR}</p><p>Green Point Common Sports Ground</p>"
+     f"<p>Saturday</p><p>03 April {NEXT_YEAR}</p><p>Wanderers Sports Ground, Windhoek</p>",
+     f"{NEXT_YEAR}-03-21", f"{NEXT_YEAR}-03-21"),
+    ("fetch_hoka_half_ct",
+     f"<p>Valid Period 23 July - 1 April {NEXT_YEAR}</p><h3>Johannesburg, 7 November "
+     f"{NEXT_YEAR}</h3><h3>Cape Town, 13 February {NEXT_YEAR}</h3><p>WHEN: 13 February "
+     f"{NEXT_YEAR}</p>", f"{NEXT_YEAR}-02-13", f"{NEXT_YEAR}-02-13"),
 ]
 
 
@@ -453,6 +478,40 @@ def test_fetcher_scrapes_official_date(fn_name, html, exp_start, exp_end):
         result = getattr(events, fn_name)()
     assert result["start_date"] == exp_start
     assert result["end_date"] == exp_end
+
+
+def _pages(by_suffix):
+    """safe_get stand-in serving different HTML per URL suffix."""
+    return lambda url: next((html for suffix, html in by_suffix.items() if url.endswith(suffix)), None)
+
+
+class TestTwoOceansScrape:
+    NIGHT = (f"<h1>Night Run Friday, 10 April 2026</h1><p>Date Wednesday, 31 March "
+             f"{NEXT_YEAR} DISTANCE 8 KM Start and finish venue Green Point</p>")
+    ULTRA = (f"<h1>Ultra Marathon Saturday, 11 April 2026</h1><p>Qualifying window "
+             f"(1 May 2026 – 7 March {NEXT_YEAR})</p><p>date Sunday, 4 April {NEXT_YEAR} "
+             f"distance 56 KM</p>")
+
+    def test_spans_night_run_to_ultra_ignoring_the_stale_header(self):
+        pages = _pages({"night-run/": self.NIGHT, "ultra-marathon/": self.ULTRA})
+        with patch("city_events.safe_get", side_effect=pages):
+            result = events.fetch_two_oceans()
+        assert (result["start_date"], result["end_date"]) == (
+            f"{NEXT_YEAR}-03-31", f"{NEXT_YEAR}-04-04")
+        assert result["source"] == events.SOURCE_TEXT
+
+    def test_one_unreadable_page_falls_back_to_the_rule(self):
+        pages = _pages({"night-run/": self.NIGHT})
+        with patch("city_events.safe_get", side_effect=pages):
+            result = events.fetch_two_oceans()
+        assert result["source"] == events.SOURCE_COMPUTED
+
+    def test_pages_from_different_editions_fall_back_to_the_rule(self):
+        stale_ultra = self.ULTRA.replace(f"4 April {NEXT_YEAR}", f"4 April {NEXT_YEAR + 1}")
+        pages = _pages({"night-run/": self.NIGHT, "ultra-marathon/": stale_ultra})
+        with patch("city_events.safe_get", side_effect=pages):
+            result = events.fetch_two_oceans()
+        assert result["source"] == events.SOURCE_COMPUTED
 
 
 def test_scrape_prefers_jsonld_over_stray_text():
