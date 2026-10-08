@@ -1,5 +1,5 @@
 {
-  "generated_at": "2026-10-08T12:48:23.449671+00:00",
+  "generated_at": "2026-10-08T13:06:47.549228+00:00",
   "calendar": {
     "total": 82,
     "upcoming": 44,
@@ -20,7 +20,7 @@
     },
     "fetch_two_oceans": {
       "name": "Two Oceans Marathon",
-      "source": "text",
+      "source": "computed",
       "last_live": "2026-10-08",
       "start_date": "2027-03-31",
       "end_date": "2027-04-04",
@@ -172,7 +172,7 @@
     },
     "fetch_africa_energy_indaba": {
       "name": "Africa Energy Indaba",
-      "source": "text",
+      "source": "computed",
       "last_live": "2026-10-08",
       "start_date": "2027-03-02",
       "end_date": "2027-03-04",
@@ -203,5 +203,8 @@
       "url": "https://www.fameweekafrica.com/"
     }
   },
-  "degradations": []
+  "degradations": [
+    "fetch_two_oceans: has not read a live date since 2026-10-08 (now falling back to 'computed')",
+    "fetch_africa_energy_indaba: has not read a live date since 2026-10-08 (now falling back to 'computed')"
+  ]
 }
