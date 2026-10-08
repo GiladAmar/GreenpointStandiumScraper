@@ -19,6 +19,7 @@ Includes:
 - Investing in African Mining Indaba (CTICC, early February)
 - State of the Nation Address (SONA)
 - Slave Route Challenge
+- Nelson Mandela Marathon (incl. the Slave Route Challenge 21/10/5 km)
 - Cape Town Big Walk
 - Cape Town International Jazz Festival (CTICC)
 - Africa Oil Week (CTICC)
@@ -148,6 +149,11 @@ EVENT_DESCRIPTIONS: Dict[str, str] = {
         "Darling Street and winding through District Six, the Company's Gardens, "
         "Bo-Kaap, the DHL Stadium and Fort Wynyard. CBD and Green Point road closures "
         "through the morning.",
+    "Nelson Mandela Marathon":
+        "Marathon (42 km) plus the Slave Route Challenge half, 10 km and 5 km, all "
+        "starting on Strand Street and passing the Castle of Good Hope, Grand Parade, "
+        "the Company's Garden, Bo-Kaap and District Six. CBD road closures through the "
+        "morning; number collection on the Grand Parade in the days before.",
     "Cape Town Big Walk":
         "Mass-participation charity walk (5–10 km) starting in Green Point and "
         "following the Sea Point Promenade. Atlantic-seaboard road and parking "
@@ -772,6 +778,52 @@ def fetch_slave_route() -> EventRecord:
     )
 
 
+# The race-week page lists number collection (15–17 Oct) before the race itself,
+# and the race-day page gives the whole race week (11–18 Oct), so the generic hunt
+# reads the wrong day. Race day is only labelled as "October 18 Race Day", with no
+# year beside it; the year comes from the page's "Cape Town, October 2026" header.
+# html_to_text() glues adjacent tags ("19h00October 18Race Day"), hence no \b.
+MANDELA_MARATHON_RACE_DAY = re.compile(
+    rf"(?<![a-z])(?P<mon>{MONTHS_REGEX})\s+(?P<d1>\d{{1,2}})(?:st|nd|rd|th)?\s*Race\s+Day\b",
+    re.IGNORECASE,
+)
+
+
+def mandela_marathon_race_day(text: str) -> Optional[DateHit]:
+    """Read race day off the Nelson Mandela Marathon race-week page text."""
+    m = MANDELA_MARATHON_RACE_DAY.search(text)
+    if not m:
+        return None
+    year = re.search(
+        rf"(?<![a-z]){re.escape(m['mon'][:3])}[a-z]*\s+(20\d{{2}})\b", text, re.IGNORECASE
+    )
+    if not year:
+        return None
+    day = parse_iso_date(m["d1"], m["mon"], year.group(1))
+    return {"start_date": day, "end_date": day}
+
+
+def fetch_mandela_marathon() -> EventRecord:
+    """Nelson Mandela Marathon — CBD road race from Strand Street (inaugural 2026).
+
+    Its 21/10/5 km races are the Slave Route Challenge, so the two arrive on the same
+    morning; CANONICAL_NAMES (generate_dhl_ics.py) folds them into one entry. A first
+    edition has no track record to base a rule on, so this is scrape-only.
+    """
+    name = "Nelson Mandela Marathon"
+    url = "https://nelsonmandelamarathon.com/race-week/"
+    location = "Cape Town CBD (Strand Street, Grand Parade, Bo-Kaap, District Six)"
+    html = safe_get(url)
+    if html:
+        for source, hit in (
+            (SOURCE_JSONLD, jsonld_event_dates(html)),
+            (SOURCE_TEXT, mandela_marathon_race_day(html_to_text(html))),
+        ):
+            if hit and _is_upcoming(hit):
+                return {**_event(name, url, source, location=location), **hit}
+    return _event(name, url, SOURCE_NONE, location=location)
+
+
 def fetch_big_walk() -> EventRecord:
     """Cape Town Big Walk — mass charity walk along the Sea Point Promenade.
 
@@ -918,6 +970,7 @@ EXTRACTORS: List[Callable[[], EventRecord]] = [
     fetch_mining_indaba,
     fetch_sona,
     fetch_slave_route,
+    fetch_mandela_marathon,
     fetch_big_walk,
     fetch_jazz_festival,
     fetch_africa_oil_week,

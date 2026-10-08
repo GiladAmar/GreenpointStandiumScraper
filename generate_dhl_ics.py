@@ -49,12 +49,9 @@ HEALTH_PATH = "health.json"
 # they do not fail the workflow. Any degradation NOT in this set still turns CI red,
 # which is the whole point of the health check (CLAUDE.md convention 1) — so keep the
 # set tight, and drop an entry the moment its scraper reads a live date again.
-ACKNOWLEDGED_DEGRADATIONS = frozenset(
-    {
-        "fetch_mining_indaba",
-        "fetch_africa_energy_indaba",
-    }
-)
+# (fetch_mining_indaba and fetch_africa_energy_indaba were listed until both read
+# live dates again on 2026-10-08.)
+ACKNOWLEDGED_DEGRADATIONS: frozenset = frozenset()
 
 CALENDAR_NAME = "Cape Town Traffic Events"
 CALENDAR_DESCRIPTION = (
@@ -108,6 +105,9 @@ CANONICAL_NAMES: List[Tuple[Pattern, str]] = [
     (re.compile(r"\bcycle tour\b", re.IGNORECASE), "Cape Town Cycle Tour"),
     (re.compile(r"\btwo oceans\b", re.IGNORECASE), "Two Oceans Marathon"),
     (re.compile(r"\bcape town marathon\b", re.IGNORECASE), "Sanlam Cape Town Marathon"),
+    # Since 2026 the Slave Route Challenge is the 21/10/5 km of the Nelson Mandela
+    # Marathon: one race morning on Strand Street, so one entry.
+    (re.compile(r"\bslave route\b|\bmandela marathon\b", re.IGNORECASE), "Nelson Mandela Marathon"),
     # A genuine multi-day tournament the stadium feed lists as one event per day.
     # Only aliased events merge (see dedupe_events), so it must be named to stay one
     # entry rather than splitting into a VEVENT per day.

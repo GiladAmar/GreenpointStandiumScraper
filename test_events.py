@@ -345,6 +345,7 @@ SCRAPE_ONLY_FETCHERS = [
     ("fetch_big_walk",         "Cape Town Big Walk"),
     ("fetch_africa_oil_week",  "Africa Oil Week"),
     ("fetch_comic_con",        "Comic Con Cape Town"),
+    ("fetch_mandela_marathon", "Nelson Mandela Marathon"),
 ]
 
 ALL_FETCHERS = CALCULATED_FETCHERS + SCRAPE_ONLY_FETCHERS
@@ -435,6 +436,14 @@ SCRAPE_SAMPLES = [
      f"<p>See you on 30 April {NEXT_YEAR}</p>", f"{NEXT_YEAR}-04-30", f"{NEXT_YEAR}-04-30"),
     ("fetch_fame_week",
      f"<p>28 October – 1 November {NEXT_YEAR}</p>", f"{NEXT_YEAR}-10-28", f"{NEXT_YEAR}-11-01"),
+    # Shape of nelsonmandelamarathon.com/race-week/: number collection is listed (with
+    # full dates) before race day, which carries no year of its own.
+    ("fetch_mandela_marathon",
+     f"<h1>A week in the spirit of Madiba</h1><p>Cape Town, October {NEXT_YEAR}.</p>"
+     f"<h3>October 15–17</h3><p>NUMBER COLLECTION Thursday, 15 October {NEXT_YEAR} "
+     f"10h30 – 19h00 Friday, 16 October {NEXT_YEAR} 09h00 – 19h00</p>"
+     f"<h3>October 18</h3><p>Race Day. Rise. Remember. Run.</p>",
+     f"{NEXT_YEAR}-10-18", f"{NEXT_YEAR}-10-18"),
 ]
 
 
@@ -1040,6 +1049,20 @@ def test_an_aliased_multi_day_tournament_still_merges():
 
 # ── Canonical naming ──────────────────────────────────────────────────────────
 
+def test_slave_route_folds_into_the_mandela_marathon():
+    """The Slave Route Challenge is the Mandela Marathon's 21/10/5 km: one morning,
+    one entry, carrying the marathon's blurb and link."""
+    slave = all_day("Slave Route Challenge", date(2026, 10, 18),
+                    url="https://www.slaveroute.co.za/", category=gen.CATEGORY_CITY)
+    mandela = all_day("Nelson Mandela Marathon", date(2026, 10, 18),
+                      url="https://nelsonmandelamarathon.com/race-week/",
+                      category=gen.CATEGORY_CITY)
+    merged = gen.dedupe_events([slave, mandela])
+    assert [(e.name, e.url) for e in merged] == [
+        ("Nelson Mandela Marathon", "https://nelsonmandelamarathon.com/race-week/")
+    ]
+
+
 def test_a_lone_record_still_gets_the_canonical_name():
     """Whether both sources are in range varies run to run, and a name that flips
     is a UID that flips — which puts the same race on the calendar twice."""
@@ -1279,11 +1302,12 @@ def test_health_check_exit_status(tmp_path):
     assert gen.check_health_file(str(dirty)) == 1
 
 
+@patch.object(gen, "ACKNOWLEDGED_DEGRADATIONS", frozenset({"fetch_mining_indaba"}))
 def test_acknowledged_degradations_are_logged_but_do_not_fail(tmp_path):
     """A scraper in ACKNOWLEDGED_DEGRADATIONS coasts on its computed rule every year
     while its site is silent; --check-health must report it but not go red for it,
     while any other degradation alongside it still fails the job."""
-    key = next(iter(gen.ACKNOWLEDGED_DEGRADATIONS))
+    key = "fetch_mining_indaba"
 
     ack_only = tmp_path / "ack.json"
     ack_only.write_text(json.dumps({"degradations": [

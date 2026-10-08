@@ -11,7 +11,7 @@ X-WR-CALDESC:DHL Stadium fixtures plus the races, parades and CTICC confer
  d and the CBD.
 NAME:Cape Town Traffic Events
 X-WR-CALNAME:Cape Town Traffic Events
-LAST-MODIFIED:20260917T221628Z
+LAST-MODIFIED:20261008T123752Z
 REFRESH-INTERVAL;VALUE=DURATION:PT12H
 SOURCE;VALUE=URI:https://raw.githubusercontent.com/GiladAmar/GreenpointSta
  ndiumScraper/refs/heads/master/dhl_stadium.ics
@@ -582,15 +582,17 @@ BEGIN:VEVENT
 SUMMARY:DHL Stormers vs Hollywoodbets Sharks
 DTSTART;TZID=Africa/Johannesburg:20261010T160000
 DTEND;TZID=Africa/Johannesburg:20261010T235959
-DTSTAMP:20260917T213356Z
+DTSTAMP:20261008T123752Z
 UID:1ba0ab520ed94a08@greenpoint-stadium-scraper
-SEQUENCE:0
+SEQUENCE:1
 CATEGORIES:DHL Stadium
 DESCRIPTION:DHL Stormers take on Hollywoodbets Sharks in the 2026/7 Vodaco
- m United Rugby Championship season.
-LAST-MODIFIED:20260917T213356Z
+ m United Rugby Championship season.\n\nTicket Sales: https://stormers.tmti
+ ckets.co.za/EDP/Event/Index/75
+LAST-MODIFIED:20261008T123752Z
 STATUS:CONFIRMED
 TRANSP:TRANSPARENT
+URL:https://stormers.tmtickets.co.za/EDP/Event/Index/75
 END:VEVENT
 BEGIN:VEVENT
 SUMMARY:DHL Stormers vs Bristol Bears
@@ -607,23 +609,25 @@ STATUS:CONFIRMED
 TRANSP:TRANSPARENT
 END:VEVENT
 BEGIN:VEVENT
-SUMMARY:Slave Route Challenge
+SUMMARY:Nelson Mandela Marathon
 DTSTART;VALUE=DATE:20261018
 DTEND;VALUE=DATE:20261019
-DTSTAMP:20260917T213356Z
-UID:6c89b1519b80a222@greenpoint-stadium-scraper
+DTSTAMP:20261008T123752Z
+UID:71ff34383b818d25@greenpoint-stadium-scraper
 SEQUENCE:0
 CATEGORIES:City Event
-DESCRIPTION:Heritage road race (21.1 km / 10 km / 5 km) starting at the Ci
- ty Hall on Darling Street and winding through District Six\, the Company's
-  Gardens\, Bo-Kaap\, the DHL Stadium and Fort Wynyard. CBD and Green Point
-  road closures through the morning.\n\nMore info: https://www.slaveroute.c
- o.za/
-LAST-MODIFIED:20260917T213356Z
-LOCATION:Cape Town CBD (City Hall\, District Six\, Bo-Kaap\, DHL Stadium)
+DESCRIPTION:Marathon (42 km) plus the Slave Route Challenge half\, 10 km a
+ nd 5 km\, all starting on Strand Street and passing the Castle of Good Hop
+ e\, Grand Parade\, the Company's Garden\, Bo-Kaap and District Six. CBD ro
+ ad closures through the morning\; number collection on the Grand Parade in
+  the days before.\n\nMore info: https://nelsonmandelamarathon.com/race-wee
+ k/
+LAST-MODIFIED:20261008T123752Z
+LOCATION:Cape Town CBD (Strand Street\, Grand Parade\, Bo-Kaap\, District 
+ Six)
 STATUS:CONFIRMED
 TRANSP:TRANSPARENT
-URL:https://www.slaveroute.co.za/
+URL:https://nelsonmandelamarathon.com/race-week/
 END:VEVENT
 BEGIN:VEVENT
 SUMMARY:DHL Stormers vs Scarlets

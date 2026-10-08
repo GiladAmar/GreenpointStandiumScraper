@@ -1,9 +1,9 @@
 {
-  "generated_at": "2026-10-01T06:48:47.814059+00:00",
+  "generated_at": "2026-10-08T12:37:52.726812+00:00",
   "calendar": {
     "total": 79,
-    "upcoming": 42,
-    "past": 37
+    "upcoming": 41,
+    "past": 38
   },
   "stadium": {
     "events": 39,
@@ -13,7 +13,7 @@
     "fetch_cycle_tour": {
       "name": "Cape Town Cycle Tour",
       "source": "text",
-      "last_live": "2026-10-01",
+      "last_live": "2026-10-08",
       "start_date": "2027-03-14",
       "end_date": "2027-03-14",
       "url": "https://www.capetowncycletour.com/"
@@ -29,7 +29,7 @@
     "fetch_ct_marathon": {
       "name": "Sanlam Cape Town Marathon",
       "source": "text",
-      "last_live": "2026-10-01",
+      "last_live": "2026-10-08",
       "start_date": "2027-05-22",
       "end_date": "2027-05-23",
       "url": "https://www.capetownmarathon.com/"
@@ -37,7 +37,7 @@
     "fetch_cape_epic": {
       "name": "Absa Cape Epic",
       "source": "text",
-      "last_live": "2026-10-01",
+      "last_live": "2026-10-08",
       "start_date": "2027-03-21",
       "end_date": "2027-03-28",
       "url": "https://www.epic-series.com/capeepic"
@@ -85,7 +85,7 @@
     "fetch_mining_indaba": {
       "name": "Investing in African Mining Indaba",
       "source": "jsonld",
-      "last_live": "2026-10-01",
+      "last_live": "2026-10-08",
       "start_date": "2027-02-08",
       "end_date": "2027-02-11",
       "url": "https://miningindaba.com/"
@@ -105,6 +105,14 @@
       "start_date": "2026-10-18",
       "end_date": "2026-10-18",
       "url": "https://www.slaveroute.co.za/"
+    },
+    "fetch_mandela_marathon": {
+      "name": "Nelson Mandela Marathon",
+      "source": "text",
+      "last_live": "2026-10-08",
+      "start_date": "2026-10-18",
+      "end_date": "2026-10-18",
+      "url": "https://nelsonmandelamarathon.com/race-week/"
     },
     "fetch_big_walk": {
       "name": "Cape Town Big Walk",
@@ -132,8 +140,8 @@
     },
     "fetch_africa_energy_indaba": {
       "name": "Africa Energy Indaba",
-      "source": "computed",
-      "last_live": "2026-09-18",
+      "source": "text",
+      "last_live": "2026-10-08",
       "start_date": "2027-03-02",
       "end_date": "2027-03-04",
       "url": "https://www.africaenergyindaba.com/"
@@ -141,7 +149,7 @@
     "fetch_enlit_africa": {
       "name": "Enlit Africa",
       "source": "text",
-      "last_live": "2026-10-01",
+      "last_live": "2026-10-08",
       "start_date": "2027-05-11",
       "end_date": "2027-05-13",
       "url": "https://wearevuka.com/energy/enlit-africa/"
@@ -157,13 +165,11 @@
     "fetch_fame_week": {
       "name": "FAME Week Africa",
       "source": "text",
-      "last_live": "2026-10-01",
+      "last_live": "2026-10-08",
       "start_date": "2026-10-28",
       "end_date": "2026-11-01",
       "url": "https://www.fameweekafrica.com/"
     }
   },
-  "degradations": [
-    "fetch_africa_energy_indaba: has not read a live date since 2026-09-18 (now falling back to 'computed')"
-  ]
+  "degradations": []
 }
