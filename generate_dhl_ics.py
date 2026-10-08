@@ -49,9 +49,18 @@ HEALTH_PATH = "health.json"
 # they do not fail the workflow. Any degradation NOT in this set still turns CI red,
 # which is the whole point of the health check (CLAUDE.md convention 1) — so keep the
 # set tight, and drop an entry the moment its scraper reads a live date again.
-# (fetch_mining_indaba and fetch_africa_energy_indaba were listed until both read
-# live dates again on 2026-10-08.)
-ACKNOWLEDGED_DEGRADATIONS: frozenset = frozenset()
+#
+# Some official sites also refuse GitHub's runner IPs (403) while serving a normal
+# connection fine, so the scraper reads live locally and falls back in CI. Listed
+# for that reason: twooceansmarathon.org.za and africaenergyindaba.com (both 403 in
+# CI as of 2026-10-08; their week-after-Easter / first-week-of-March rules match the
+# published dates). Recheck from a runner before dropping them.
+ACKNOWLEDGED_DEGRADATIONS = frozenset(
+    {
+        "fetch_two_oceans",
+        "fetch_africa_energy_indaba",
+    }
+)
 
 CALENDAR_NAME = "Cape Town Traffic Events"
 CALENDAR_DESCRIPTION = (
