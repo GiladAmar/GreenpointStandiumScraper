@@ -11,7 +11,7 @@ X-WR-CALDESC:DHL Stadium fixtures plus the races, parades and CTICC confer
  d and the CBD.
 NAME:Cape Town Traffic Events
 X-WR-CALNAME:Cape Town Traffic Events
-LAST-MODIFIED:20261008T124823Z
+LAST-MODIFIED:20261015T053241Z
 REFRESH-INTERVAL;VALUE=DURATION:PT12H
 SOURCE;VALUE=URI:https://raw.githubusercontent.com/GiladAmar/GreenpointSta
  ndiumScraper/refs/heads/master/dhl_stadium.ics
@@ -598,15 +598,17 @@ BEGIN:VEVENT
 SUMMARY:DHL Stormers vs Bristol Bears
 DTSTART;TZID=Africa/Johannesburg:20261017T161500
 DTEND;TZID=Africa/Johannesburg:20261017T235959
-DTSTAMP:20260917T221524Z
+DTSTAMP:20261015T053241Z
 UID:73c37282598fa4a8@greenpoint-stadium-scraper
-SEQUENCE:0
+SEQUENCE:1
 CATEGORIES:DHL Stadium
 DESCRIPTION:DHL Stormers take on the Bristol Bears in their first game of 
- the Investec Champions Cup Tournament.
-LAST-MODIFIED:20260917T221524Z
+ the Investec Champions Cup Tournament.\n\nTicket Sales: https://stormers.t
+ mtickets.co.za/EDP/Event/Index/76
+LAST-MODIFIED:20261015T053241Z
 STATUS:CONFIRMED
 TRANSP:TRANSPARENT
+URL:https://stormers.tmtickets.co.za/EDP/Event/Index/76
 END:VEVENT
 BEGIN:VEVENT
 SUMMARY:Nelson Mandela Marathon
