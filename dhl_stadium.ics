@@ -11,7 +11,7 @@ X-WR-CALDESC:DHL Stadium fixtures plus the races, parades and CTICC confer
  d and the CBD.
 NAME:Cape Town Traffic Events
 X-WR-CALNAME:Cape Town Traffic Events
-LAST-MODIFIED:20261015T053241Z
+LAST-MODIFIED:20261101T070728Z
 REFRESH-INTERVAL;VALUE=DURATION:PT12H
 SOURCE;VALUE=URI:https://raw.githubusercontent.com/GiladAmar/GreenpointSta
  ndiumScraper/refs/heads/master/dhl_stadium.ics
@@ -635,15 +635,17 @@ BEGIN:VEVENT
 SUMMARY:DHL Stormers vs Scarlets
 DTSTART;TZID=Africa/Johannesburg:20261024T160000
 DTEND;TZID=Africa/Johannesburg:20261024T235959
-DTSTAMP:20260917T221524Z
+DTSTAMP:20261101T070728Z
 UID:e96026b4b0e5bbd7@greenpoint-stadium-scraper
-SEQUENCE:0
+SEQUENCE:1
 CATEGORIES:DHL Stadium
 DESCRIPTION:DHL Stormers take on the Welsh rugby team Scarlets in the Voda
- com United Rugby Championship Tournament.
-LAST-MODIFIED:20260917T221524Z
+ com United Rugby Championship Tournament.\n\nTicket Sales: https://stormer
+ s.co.za/
+LAST-MODIFIED:20261101T070728Z
 STATUS:CONFIRMED
 TRANSP:TRANSPARENT
+URL:https://stormers.co.za/
 END:VEVENT
 BEGIN:VEVENT
 SUMMARY:FAME Week Africa
@@ -663,18 +665,38 @@ TRANSP:TRANSPARENT
 URL:https://www.fameweekafrica.com/
 END:VEVENT
 BEGIN:VEVENT
-SUMMARY:DHL Stormers vs Ulster
-DTSTART;TZID=Africa/Johannesburg:20261031T134500
-DTEND;TZID=Africa/Johannesburg:20261031T235959
-DTSTAMP:20260917T221524Z
-UID:19801c0a649f70ef@greenpoint-stadium-scraper
+SUMMARY:Caroline's White Wine Review
+DTSTART;TZID=Africa/Johannesburg:20261029T170000
+DTEND;TZID=Africa/Johannesburg:20261029T235959
+DTSTAMP:20261101T070728Z
+UID:fcd2af602aa47f4e@greenpoint-stadium-scraper
 SEQUENCE:0
 CATEGORIES:DHL Stadium
-DESCRIPTION:DHL Stormers take on the Irish rugby team Ulster in the Vodaco
- m United Rugby Championship Tournament.
-LAST-MODIFIED:20260917T221524Z
+DESCRIPTION:Join us for an exclusive White Wine Tasting Evening at Carolin
+ e’s White Wine Review on October 29\, 2026.\n\nTicket Sales: https://www
+ .quicket.co.za/events/399474-carolines-white-wine-cap-classique-review-202
+ 6/#/tickets
+LAST-MODIFIED:20261101T070728Z
 STATUS:CONFIRMED
 TRANSP:TRANSPARENT
+URL:https://www.quicket.co.za/events/399474-carolines-white-wine-cap-class
+ ique-review-2026/#/tickets
+END:VEVENT
+BEGIN:VEVENT
+SUMMARY:DHL Stormers vs Ulster
+DTSTART;TZID=Africa/Johannesburg:20261031T144500
+DTEND;TZID=Africa/Johannesburg:20261031T235959
+DTSTAMP:20261101T070728Z
+UID:19801c0a649f70ef@greenpoint-stadium-scraper
+SEQUENCE:1
+CATEGORIES:DHL Stadium
+DESCRIPTION:DHL Stormers take on the Irish rugby team Ulster in the Vodaco
+ m United Rugby Championship Tournament.\n\nTicket Sales: https://stormers.
+ tmtickets.co.za/EDP/Event/Index/78
+LAST-MODIFIED:20261101T070728Z
+STATUS:CONFIRMED
+TRANSP:TRANSPARENT
+URL:https://stormers.tmtickets.co.za/EDP/Event/Index/78
 END:VEVENT
 BEGIN:VEVENT
 SUMMARY:First Thursdays
@@ -724,15 +746,15 @@ TRANSP:TRANSPARENT
 END:VEVENT
 BEGIN:VEVENT
 SUMMARY:DHL Stormers vs Lions
-DTSTART;TZID=Africa/Johannesburg:20261219T150000
+DTSTART;TZID=Africa/Johannesburg:20261219T160000
 DTEND;TZID=Africa/Johannesburg:20261219T235959
-DTSTAMP:20260917T221524Z
+DTSTAMP:20261101T070728Z
 UID:2be90ca35615cef2@greenpoint-stadium-scraper
-SEQUENCE:0
+SEQUENCE:1
 CATEGORIES:DHL Stadium
 DESCRIPTION:DHL Stormers take on the Lions in the Vodacom United Rugby Cha
  mpionship Tournament.
-LAST-MODIFIED:20260917T221524Z
+LAST-MODIFIED:20261101T070728Z
 STATUS:CONFIRMED
 TRANSP:TRANSPARENT
 END:VEVENT
@@ -772,15 +794,15 @@ URL:https://en.wikipedia.org/wiki/Kaapse_Klopse
 END:VEVENT
 BEGIN:VEVENT
 SUMMARY:DHL Stormers vs Vodacom Bulls
-DTSTART;TZID=Africa/Johannesburg:20270103T150000
+DTSTART;TZID=Africa/Johannesburg:20270103T160000
 DTEND;TZID=Africa/Johannesburg:20270103T235959
-DTSTAMP:20260917T221524Z
+DTSTAMP:20261101T070728Z
 UID:6101241ef1d221a8@greenpoint-stadium-scraper
-SEQUENCE:0
+SEQUENCE:1
 CATEGORIES:DHL Stadium
 DESCRIPTION:DHL Stormers take on the Vodacom Bulls in the Vodacom United R
  ugby Championship Tournament.
-LAST-MODIFIED:20260917T221524Z
+LAST-MODIFIED:20261101T070728Z
 STATUS:CONFIRMED
 TRANSP:TRANSPARENT
 END:VEVENT
@@ -816,15 +838,29 @@ TRANSP:TRANSPARENT
 END:VEVENT
 BEGIN:VEVENT
 SUMMARY:DHL Stormers vs Cardiff Rugby
-DTSTART;TZID=Africa/Johannesburg:20270123T160000
+DTSTART;TZID=Africa/Johannesburg:20270123T170000
 DTEND;TZID=Africa/Johannesburg:20270123T235959
-DTSTAMP:20260917T221524Z
+DTSTAMP:20261101T070728Z
 UID:89e86065c21b374e@greenpoint-stadium-scraper
-SEQUENCE:0
+SEQUENCE:1
 CATEGORIES:DHL Stadium
 DESCRIPTION:DHL Stormers take on Cardiff Rugby in the Vodacom United Rugby
   Championship Tournament.
-LAST-MODIFIED:20260917T221524Z
+LAST-MODIFIED:20261101T070728Z
+STATUS:CONFIRMED
+TRANSP:TRANSPARENT
+END:VEVENT
+BEGIN:VEVENT
+SUMMARY:DHL Stormers vs Zebre Parma
+DTSTART;TZID=Africa/Johannesburg:20270130T170000
+DTEND;TZID=Africa/Johannesburg:20270130T235959
+DTSTAMP:20261101T070728Z
+UID:5654c6145c138361@greenpoint-stadium-scraper
+SEQUENCE:0
+CATEGORIES:DHL Stadium
+DESCRIPTION:DHL Stormers take on Zebre Parma in the Vodacom United Rugby C
+ hampionship Tournament.
+LAST-MODIFIED:20261101T070728Z
 STATUS:CONFIRMED
 TRANSP:TRANSPARENT
 END:VEVENT
@@ -1257,6 +1293,25 @@ LAST-MODIFIED:20260917T213356Z
 STATUS:CONFIRMED
 TRANSP:TRANSPARENT
 URL:https://first-thursdays.co.za/
+END:VEVENT
+BEGIN:VEVENT
+SUMMARY:Nelson Mandela Marathon
+DTSTART;VALUE=DATE:20271017
+DTEND;VALUE=DATE:20271018
+DTSTAMP:20261101T070728Z
+UID:466c946492eba162@greenpoint-stadium-scraper
+SEQUENCE:0
+CATEGORIES:City Event
+DESCRIPTION:Heritage road race (21.1 km / 10 km / 5 km) starting at the Ci
+ ty Hall on Darling Street and winding through District Six\, the Company's
+  Gardens\, Bo-Kaap\, the DHL Stadium and Fort Wynyard. CBD and Green Point
+  road closures through the morning.\n\nMore info: https://www.slaveroute.c
+ o.za/
+LAST-MODIFIED:20261101T070728Z
+LOCATION:Cape Town CBD (City Hall\, District Six\, Bo-Kaap\, DHL Stadium)
+STATUS:CONFIRMED
+TRANSP:TRANSPARENT
+URL:https://www.slaveroute.co.za/
 END:VEVENT
 BEGIN:VEVENT
 SUMMARY:First Thursdays

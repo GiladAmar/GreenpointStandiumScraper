@@ -1,19 +1,19 @@
 {
-  "generated_at": "2026-10-15T05:32:41.694903+00:00",
+  "generated_at": "2026-11-01T07:07:28.261106+00:00",
   "calendar": {
-    "total": 82,
-    "upcoming": 43,
-    "past": 39
+    "total": 85,
+    "upcoming": 41,
+    "past": 44
   },
   "stadium": {
-    "events": 39,
+    "events": 41,
     "newest_start": "2027-04-24"
   },
   "sources": {
     "fetch_cycle_tour": {
       "name": "Cape Town Cycle Tour",
       "source": "text",
-      "last_live": "2026-10-15",
+      "last_live": "2026-11-01",
       "start_date": "2027-03-14",
       "end_date": "2027-03-14",
       "url": "https://www.capetowncycletour.com/"
@@ -29,7 +29,7 @@
     "fetch_ct_marathon": {
       "name": "Sanlam Cape Town Marathon",
       "source": "text",
-      "last_live": "2026-10-15",
+      "last_live": "2026-11-01",
       "start_date": "2027-05-22",
       "end_date": "2027-05-23",
       "url": "https://www.capetownmarathon.com/"
@@ -37,7 +37,7 @@
     "fetch_cape_epic": {
       "name": "Absa Cape Epic",
       "source": "text",
-      "last_live": "2026-10-15",
+      "last_live": "2026-11-01",
       "start_date": "2027-03-21",
       "end_date": "2027-03-28",
       "url": "https://www.epic-series.com/capeepic"
@@ -85,7 +85,7 @@
     "fetch_mining_indaba": {
       "name": "Investing in African Mining Indaba",
       "source": "jsonld",
-      "last_live": "2026-10-15",
+      "last_live": "2026-11-01",
       "start_date": "2027-02-08",
       "end_date": "2027-02-11",
       "url": "https://miningindaba.com/"
@@ -102,16 +102,16 @@
       "name": "Slave Route Challenge",
       "source": "computed",
       "last_live": null,
-      "start_date": "2026-10-18",
-      "end_date": "2026-10-18",
+      "start_date": "2027-10-17",
+      "end_date": "2027-10-17",
       "url": "https://www.slaveroute.co.za/"
     },
     "fetch_mandela_marathon": {
       "name": "Nelson Mandela Marathon",
-      "source": "text",
+      "source": "none",
       "last_live": "2026-10-15",
-      "start_date": "2026-10-18",
-      "end_date": "2026-10-18",
+      "start_date": null,
+      "end_date": null,
       "url": "https://nelsonmandelamarathon.com/race-week/"
     },
     "fetch_run_your_city_ct": {
@@ -141,7 +141,7 @@
     "fetch_hoka_half_ct": {
       "name": "HOKA Half Cape Town",
       "source": "text",
-      "last_live": "2026-10-15",
+      "last_live": "2026-11-01",
       "start_date": "2027-02-13",
       "end_date": "2027-02-13",
       "url": "https://hokahalf.co.za/"
@@ -172,8 +172,8 @@
     },
     "fetch_africa_energy_indaba": {
       "name": "Africa Energy Indaba",
-      "source": "computed",
-      "last_live": "2026-10-08",
+      "source": "text",
+      "last_live": "2026-11-01",
       "start_date": "2027-03-02",
       "end_date": "2027-03-04",
       "url": "https://www.africaenergyindaba.com/"
@@ -181,7 +181,7 @@
     "fetch_enlit_africa": {
       "name": "Enlit Africa",
       "source": "text",
-      "last_live": "2026-10-15",
+      "last_live": "2026-11-01",
       "start_date": "2027-05-11",
       "end_date": "2027-05-13",
       "url": "https://wearevuka.com/energy/enlit-africa/"
@@ -197,7 +197,7 @@
     "fetch_fame_week": {
       "name": "FAME Week Africa",
       "source": "text",
-      "last_live": "2026-10-15",
+      "last_live": "2026-11-01",
       "start_date": "2026-10-28",
       "end_date": "2026-11-01",
       "url": "https://www.fameweekafrica.com/"
@@ -205,6 +205,6 @@
   },
   "degradations": [
     "fetch_two_oceans: has not read a live date since 2026-10-08 (now falling back to 'computed')",
-    "fetch_africa_energy_indaba: has not read a live date since 2026-10-08 (now falling back to 'computed')"
+    "fetch_mandela_marathon: has not read a live date since 2026-10-15 (now falling back to 'none')"
   ]
 }
