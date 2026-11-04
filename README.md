@@ -116,3 +116,21 @@ so the build is designed to fail loudly rather than publish something broken.
 
 Run the test suite with `python3 -m pytest test_events.py -q`; CI runs it before
 every build.
+
+## 🚧 Not yet included: Green Point Athletics Stadium
+
+The athletics stadium next to DHL Stadium is a separate City facility with its own
+bookings, and nothing in the stadium's API covers it — so its meets have never
+appeared on this calendar, including the ones that fill Fritz Sonnenberg and Helen
+Suzman with buses and parents.
+
+Support for it is written but **switched off**, because none of the candidate
+sources could be verified from the environment that wrote it. To evaluate them:
+
+```
+python3 probe_sources.py --json findings.json   # which sources actually work
+python3 generate_dhl_ics.py --with-athletics    # build including the feed
+```
+
+The feed is pooled into the calendar but excluded from the fail-closed guard, so a
+club website going down costs its own events and nothing else.

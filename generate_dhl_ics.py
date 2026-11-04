@@ -31,6 +31,11 @@ from zoneinfo import ZoneInfo
 import requests
 from icalendar import Calendar, Component, Event, Timezone, vDuration
 
+from athletics_stadium import (
+    FETCHER_KEY as ATHLETICS_FETCHER,
+    fetch_athletics_events,
+    health_record as athletics_health_record,
+)
 from city_events import (
     FIRST_THURSDAYS_FETCHER,
     SCRAPED_SOURCES,
@@ -92,10 +97,18 @@ API_LOOKBACK = timedelta(days=60)
 # compare like with like across runs.
 CATEGORY_STADIUM = "DHL Stadium"
 CATEGORY_CITY = "City Event"
-KNOWN_CATEGORIES = (CATEGORY_STADIUM, CATEGORY_CITY)
+# The athletics stadium is a separate City facility ~400 m from DHL Stadium, with
+# its own bookings and its own feed; see athletics_stadium.py.
+CATEGORY_ATHLETICS = "Green Point Track"
+KNOWN_CATEGORIES = (CATEGORY_STADIUM, CATEGORY_CITY, CATEGORY_ATHLETICS)
 
 # Which source wins when the same event arrives from more than one place.
-CATEGORY_PRIORITY = {CATEGORY_STADIUM: 2, CATEGORY_CITY: 1}
+CATEGORY_PRIORITY = {CATEGORY_STADIUM: 3, CATEGORY_ATHLETICS: 2, CATEGORY_CITY: 1}
+
+# The athletics feed is unverified (no host it targets was reachable from the
+# session that wrote it), so it is off unless explicitly switched on. Merging it
+# therefore cannot change a single event in the published calendar.
+ENABLE_ATHLETICS = os.environ.get("ENABLE_ATHLETICS", "").strip().lower() in {"1", "true", "yes"}
 
 # Guard thresholds. A build that would drop more than this share of the upcoming
 # events is treated as a broken source rather than a real cancellation.
@@ -440,8 +453,14 @@ def get_api_events(resp: Any) -> List[CalEvent]:
 # City events
 # ------------------------------------------------------------
 
-def get_city_events(records: Iterable[EventRecord]) -> List[CalEvent]:
-    """Convert city-event scraper records into calendar events.
+def get_city_events(
+    records: Iterable[EventRecord], category: str = CATEGORY_CITY
+) -> List[CalEvent]:
+    """Convert scraper records into calendar events.
+
+    ``category`` lets a second record-shaped feed (the athletics venue) reuse this
+    conversion instead of duplicating the date handling, which is where the awkward
+    cases live.
 
     Records with no date are skipped by design: a scrape-only event with no
     readable date is left off the calendar rather than given an invented one.
@@ -484,7 +503,7 @@ def get_city_events(records: Iterable[EventRecord]) -> List[CalEvent]:
                     description=(record.get("description") or "").strip(),
                     url=(record.get("url") or "").strip(),
                     location=(record.get("location") or "").strip(),
-                    category=CATEGORY_CITY,
+                    category=category,
                 )
             )
         except Exception as exc:
@@ -1122,8 +1141,25 @@ def _is_acknowledged(line: str) -> bool:
     return any(line.startswith(f"{key}: ") for key in ACKNOWLEDGED_DEGRADATIONS)
 
 
+def collect_athletics_events() -> List[EventRecord]:
+    """Fetch the Green Point Athletics Stadium feed, swallowing every failure.
+
+    Deliberately a *soft* source. It is unverified and depends on third-party club
+    and federation sites, and the calendar must never become unpublishable because
+    one of those is down or has changed shape. A failure costs its own events and
+    shows up in the health report; it is never allowed to block the build, which is
+    also why it is not passed to ``check_regression``.
+    """
+    try:
+        return fetch_athletics_events()
+    except Exception as exc:  # pragma: no cover - the feed already guards per source
+        print(f"Warning: athletics venue feed failed: {exc}")
+        return []
+
+
 def generate(ics_path: str = ICS_PATH, health_path: str = HEALTH_PATH,
-             *, allow_shrink: bool = False) -> HealthReport:
+             *, allow_shrink: bool = False,
+             with_athletics: Optional[bool] = None) -> HealthReport:
     """Build the calendar and the health report, and write both.
 
     events.json is intentionally not written here: it is a debug dump of the raw
@@ -1144,7 +1180,14 @@ def generate(ics_path: str = ICS_PATH, health_path: str = HEALTH_PATH,
         record for record in records if record.get("fetcher") != FIRST_THURSDAYS_FETCHER
     )
 
-    fresh = dedupe_events(stadium_events + city_events)
+    # Soft third source: included in what gets published, excluded from the guard.
+    athletics_records: List[EventRecord] = []
+    athletics_events: List[CalEvent] = []
+    if ENABLE_ATHLETICS if with_athletics is None else with_athletics:
+        athletics_records = collect_athletics_events()
+        athletics_events = get_city_events(athletics_records, CATEGORY_ATHLETICS)
+
+    fresh = dedupe_events(stadium_events + city_events + athletics_events)
     check_regression(stadium_events, scraped_city, fresh, existing, allow_shrink=allow_shrink)
 
     merged = merge_events(fresh, existing)
@@ -1159,7 +1202,14 @@ def generate(ics_path: str = ICS_PATH, health_path: str = HEALTH_PATH,
         warnings.append(
             f"previous health report was unusable ({prev_error}); last_live baseline reset"
         )
-    health = build_health(records, stamped, warnings, previous)
+    # The venue feed is summarised as one extra record so it inherits the existing
+    # per-source health machinery (last_live carry-forward, degradation reporting)
+    # rather than needing a parallel one. Kept out of `records` proper, which is what
+    # the city events are built from.
+    health_records: List[EventRecord] = list(records)
+    if athletics_records or (ENABLE_ATHLETICS if with_athletics is None else with_athletics):
+        health_records.append(athletics_health_record(athletics_records))
+    health = build_health(health_records, stamped, warnings, previous)
 
     with open(ics_path, "wb") as handle:
         handle.write(build_calendar(stamped).to_ical())
@@ -1184,6 +1234,13 @@ def main(argv: Optional[List[str]] = None) -> int:
         help="publish even if the calendar lost most of its upcoming events",
     )
     parser.add_argument(
+        "--with-athletics",
+        action="store_true",
+        default=None,
+        help="include the (unverified) Green Point Athletics Stadium feed; "
+             "also settable with ENABLE_ATHLETICS=1",
+    )
+    parser.add_argument(
         "--check-health",
         action="store_true",
         help="exit non-zero if the last build recorded a degraded source",
@@ -1193,7 +1250,7 @@ def main(argv: Optional[List[str]] = None) -> int:
     if args.check_health:
         return check_health_file()
     try:
-        generate(allow_shrink=args.allow_shrink)
+        generate(allow_shrink=args.allow_shrink, with_athletics=args.with_athletics)
     except (StadiumApiError, CalendarBuildError) as exc:
         print(f"Error: {exc}", file=sys.stderr)
         return 1

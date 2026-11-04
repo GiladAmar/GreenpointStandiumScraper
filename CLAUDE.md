@@ -15,6 +15,17 @@ CBD / Green Point / Atlantic-seaboard traffic and publishes them as `dhl_stadium
   (`dedupe_events`), checks the result is safe to publish (`check_regression`), then
   `merge_events()` preserves past events from the existing file and `stamp_events()`
   assigns UID/DTSTAMP/SEQUENCE. Entry point is `main()` (guarded by `__main__`).
+- `athletics_stadium.py` — **unverified** venue feed for Green Point Athletics Stadium,
+  a separate City facility ~400 m from DHL Stadium that the stadium API does not cover.
+  Off unless `ENABLE_ATHLETICS=1` / `--with-athletics`, so it cannot affect the published
+  calendar until a source is confirmed. No computed fallback by design: the big meets
+  (national / WP schools championships) move host city year to year — one was moved to
+  Paarl at short notice because Green Point was too busy — so a calendar rule would
+  publish road closures for a meet 60 km away.
+- `probe_sources.py` — read-only diagnostic that answers convention 1 for the athletics
+  candidates in one command: which hosts answer, which expose a WordPress REST API,
+  which publish schema.org Event markup, and whether a date can actually be parsed.
+  Run it before trusting anything in `athletics_stadium.py`.
 - `test_events.py` — pytest suite. Run: `python3 -m pytest test_events.py -q`.
 - Outputs committed by each run: `dhl_stadium.ics` (the calendar) and `health.json`
   (per-source provenance, including `last_live` — when each scraper last read a real date —
@@ -107,5 +118,14 @@ CBD / Green Point / Atlantic-seaboard traffic and publishes them as `dhl_stadium
 - DTSTAMP/SEQUENCE only change when an event's content does (`fingerprint()`), so a rebuild
   that changes nothing is byte-identical. If you add a field a subscriber can see, add it to
   the fingerprint too.
+- **A new source stays soft until it is proven.** The athletics feed is pooled into
+  what gets published but is deliberately *not* passed to `check_regression`: an
+  unverified third-party site must never be able to make the calendar unpublishable.
+  Promote it to a required source only once it has run clean for a few cycles.
+- A venue feed with many meets a year needs a materiality filter, or it buries the
+  events the calendar exists for. `athletics_stadium.is_material()` is a name-based
+  heuristic (championship / national / schools in, league / masters / time-trial out)
+  because no source publishes expected attendance; settle it against real
+  `probe_sources.py` output rather than guessing further.
 - Events are Cape Town / seaboard only — don't add out-of-town events (e.g. Knysna was
   removed for this reason).
