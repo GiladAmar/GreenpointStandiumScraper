@@ -1480,3 +1480,229 @@ def test_main_reports_a_failed_build_with_a_non_zero_exit_code(tmp_path, monkeyp
     monkeypatch.chdir(tmp_path)
     with patch.object(gen, "fetch_stadium_api", side_effect=gen.StadiumApiError("down")):
         assert gen.main([]) == 1
+
+
+# ── Green Point Athletics Stadium (unverified venue feed) ─────────────────────
+# The parsers below have never seen the real pages: the session that wrote them
+# had every candidate host blocked. These tests pin the *shapes* the module
+# assumes, so that when probe_sources.py reports what the sites actually serve,
+# the gap between assumption and reality is visible rather than silent.
+
+import athletics_stadium as track
+
+
+def wp_post(title, excerpt="", link="https://wpa.org.za/post/"):
+    """A WordPress REST post, in the shape /wp-json/wp/v2/posts returns."""
+    return {
+        "id": 1,
+        "link": link,
+        "title": {"rendered": title},
+        "excerpt": {"rendered": excerpt},
+        "date": "2026-01-01T00:00:00",
+    }
+
+
+class TestMateriality:
+    """A midweek club league meeting is not a traffic event; a championship is.
+
+    Without this filter the venue's 20-40 meets a year would bury the handful
+    that actually close streets, which is the opposite of what the calendar is for.
+    """
+
+    @pytest.mark.parametrize("name", [
+        "WP Schools Athletics Championships",
+        "National Primary Schools Championship",
+        "Cape Milers Club Continental Challenger Series",
+        "ASA Grand Prix",
+        "Provincial Trials",
+    ])
+    def test_big_meets_are_published(self, name):
+        assert track.is_material(name)
+
+    @pytest.mark.parametrize("name", [
+        "WPA Track & Field League 3",
+        "Masters Open Meeting",
+        "Thursday Twilight Time Trial",
+        "Pre-season development meeting",
+    ])
+    def test_routine_meets_are_filtered_out(self, name):
+        assert not track.is_material(name)
+
+    def test_routine_wins_when_a_name_matches_both(self):
+        """'League Final' is a league meeting, not a championship."""
+        assert not track.is_material("WPA League Final")
+
+
+class TestWordPressExtraction:
+    def test_a_dated_post_at_the_venue_becomes_an_event(self):
+        posts = [wp_post(
+            f"WP Schools Championships - 14 March {NEXT_YEAR} - Green Point Athletics Stadium"
+        )]
+        found = track.events_from_posts(posts)
+        assert len(found) == 1
+        assert found[0]["start_date"] == f"{NEXT_YEAR}-03-14"
+        assert found[0]["location"] == track.VENUE_LOCATION
+
+    def test_a_post_about_another_venue_is_ignored(self):
+        posts = [wp_post(f"WPA 5km Championships - 7 June {NEXT_YEAR} - Killarney Race Track")]
+        assert track.events_from_posts(posts) == []
+
+    def test_a_post_with_no_future_date_is_ignored(self):
+        """Most posts at these sites are results write-ups for meets already run."""
+        posts = [wp_post("Results - 8 October 2021 - Green Point Athletics Stadium")]
+        assert track.events_from_posts(posts) == []
+
+    def test_the_venue_may_be_named_in_the_excerpt(self):
+        posts = [wp_post(
+            f"Provincial Championships - 14 March {NEXT_YEAR}",
+            excerpt="Entries close Friday. Held at the Green Point Track.",
+        )]
+        assert len(track.events_from_posts(posts)) == 1
+
+    @pytest.mark.parametrize("title,expected", [
+        (f"REMINDER: WPA Championships - 14 March {NEXT_YEAR} - Green Point Athletics Stadium",
+         "WPA Championships (Green Point Track)"),
+        (f"Schools Champs - Green Point Track - 14 March {NEXT_YEAR}",
+         "Schools Champs (Green Point Track)"),
+    ])
+    def test_the_meet_name_loses_its_prefix_date_and_venue(self, title, expected):
+        """The UID is hashed from the name, so a title reposted with a different
+        editorial prefix must still resolve to one event, not two."""
+        assert track.clean_meet_name(title) == expected
+
+
+class TestHtmlExtraction:
+    def test_schema_org_markup_is_preferred(self):
+        html = (
+            f'<script type="application/ld+json">'
+            f'{{"@type":"Event","startDate":"{NEXT_YEAR}-03-20","endDate":"{NEXT_YEAR}-03-21"}}'
+            f'</script><p>Newsletter sent 1 January {NEXT_YEAR}</p>'
+        )
+        with patch("athletics_stadium.safe_get", return_value=html):
+            found = track.events_from_html("https://example.test/venue")
+        assert found[0]["start_date"] == f"{NEXT_YEAR}-03-20"
+        assert found[0]["source"] == track.SOURCE_JSONLD
+
+    def test_plain_text_dates_are_the_fallback(self):
+        html = f"<p>Next meeting: 20 - 21 March {NEXT_YEAR}</p>"
+        with patch("athletics_stadium.safe_get", return_value=html):
+            found = track.events_from_html("https://example.test/venue")
+        assert found[0]["end_date"] == f"{NEXT_YEAR}-03-21"
+
+    def test_an_unreachable_page_yields_nothing(self):
+        with patch("athletics_stadium.safe_get", return_value=None):
+            assert track.events_from_html("https://example.test/venue") == []
+
+
+class TestFeedRobustness:
+    """The feed is third-party and unverified; it must fail quietly and alone."""
+
+    def test_one_broken_candidate_does_not_cost_the_others(self):
+        good = [wp_post(
+            f"Schools Championships - 14 March {NEXT_YEAR} - Green Point Athletics Stadium"
+        )]
+
+        def flaky(base, *args, **kwargs):
+            if "broken" in base:
+                raise RuntimeError("site down")
+            return good
+
+        candidates = [
+            track.Candidate("broken", "https://broken.test", "wordpress", ""),
+            track.Candidate("working", "https://working.test", "wordpress", ""),
+        ]
+        with patch.object(track, "wordpress_posts", side_effect=flaky):
+            found = track.fetch_athletics_events(candidates)
+        assert len(found) == 1
+
+    def test_the_same_meet_from_two_candidates_is_published_once(self):
+        posts = [wp_post(
+            f"Schools Championships - 14 March {NEXT_YEAR} - Green Point Athletics Stadium"
+        )]
+        candidates = [
+            track.Candidate("a", "https://a.test", "wordpress", ""),
+            track.Candidate("b", "https://b.test", "wordpress", ""),
+        ]
+        with patch.object(track, "wordpress_posts", return_value=posts):
+            assert len(track.fetch_athletics_events(candidates)) == 1
+
+    def test_the_materiality_filter_can_be_bypassed(self):
+        posts = [wp_post(
+            f"WPA League 3 - 14 March {NEXT_YEAR} - Green Point Athletics Stadium"
+        )]
+        candidates = [track.Candidate("a", "https://a.test", "wordpress", "")]
+        with patch.object(track, "wordpress_posts", return_value=posts):
+            assert track.fetch_athletics_events(candidates) == []
+            assert track.fetch_athletics_events(candidates, material_only=False)
+
+    def test_a_missing_rest_api_is_not_an_error(self):
+        """Plenty of WordPress installs disable wp-json; that is a quiet no, not a crash."""
+        with patch.object(track.session, "get", side_effect=RuntimeError("404")):
+            assert track.wordpress_posts("https://a.test") == []
+
+
+class TestHealthRecord:
+    def test_an_empty_feed_reports_no_date(self):
+        record = track.health_record([])
+        assert record["fetcher"] == track.FETCHER_KEY
+        assert record["source"] == track.SOURCE_NONE
+        assert "start_date" not in record
+
+    def test_a_working_feed_reports_its_next_meet(self):
+        records = [
+            {"name": "Later", "url": "", "source": track.SOURCE_TEXT,
+             "start_date": f"{NEXT_YEAR}-06-01", "end_date": f"{NEXT_YEAR}-06-01"},
+            {"name": "Sooner", "url": "", "source": track.SOURCE_TEXT,
+             "start_date": f"{NEXT_YEAR}-03-14", "end_date": f"{NEXT_YEAR}-03-15"},
+        ]
+        record = track.health_record(records)
+        assert record["start_date"] == f"{NEXT_YEAR}-03-14"
+        assert record["source"] == track.SOURCE_TEXT
+
+
+class TestAthleticsIntegration:
+    """Merging this must not be able to change the published calendar."""
+
+    def test_the_feed_is_off_by_default(self, tmp_path):
+        with patch.object(gen, "collect_athletics_events") as feed:
+            _build(tmp_path)
+        feed.assert_not_called()
+
+    def test_an_exploding_feed_never_blocks_the_build(self, tmp_path):
+        """A club website being down must not make the calendar unpublishable."""
+        with patch.object(track, "fetch_athletics_events", side_effect=RuntimeError("down")), \
+                patch.object(gen, "fetch_athletics_events", side_effect=RuntimeError("down")):
+            ics, _, report = _build(tmp_path, with_athletics=True)
+        assert ics.read_bytes()
+        assert report["calendar"]["total"] > 0
+
+    def test_an_empty_feed_is_not_treated_as_a_regression(self, tmp_path):
+        """check_regression names the sources it requires; this is not one of them."""
+        with patch.object(gen, "fetch_athletics_events", return_value=[]):
+            ics, _, report = _build(tmp_path, with_athletics=True)
+        assert ics.read_bytes()
+
+    def test_published_meets_carry_the_athletics_category(self, tmp_path):
+        records = [{
+            "name": f"Schools Championships (Green Point Track)",
+            "url": "https://wpa.org.za/post/",
+            "source": track.SOURCE_TEXT,
+            "start_date": f"{NEXT_YEAR}-03-14",
+            "end_date": f"{NEXT_YEAR}-03-15",
+            "location": track.VENUE_LOCATION,
+        }]
+        with patch.object(gen, "fetch_athletics_events", return_value=records):
+            ics, health, _ = _build(tmp_path, with_athletics=True)
+        published = gen.parse_calendar(ics.read_bytes())
+        meets = [e for e in published if e.category == gen.CATEGORY_ATHLETICS]
+        assert len(meets) == 1
+        assert meets[0].location == track.VENUE_LOCATION
+        # and the feed appears in the health report like any other source
+        assert track.FETCHER_KEY in json.loads(health.read_text())["sources"]
+
+    def test_the_athletics_category_survives_a_round_trip(self):
+        event = all_day("Schools Champs", date(NEXT_YEAR, 3, 14),
+                        category=gen.CATEGORY_ATHLETICS)
+        stamped = gen.stamp_events([event], [])
+        parsed = gen.parse_calendar(gen.build_calendar(stamped).to_ical())
+        assert parsed[0].category == gen.CATEGORY_ATHLETICS
